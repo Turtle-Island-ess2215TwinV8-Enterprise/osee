@@ -8,7 +8,7 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.framework.ui.skynet.widgets.xHistory;
+package org.eclipse.osee.framework.ui.skynet.history.table;
 
 import java.util.ArrayList;
 import org.eclipse.core.runtime.IAdaptable;
@@ -89,19 +89,17 @@ public class HistoryXViewer extends XViewer {
       mm.insertBefore(MENU_GROUP_PRE, new Separator());
    }
 
-   /**
-    * Release resources
-    */
    @Override
    public void dispose() {
       getLabelProvider().dispose();
    }
 
-   /**
-    * @return the xHistoryViewer
-    */
    public XHistoryWidget getXHisotryViewer() {
       return xHistoryViewer;
+   }
+
+   public void clear() {
+      ((XHistoryContentProvider) getContentProvider()).clear(false);
    }
 
 }

@@ -8,22 +8,24 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.framework.ui.skynet.widgets.xHistory;
+package org.eclipse.osee.framework.ui.skynet.history.table;
 
 import java.util.Collection;
+import java.util.Collections;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osee.framework.ui.swt.Displays;
 
 /**
  * @author Jeff C. Phillips
  */
 public class XHistoryContentProvider implements ITreeContentProvider {
 
-   private final HistoryXViewer changeXViewer;
+   private final HistoryXViewer historyXViewer;
    private static Object[] EMPTY_ARRAY = new Object[0];
 
-   public XHistoryContentProvider(HistoryXViewer commitXViewer) {
-      changeXViewer = commitXViewer;
+   public XHistoryContentProvider(HistoryXViewer historyXViewer) {
+      this.historyXViewer = historyXViewer;
    }
 
    @Override
@@ -65,11 +67,18 @@ public class XHistoryContentProvider implements ITreeContentProvider {
       // do nothing
    }
 
-   /**
-    * @return the changeXViewer
-    */
    public HistoryXViewer getChangeXViewer() {
-      return changeXViewer;
+      return historyXViewer;
+   }
+
+   public void clear(boolean forcePend) {
+      Displays.ensureInDisplayThread(new Runnable() {
+         @Override
+         public void run() {
+            historyXViewer.setInput(Collections.emptyList());
+            historyXViewer.refresh();
+         };
+      }, forcePend);
    }
 
 }

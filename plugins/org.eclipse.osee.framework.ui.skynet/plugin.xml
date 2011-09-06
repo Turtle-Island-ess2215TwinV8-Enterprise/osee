@@ -89,6 +89,13 @@
         id="org.eclipse.osee.framework.ui.skynet.results.ResultsEditor"
         name="Results Editor">
   </editor>
+  <editor
+        class="org.eclipse.osee.framework.ui.skynet.history.editor.ResourceHistoryEditor"
+        default="false"
+        icon="images/DBiconBlueEdit.GIF"
+        id="org.eclipse.osee.framework.ui.skynet.history.editor.ResourceHistoryEditor"
+        name="Resource History">
+  </editor>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page class="org.eclipse.osee.framework.ui.skynet.OseePreferencePage" name="OSEE" id="org.eclipse.osee.framework.ui.skynet.OseePreferencePage"/>
@@ -1564,6 +1571,10 @@
       <factory
             class="org.eclipse.osee.framework.ui.skynet.change.ChangeReportEditorInputFactory"
             id="org.eclipse.osee.framework.ui.skynet.change.ChangeReportEditorInputFactory">
+      </factory>
+      <factory
+            class="org.eclipse.osee.framework.ui.skynet.history.editor.ResourceHistoryEditorInputFactory"
+            id="org.eclipse.osee.framework.ui.skynet.history.editor.ResourceHistoryEditorInputFactory">
       </factory>
    </extension>
    <extension

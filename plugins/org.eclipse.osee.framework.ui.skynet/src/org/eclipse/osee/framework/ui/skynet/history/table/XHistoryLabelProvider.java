@@ -8,7 +8,7 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.framework.ui.skynet.widgets.xHistory;
+package org.eclipse.osee.framework.ui.skynet.history.table;
 
 import java.text.SimpleDateFormat;
 import org.eclipse.jface.viewers.ILabelProviderListener;

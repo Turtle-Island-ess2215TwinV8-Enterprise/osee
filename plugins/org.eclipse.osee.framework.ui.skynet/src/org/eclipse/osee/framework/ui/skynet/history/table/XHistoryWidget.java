@@ -9,7 +9,7 @@
  *     Boeing - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.osee.framework.ui.skynet.widgets.xHistory;
+package org.eclipse.osee.framework.ui.skynet.history.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,7 +82,9 @@ public class XHistoryWidget extends GenericXWidget {
       }
 
       Composite mainComp = new Composite(parent, SWT.BORDER);
-      mainComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+      GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+      layoutData.widthHint = 300;
+      mainComp.setLayoutData(layoutData);
       mainComp.setLayout(ALayout.getZeroMarginLayout());
       if (toolkit != null) {
          toolkit.paintBordersFor(mainComp);

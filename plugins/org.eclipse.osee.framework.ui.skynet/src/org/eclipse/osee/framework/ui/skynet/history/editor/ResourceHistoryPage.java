@@ -1,5 +1,4 @@
 /*******************************************************************************
-/*******************************************************************************
  * Copyright (c) 2004, 2007 Boeing.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,33 +8,31 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-
-package org.eclipse.osee.framework.ui.skynet.widgets.xHistory;
+package org.eclipse.osee.framework.ui.skynet.history.editor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.nebula.widgets.xviewer.customize.XViewerCustomMenu;
 import org.eclipse.osee.framework.access.AccessControlManager;
 import org.eclipse.osee.framework.core.enums.TransactionDetailsType;
-import org.eclipse.osee.framework.core.exception.OseeArgumentException;
+import org.eclipse.osee.framework.core.exception.ArtifactDoesNotExist;
+import org.eclipse.osee.framework.core.exception.BranchDoesNotExist;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.TransactionRecord;
 import org.eclipse.osee.framework.help.ui.OseeHelpContext;
+import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.logging.OseeLevel;
 import org.eclipse.osee.framework.logging.OseeLog;
-import org.eclipse.osee.framework.plugin.core.util.Jobs;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.skynet.core.artifact.Attribute;
 import org.eclipse.osee.framework.skynet.core.artifact.BranchManager;
@@ -61,10 +58,9 @@ import org.eclipse.osee.framework.ui.skynet.history.table.XHistoryWidget;
 import org.eclipse.osee.framework.ui.skynet.internal.Activator;
 import org.eclipse.osee.framework.ui.skynet.listener.IRebuildMenuListener;
 import org.eclipse.osee.framework.ui.skynet.menu.CompareArtifactAction;
-import org.eclipse.osee.framework.ui.skynet.util.SkynetViews;
-import org.eclipse.osee.framework.ui.skynet.widgets.GenericViewPart;
 import org.eclipse.osee.framework.ui.swt.Displays;
 import org.eclipse.osee.framework.ui.swt.ImageManager;
+import org.eclipse.osee.framework.ui.swt.Widgets;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
@@ -73,76 +69,64 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.IFormPart;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
- * Displays persisted changes made to an artifact.
- * 
- * @author Jeff C. Phillips
+ * @author Ryan D. Brooks
  */
-public class HistoryView extends GenericViewPart implements IBranchEventListener, ITransactionRecordSelectionProvider, IRebuildMenuListener {
+public class ResourceHistoryPage extends FormPage implements IBranchEventListener, ITransactionRecordSelectionProvider, IRebuildMenuListener {
 
-   public static final String VIEW_ID = "org.eclipse.osee.framework.ui.skynet.widgets.xHistory.HistoryView";
    private XHistoryWidget xHistoryWidget;
    private Artifact artifact;
+   private final ResourceHistoryEditor editor;
+   private Label descriptionLabel;
 
-   public static void open(Artifact artifact) throws OseeArgumentException {
-      if (artifact == null) {
-         throw new OseeArgumentException("Artifact can't be null");
-      }
-      HistoryView.openViewUpon(artifact, true);
+   public ResourceHistoryPage(ResourceHistoryEditor editor) {
+      super(editor, "resource.history", "Resource History");
+      this.editor = editor;
    }
 
-   private static void openViewUpon(final Artifact artifact, final Boolean loadHistory) {
-      Job job = new Job("Open History: " + artifact.getName()) {
-
-         @Override
-         protected IStatus run(final IProgressMonitor monitor) {
-            Displays.ensureInDisplayThread(new Runnable() {
-               @Override
-               public void run() {
-                  try {
-                     IWorkbenchPage page = AWorkbench.getActivePage();
-                     HistoryView historyView =
-                        (HistoryView) page.showView(VIEW_ID, artifact.getGuid() + artifact.getBranch().getId(),
-                           IWorkbenchPage.VIEW_ACTIVATE);
-
-                     historyView.explore(artifact, loadHistory);
-                  } catch (Exception ex) {
-                     OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-                  }
-               }
-            });
-            monitor.done();
-            return Status.OK_STATUS;
-         }
-      };
-
-      Jobs.startJob(job);
-   }
-
-   /**
-    * @see IWorkbenchPart#createPartControl(Composite)
-    */
    @Override
-   public void createPartControl(Composite parent) {
-      /*
-       * Create a grid layout object so the text and treeviewer are layed out the way I want.
-       */
+   public void showBusy(boolean busy) {
+      super.showBusy(busy);
+      if (Widgets.isAccessible(getManagedForm().getForm())) {
+         getManagedForm().getForm().getForm().setBusy(busy);
+      }
+   }
+
+   @Override
+   protected void createFormContent(IManagedForm managedForm) {
+      super.createFormContent(managedForm);
+
+      final ScrolledForm form = managedForm.getForm();
+      final FormToolkit toolkit = managedForm.getToolkit();
+
+      Composite parent = form.getBody();
       GridLayout layout = new GridLayout();
       layout.numColumns = 1;
-      layout.verticalSpacing = 0;
-      layout.marginWidth = 0;
-      layout.marginHeight = 0;
-      parent.setLayout(layout);
-      parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+      layout.marginHeight = 10;
+      layout.marginWidth = 6;
+      layout.horizontalSpacing = 20;
+      form.getBody().setLayout(layout);
+      GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+      layoutData.widthHint = 300;
+      form.getBody().setLayoutData(layoutData);
+
+      updateTitle(form);
+      updateImage(form);
+
+      descriptionLabel = new Label(parent, SWT.NONE);
+      descriptionLabel.setText("Loading...");
+
+      managedForm.getMessageManager().setAutoUpdate(false);
 
       xHistoryWidget = new XHistoryWidget();
       xHistoryWidget.setDisplayLabel(false);
@@ -163,16 +147,168 @@ public class HistoryView extends GenericViewPart implements IBranchEventListener
       xHistoryWidget.getXViewer().getTree().setMenu(
          menuManager.createContextMenu(xHistoryWidget.getXViewer().getTree()));
 
-      getSite().registerContextMenu(VIEW_ID, menuManager, xHistoryWidget.getXViewer());
+      getSite().registerContextMenu(ResourceHistoryEditor.EDITOR_ID, menuManager, xHistoryWidget.getXViewer());
       getSite().setSelectionProvider(xHistoryWidget.getXViewer());
 
       HelpUtil.setHelp(parent, OseeHelpContext.HISTORY_VIEW);
 
-      OseeStatusContributionItemFactory.addTo(this, true);
+      OseeStatusContributionItemFactory.addTo(editor, true);
 
+      addToolBar(toolkit, form, true);
+      form.reflow(true);
+
+      HelpUtil.setHelp(form.getBody(), OseeHelpContext.CHANGE_REPORT_EDITOR);
+   }
+
+   private void setDescription(String desc) {
+      descriptionLabel.setText(desc);
+      descriptionLabel.getParent().layout();
+   }
+
+   private void updateTitle(ScrolledForm form) {
+      form.setText(Strings.escapeAmpersands(getEditorInput().getName()));
+   }
+
+   private void updateImage(ScrolledForm form) {
+      form.setImage(getEditor().getEditorInput().getImage());
+   }
+
+   private void addToolBar(FormToolkit toolkit, ScrolledForm form, boolean add) {
+      IToolBarManager manager = form.getToolBarManager();
+      if (add) {
+         manager.add(xHistoryWidget.getXViewer().getCustomizeAction());
+         manager.update(true);
+      } else {
+         manager.removeAll();
+      }
+      form.reflow(true);
+   }
+
+   private void onLoad(ResourceHistoryEditorInput input, boolean loadHistory) {
+      String name = "History: ";
+      String description = "";
+      if (xHistoryWidget != null) {
+         if (this.artifact == null && loadHistory) {
+            Branch branch = null;
+            try {
+               branch = BranchManager.getBranchByGuid(input.getBranchGuid());
+            } catch (BranchDoesNotExist ex) {
+               name += "Branch not Found";
+               description = "Stored branch not found - nothing to load.";
+            } catch (OseeCoreException ex) {
+               name += "Error";
+               description = "Exception reloading (see log for details)";
+               OseeLog.log(Activator.class, Level.SEVERE, ex);
+            }
+            try {
+               this.artifact = ArtifactQuery.getArtifactFromId(input.getArtGuid(), branch);
+            } catch (ArtifactDoesNotExist ex) {
+               name += "Artifact not Found";
+               description = "Artifact not Found - nothing to load.";
+            } catch (OseeCoreException ex) {
+               name += "Error";
+               description = "Exception reloading (see log for details)";
+               OseeLog.log(Activator.class, Level.SEVERE, ex);
+            }
+            name = this.artifact.getName();
+         } else {
+            name += input.getName();
+            description = "Press Reload";
+         }
+         setPartName(name);
+         setDescription(description);
+         if (loadHistory && this.artifact != null) {
+            xHistoryWidget.setInputData(artifact, loadHistory);
+         } else {
+            xHistoryWidget.getXViewer().clear();
+         }
+      }
+   }
+
+   @Override
+   public ResourceHistoryEditor getEditor() {
+      return (ResourceHistoryEditor) super.getEditor();
+   }
+
+   @Override
+   public ResourceHistoryEditorInput getEditorInput() {
+      return (ResourceHistoryEditorInput) super.getEditorInput();
+   }
+
+   public void onLoad(final boolean loadHistory) {
+      Displays.ensureInDisplayThread(new Runnable() {
+         @Override
+         public void run() {
+            onLoad(editor.getEditorInput(), loadHistory);
+         }
+      });
+   }
+
+   public void refresh() {
+      final ScrolledForm sForm = getManagedForm().getForm();
+      for (IFormPart part : getManagedForm().getParts()) {
+         part.refresh();
+      }
+      onLoad(true);
+
+      updateTitle(sForm);
+      updateImage(sForm);
+
+      sForm.getBody().layout(true);
+      sForm.reflow(true);
+      getManagedForm().refresh();
+   }
+
+   private void handleBranchEvent(BranchEventType branchModType) {
+      if (branchModType == BranchEventType.Deleting || branchModType == BranchEventType.Deleted || branchModType == BranchEventType.Purging || branchModType == BranchEventType.Purged) {
+         Displays.ensureInDisplayThread(new Runnable() {
+            @Override
+            public void run() {
+               closeEditor();
+            }
+         });
+         return;
+      } else if (branchModType == BranchEventType.Committed) {
+         onLoad(true);
+      }
+   }
+
+   private void closeEditor() {
+      final ResourceHistoryPage editor = this;
+      Displays.ensureInDisplayThread(new Runnable() {
+         @Override
+         public void run() {
+            AWorkbench.getActivePage().closeEditor(editor, false);
+         }
+      });
+   }
+
+   @Override
+   public void handleBranchEvent(Sender sender, BranchEvent branchEvent) {
+      handleBranchEvent(branchEvent.getEventType());
+   }
+
+   @Override
+   public List<? extends IEventFilter> getEventFilters() {
+      if (artifact != null) {
+         return OseeEventManager.getEventFiltersForBranch(artifact.getBranch());
+      }
+      return null;
+   }
+
+   @Override
+   public ArrayList<TransactionRecord> getSelectedTransactionRecords() {
+      return xHistoryWidget.getSelectedTransactionRecords();
+   }
+
+   @Override
+   public void refreshUI(ArrayList<TransactionRecord> records) {
+      xHistoryWidget.refresh();
+   }
+
+   @Override
+   public void rebuildMenu() {
       setupMenus();
-
-      setFocusWidget(xHistoryWidget.getXViewer().getControl());
    }
 
    private void setupMenus() {
@@ -287,107 +423,5 @@ public class HistoryView extends GenericViewPart implements IBranchEventListener
          }
 
       });
-   }
-
-   private void explore(final Artifact artifact, boolean loadHistory) {
-      if (xHistoryWidget != null) {
-         this.artifact = artifact;
-
-         setPartName("History: " + artifact.getName());
-         xHistoryWidget.setInputData(artifact, loadHistory);
-      }
-   }
-
-   private static final String INPUT = "input";
-   private static final String ART_GUID = "artifactGuid";
-   private static final String BRANCH_ID = "branchId";
-
-   @Override
-   public void saveState(IMemento memento) {
-      super.saveState(memento);
-      memento = memento.createChild(INPUT);
-      if (artifact != null) {
-         memento.putString(ART_GUID, artifact.getGuid());
-         memento.putInteger(BRANCH_ID, artifact.getBranch().getId());
-         SkynetViews.addDatabaseSourceId(memento);
-      }
-   }
-
-   @Override
-   public void init(IViewSite site, IMemento memento) throws PartInitException {
-      super.init(site, memento);
-      try {
-         if (memento != null) {
-            memento = memento.getChild(INPUT);
-            if (memento != null) {
-               if (SkynetViews.isSourceValid(memento)) {
-                  String guid = memento.getString(ART_GUID);
-                  Integer branchId = memento.getInteger(BRANCH_ID);
-                  Artifact artifact = ArtifactQuery.getArtifactFromId(guid, BranchManager.getBranch(branchId));
-                  openViewUpon(artifact, false);
-               } else {
-                  closeView();
-               }
-            }
-         }
-      } catch (Exception ex) {
-         OseeLog.log(Activator.class, Level.WARNING, "History View error on init", ex);
-      }
-   }
-
-   private void handleBranchEvent(BranchEventType branchModType) {
-      if (branchModType == BranchEventType.Deleting || branchModType == BranchEventType.Deleted || branchModType == BranchEventType.Purging || branchModType == BranchEventType.Purged) {
-         Displays.ensureInDisplayThread(new Runnable() {
-            @Override
-            public void run() {
-               closeView();
-            }
-         });
-         return;
-      } else if (branchModType == BranchEventType.Committed) {
-         Displays.ensureInDisplayThread(new Runnable() {
-            @Override
-            public void run() {
-               try {
-                  explore(artifact, true);
-               } catch (Exception ex) {
-                  OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-               }
-            }
-         });
-         // refresh view with new branch and transaction id
-      }
-   }
-
-   private void closeView() {
-      SkynetViews.closeView(VIEW_ID, getViewSite().getSecondaryId());
-   }
-
-   @Override
-   public void rebuildMenu() {
-      setupMenus();
-   }
-
-   @Override
-   public void handleBranchEvent(Sender sender, BranchEvent branchEvent) {
-      handleBranchEvent(branchEvent.getEventType());
-   }
-
-   @Override
-   public List<? extends IEventFilter> getEventFilters() {
-      if (artifact != null) {
-         return OseeEventManager.getEventFiltersForBranch(artifact.getBranch());
-      }
-      return null;
-   }
-
-   @Override
-   public ArrayList<TransactionRecord> getSelectedTransactionRecords() {
-      return xHistoryWidget.getSelectedTransactionRecords();
-   }
-
-   @Override
-   public void refreshUI(ArrayList<TransactionRecord> records) {
-      xHistoryWidget.refresh();
    }
 }
