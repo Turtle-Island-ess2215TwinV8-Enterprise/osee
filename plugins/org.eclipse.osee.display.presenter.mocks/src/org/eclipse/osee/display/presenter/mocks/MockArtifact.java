@@ -61,6 +61,10 @@ public class MockArtifact implements ReadableArtifact {
       addAttribute(CoreAttributeTypes.Name, name);
    }
 
+   public ReadableArtifact getParent() {
+      return parent;
+   }
+
    public void setParent(ReadableArtifact parent) {
       this.parent = parent;
    }
@@ -198,6 +202,11 @@ public class MockArtifact implements ReadableArtifact {
 
    @Override
    public boolean isOfType(IArtifactType... otherTypes) {
+      for (IArtifactType type : otherTypes) {
+         if (this.type == type) {
+            return true;
+         }
+      }
       return false;
    }
 

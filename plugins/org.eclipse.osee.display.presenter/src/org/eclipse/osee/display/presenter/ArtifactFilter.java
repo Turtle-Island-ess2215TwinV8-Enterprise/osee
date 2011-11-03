@@ -12,7 +12,6 @@ package org.eclipse.osee.display.presenter;
 
 import java.util.Arrays;
 import java.util.List;
-import org.eclipse.osee.display.api.search.ArtifactProvider;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.enums.CoreArtifactTypes;
 import org.eclipse.osee.framework.core.enums.CoreBranches;

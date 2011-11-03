@@ -32,7 +32,7 @@ public class ArtifactProviderCache {
    private final Set<ReadableArtifact> artifactsWithNoParent = new HashSet<ReadableArtifact>();
 
    private ResultSet<Match<ReadableArtifact, ReadableAttribute<?>>> searchResults;
-   private SearchParameters searchParameters;
+   private ArtifactSearchParameters searchParameters;
    private Future<?> future;
 
    public ArtifactProviderCache() {
@@ -63,7 +63,7 @@ public class ArtifactProviderCache {
       this.searchResults = searchResults;
    }
 
-   public void cacheSearch(SearchParameters searchParameters) {
+   public void cacheSearch(ArtifactSearchParameters searchParameters) {
       this.searchParameters = searchParameters;
    }
 
@@ -71,11 +71,11 @@ public class ArtifactProviderCache {
       return searchResults;
    }
 
-   public SearchParameters getSearchParameters() {
+   public ArtifactSearchParameters getSearchParameters() {
       return searchParameters;
    }
 
-   public boolean isSearchCached(SearchParameters params) {
+   public boolean isSearchCached(ArtifactSearchParameters params) {
       return searchParameters != null && searchParameters.equals(params);
    }
 

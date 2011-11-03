@@ -12,7 +12,6 @@ package org.eclipse.osee.ats.presenter.internal;
 
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.osee.ats.api.search.AtsArtifactProvider;
 import org.eclipse.osee.ats.api.tokens.AtsArtifactToken;
 import org.eclipse.osee.ats.api.tokens.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.tokens.AtsRelationTypes;

@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.osee.display.api.components.SearchResultComponent;
 import org.eclipse.osee.display.api.components.SearchResultsListComponent;
+import org.eclipse.osee.display.api.data.SearchResult;
 import org.eclipse.osee.display.api.search.SearchPresenter;
 import org.eclipse.osee.display.api.search.SearchProgressListener;
 import org.eclipse.osee.display.api.search.SearchProgressProvider;
@@ -208,11 +208,12 @@ public class OseeSearchResultsListComponent extends VerticalLayout implements Se
    }
 
    @Override
-   public SearchResultComponent createSearchResult() {
-      OseeSearchResultComponent searchResultComp = new OseeSearchResultComponent();
-      resultList.add(searchResultComp);
-
-      return searchResultComp;
+   public SearchResult createSearchResult() {
+      //         OseeSearchResultComponent searchResultComp = new OseeSearchResultComponent();
+      //         resultList.add(searchResultComp);
+      //   
+      //         return searchResultComp;
+      return null;
    }
 
    @Override

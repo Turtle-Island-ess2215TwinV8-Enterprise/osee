@@ -11,11 +11,12 @@
 package org.eclipse.osee.display.api.components;
 
 import org.eclipse.osee.display.api.data.ViewArtifact;
+import org.eclipse.osee.display.api.view.DisplaysErrorView;
 
 /**
  * @author Shawn F. Cook
  */
-public interface ArtifactHeaderComponent extends DisplaysErrorComponent {
+public interface ArtifactHeaderComponent extends DisplaysErrorView {
 
    void clearAll();
 

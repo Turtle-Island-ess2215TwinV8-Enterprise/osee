@@ -12,8 +12,6 @@ package org.eclipse.osee.display.view.web.components;
 
 import org.eclipse.osee.display.api.components.DisplayOptionsComponent;
 import org.eclipse.osee.display.api.data.DisplayOptions;
-import org.eclipse.osee.display.api.search.SearchNavigator;
-import org.eclipse.osee.display.api.search.SearchPresenter;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.CheckBox;
@@ -64,7 +62,7 @@ public class OseeDisplayOptionsComponentImpl extends VerticalLayout implements D
    @Override
    public void setDisplayOptions(DisplayOptions options) {
       if (options != null) {
-         boolean showVerbose_fromPres = options.getVerboseResults();
+         boolean showVerbose_fromPres = options.isVerboseResults();
          boolean showVerbose_fromUi = showVerboseCheckBox.toString().equalsIgnoreCase("true");
          if (showVerbose_fromUi != showVerbose_fromPres) {
             synchronized (lock_InhibitActionFromServer) {
@@ -80,16 +78,16 @@ public class OseeDisplayOptionsComponentImpl extends VerticalLayout implements D
    }
 
    private void onBoxChecked(boolean isShowVerbose) {
-      DisplayOptions options = new DisplayOptions(isShowVerbose);
-
-      String url = ComponentUtility.getUrl(OseeDisplayOptionsComponentImpl.this);
-      SearchNavigator navigator = ComponentUtility.getNavigator(OseeDisplayOptionsComponentImpl.this);
-      SearchPresenter<?, ?> presenter = ComponentUtility.getPresenter(OseeDisplayOptionsComponentImpl.this);
-      if (presenter != null) {
-         presenter.selectDisplayOptions(url, options, navigator);
-      } else {
-         ComponentUtility.logWarn("OseeDisplayOptionsComponentImpl.onBoxChecked - WARNING: null value detected.", this);
-      }
+      //      DisplayOptions options = new DisplayOptions(isShowVerbose);
+      //
+      //      String url = ComponentUtility.getUrl(OseeDisplayOptionsComponentImpl.this);
+      //      SearchNavigator navigator = ComponentUtility.getNavigator(OseeDisplayOptionsComponentImpl.this);
+      //      SearchPresenter<?, ?> presenter = ComponentUtility.getPresenter(OseeDisplayOptionsComponentImpl.this);
+      //      if (presenter != null) {
+      //         presenter.selectDisplayOptions(url, options, navigator);
+      //      } else {
+      //         ComponentUtility.logWarn("OseeDisplayOptionsComponentImpl.onBoxChecked - WARNING: null value detected.", this);
+      //      }
    }
 
    public void enableDisplayOptions() {

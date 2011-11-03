@@ -12,8 +12,10 @@ package org.eclipse.osee.display.mvp.presenter;
 
 import org.eclipse.osee.display.mvp.BindException;
 import org.eclipse.osee.display.mvp.MessageType;
+import org.eclipse.osee.display.mvp.MessageTypeEnum;
 import org.eclipse.osee.display.mvp.event.EventBus;
 import org.eclipse.osee.display.mvp.view.View;
+import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.logger.Log;
 
 /**
@@ -74,5 +76,10 @@ public abstract class AbstractPresenter<V extends View, E extends EventBus> impl
    @Override
    public void showNotification(String caption, String description, MessageType type) {
       view.displayMessage(caption, description, type);
+   }
+
+   protected void setErrorMessage(String message, Exception ex) {
+      getLogger().error(ex, message);
+      getView().displayMessage(message, Lib.exceptionToString(ex), MessageTypeEnum.ERROR);
    }
 }

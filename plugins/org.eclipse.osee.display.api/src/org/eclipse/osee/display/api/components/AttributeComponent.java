@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.osee.display.api.components;
 
+import org.eclipse.osee.display.api.view.DisplaysErrorView;
+
 /**
  * @author Shawn F. Cook
  */
-public interface AttributeComponent extends DisplaysErrorComponent {
+public interface AttributeComponent extends DisplaysErrorView {
 
    void clearAll();
 

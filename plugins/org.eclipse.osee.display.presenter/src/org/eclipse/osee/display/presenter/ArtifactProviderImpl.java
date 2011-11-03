@@ -17,13 +17,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import org.eclipse.osee.display.api.search.ArtifactProvider;
-import org.eclipse.osee.display.api.search.AsyncSearchListener;
 import org.eclipse.osee.display.presenter.internal.ArtifactProviderCache;
+import org.eclipse.osee.display.presenter.internal.ArtifactSearchParameters;
 import org.eclipse.osee.display.presenter.internal.FilteredArtifactCallable;
 import org.eclipse.osee.display.presenter.internal.FilteredResultSetCallable;
 import org.eclipse.osee.display.presenter.internal.SearchExecutionCallback;
-import org.eclipse.osee.display.presenter.internal.SearchParameters;
 import org.eclipse.osee.executor.admin.ExecutorAdmin;
 import org.eclipse.osee.executor.admin.PassThroughCallable;
 import org.eclipse.osee.framework.core.data.IArtifactToken;
@@ -95,8 +93,8 @@ public class ArtifactProviderImpl implements ArtifactProvider {
    }
 
    @Override
-   public void getSearchResults(IOseeBranch branch, boolean nameOnly, String searchPhrase, AsyncSearchListener callback) throws OseeCoreException {
-      SearchParameters params = new SearchParameters(branch, nameOnly, searchPhrase);
+   public void getSearchResults(IOseeBranch branch, boolean nameOnly, String searchPhrase, AsyncSearchHandler callback) throws OseeCoreException {
+      ArtifactSearchParameters params = new ArtifactSearchParameters(branch, nameOnly, searchPhrase);
 
       Callable<ResultSet<Match<ReadableArtifact, ReadableAttribute<?>>>> callable =
          createSearchCallable(params, callback);
@@ -114,7 +112,7 @@ public class ArtifactProviderImpl implements ArtifactProvider {
       cache.cacheSearchFuture(searchFuture);
    }
 
-   private Callable<ResultSet<Match<ReadableArtifact, ReadableAttribute<?>>>> createSearchCallable(SearchParameters params, AsyncSearchListener callback) throws OseeCoreException {
+   private Callable<ResultSet<Match<ReadableArtifact, ReadableAttribute<?>>>> createSearchCallable(ArtifactSearchParameters params, AsyncSearchHandler callback) throws OseeCoreException {
       Callable<ResultSet<Match<ReadableArtifact, ReadableAttribute<?>>>> callable;
       if (cache.isSearchCached(params)) {
          callable =

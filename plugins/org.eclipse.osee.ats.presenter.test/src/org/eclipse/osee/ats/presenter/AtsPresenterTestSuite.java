@@ -10,17 +10,17 @@
  *******************************************************************************/
 package org.eclipse.osee.ats.presenter;
 
-import org.eclipse.osee.ats.presenter.internal.AtsSearchPresenterTest;
+import org.eclipse.osee.ats.presenter.internal.AtsSearchCriteriaPresenterTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({//
-AtsSearchPresenterTest.class,//
+AtsSearchCriteriaPresenterTest.class,//
 })
 /**
  * @author John Misinco
  */
 public class AtsPresenterTestSuite {
-
+   // classes listed above
 }

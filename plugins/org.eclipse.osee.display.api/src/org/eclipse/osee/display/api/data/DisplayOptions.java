@@ -15,14 +15,27 @@ package org.eclipse.osee.display.api.data;
  */
 public class DisplayOptions {
 
-   private final Boolean verboseResults;
+   private boolean verboseResults;
+   private int resultsPerPage;
 
-   public DisplayOptions(Boolean verboseResults) {
+   public DisplayOptions(boolean verboseResults, int resultsPerPage) {
       this.verboseResults = verboseResults;
+      this.resultsPerPage = resultsPerPage;
    }
 
-   public Boolean getVerboseResults() {
+   public boolean isVerboseResults() {
       return verboseResults;
    }
 
+   public int getResultsPerPage() {
+      return resultsPerPage;
+   }
+
+   public void setVerboseResults(boolean verboseResults) {
+      this.verboseResults = verboseResults;
+   }
+
+   public void setResultsPerPage(int resultsPerPage) {
+      this.resultsPerPage = resultsPerPage;
+   }
 }

@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.osee.display.api.search.ArtifactProvider;
-import org.eclipse.osee.display.api.search.AsyncSearchListener;
+import org.eclipse.osee.display.presenter.ArtifactProvider;
+import org.eclipse.osee.display.presenter.AsyncSearchHandler;
 import org.eclipse.osee.framework.core.data.IArtifactToken;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.data.IRelationTypeSide;
@@ -51,11 +51,6 @@ public class MockArtifactProvider implements ArtifactProvider {
       return artifacts.get(guid);
    }
 
-   //   @Override
-   //   public List<Match<ReadableArtifact, ReadableAttribute<?>>> getSearchResults(IOseeBranch branch, boolean nameOnly, String searchPhrase) {
-   //      return resultList;
-   //   }
-
    @Override
    public List<ReadableArtifact> getRelatedArtifacts(ReadableArtifact art, IRelationTypeSide relationTypeSide) {
       if (art instanceof MockArtifact) {
@@ -80,7 +75,7 @@ public class MockArtifactProvider implements ArtifactProvider {
    public ReadableArtifact getParent(ReadableArtifact art) {
       if (art instanceof MockArtifact) {
          MockArtifact mArt = (MockArtifact) art;
-         return null;
+         return mArt.getParent();
       } else {
          return null;
       }
@@ -96,7 +91,7 @@ public class MockArtifactProvider implements ArtifactProvider {
    }
 
    @Override
-   public void getSearchResults(IOseeBranch branch, boolean nameOnly, String searchPhrase, AsyncSearchListener callback) {
+   public void getSearchResults(IOseeBranch branch, boolean nameOnly, String searchPhrase, AsyncSearchHandler callback) {
       callback.onSearchComplete(resultList);
    }
 

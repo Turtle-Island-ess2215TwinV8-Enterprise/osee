@@ -6,10 +6,13 @@ Bundle-Version: 0.9.9.qualifier
 Bundle-Vendor: Eclipse Open System Engineering Environment
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.common.collect,
- org.eclipse.osee.display.api,
- org.eclipse.osee.display.api.components,
  org.eclipse.osee.display.api.data,
- org.eclipse.osee.display.api.search,
+ org.eclipse.osee.display.api.view,
+ org.eclipse.osee.display.mvp,
+ org.eclipse.osee.display.mvp.event,
+ org.eclipse.osee.display.mvp.event.annotation,
+ org.eclipse.osee.display.mvp.presenter,
+ org.eclipse.osee.display.mvp.view,
  org.eclipse.osee.executor.admin,
  org.eclipse.osee.framework.core.data,
  org.eclipse.osee.framework.core.enums,
@@ -24,5 +27,6 @@ Import-Package: com.google.common.collect,
  org.eclipse.osee.orcs.data,
  org.eclipse.osee.orcs.search,
  org.eclipse.osee.orcs.utility
-Export-Package: org.eclipse.osee.display.presenter
 Require-Bundle: org.eclipse.core.runtime
+Export-Package: org.eclipse.osee.display.presenter,
+ org.eclipse.osee.display.presenter.events

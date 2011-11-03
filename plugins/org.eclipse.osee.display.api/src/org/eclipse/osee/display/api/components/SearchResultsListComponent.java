@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.osee.display.api.components;
 
+import org.eclipse.osee.display.api.data.SearchResult;
+import org.eclipse.osee.display.api.view.DisplaysErrorView;
+
 /**
  * @author Shawn F. Cook
  */
-public interface SearchResultsListComponent extends DisplaysErrorComponent {
+public interface SearchResultsListComponent extends DisplaysErrorView {
 
    void clearAll();
 
-   SearchResultComponent createSearchResult();
+   SearchResult createSearchResult();
 
    void noSearchResultsFound();
 

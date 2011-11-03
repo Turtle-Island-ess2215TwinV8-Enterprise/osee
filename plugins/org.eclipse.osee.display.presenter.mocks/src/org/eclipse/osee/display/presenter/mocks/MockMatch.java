@@ -20,23 +20,23 @@ import org.eclipse.osee.orcs.search.Match;
 /**
  * @author John Misinco
  */
-public class MockMatch implements Match<ReadableArtifact, ReadableAttribute<String>> {
+public class MockMatch implements Match<ReadableArtifact, ReadableAttribute<?>> {
 
    private final ReadableArtifact artifact;
-   private final List<ReadableAttribute<String>> attributes = new LinkedList<ReadableAttribute<String>>();
+   private final List<ReadableAttribute<?>> attributes = new LinkedList<ReadableAttribute<?>>();
 
    public MockMatch(ReadableArtifact artifact) {
       this.artifact = artifact;
    }
 
-   public MockMatch(ReadableArtifact artifact, ReadableAttribute<String> attribute) {
+   public MockMatch(ReadableArtifact artifact, ReadableAttribute<?> attribute) {
       this(artifact);
       attributes.add(attribute);
    }
 
-   public MockMatch(ReadableArtifact artifact, List<ReadableAttribute<String>> attributes) {
+   public MockMatch(ReadableArtifact artifact, List<ReadableAttribute<?>> attributes) {
       this(artifact);
-      attributes.addAll(attributes);
+      this.attributes.addAll(attributes);
    }
 
    @Override
@@ -50,12 +50,12 @@ public class MockMatch implements Match<ReadableArtifact, ReadableAttribute<Stri
    }
 
    @Override
-   public List<ReadableAttribute<String>> getElements() {
+   public List<ReadableAttribute<?>> getElements() {
       return attributes;
    }
 
    @Override
-   public List<MatchLocation> getLocation(ReadableAttribute<String> element) {
+   public List<MatchLocation> getLocation(ReadableAttribute<?> element) {
       List<MatchLocation> toReturn = new LinkedList<MatchLocation>();
       toReturn.add(new MatchLocation());
       return toReturn;

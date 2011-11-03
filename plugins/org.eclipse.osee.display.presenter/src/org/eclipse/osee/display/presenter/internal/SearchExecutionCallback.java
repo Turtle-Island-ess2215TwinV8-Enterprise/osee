@@ -11,7 +11,7 @@
 package org.eclipse.osee.display.presenter.internal;
 
 import java.util.concurrent.CancellationException;
-import org.eclipse.osee.display.api.search.AsyncSearchListener;
+import org.eclipse.osee.display.presenter.AsyncSearchHandler;
 import org.eclipse.osee.executor.admin.ExecutionCallback;
 import org.eclipse.osee.framework.core.data.ResultSet;
 import org.eclipse.osee.framework.core.exception.OseeWrappedException;
@@ -25,11 +25,11 @@ import org.eclipse.osee.orcs.search.Match;
  */
 public class SearchExecutionCallback implements ExecutionCallback<ResultSet<Match<ReadableArtifact, ReadableAttribute<?>>>> {
 
-   private final AsyncSearchListener callback;
+   private final AsyncSearchHandler callback;
    private final ArtifactProviderCache cache;
    private final Log logger;
 
-   public SearchExecutionCallback(Log logger, ArtifactProviderCache cache, AsyncSearchListener callback) {
+   public SearchExecutionCallback(Log logger, ArtifactProviderCache cache, AsyncSearchHandler callback) {
       this.logger = logger;
       this.cache = cache;
       this.callback = callback;

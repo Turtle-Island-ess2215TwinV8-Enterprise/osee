@@ -12,11 +12,12 @@ package org.eclipse.osee.display.api.components;
 
 import org.eclipse.osee.display.api.data.ViewArtifact;
 import org.eclipse.osee.display.api.data.ViewId;
+import org.eclipse.osee.display.api.view.DisplaysErrorView;
 
 /**
  * @author Shawn F. Cook
  */
-public interface RelationComponent extends DisplaysErrorComponent {
+public interface RelationComponent extends DisplaysErrorView {
 
    void setArtifact(ViewArtifact artifact);
 

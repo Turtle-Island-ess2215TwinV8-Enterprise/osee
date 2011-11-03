@@ -11,8 +11,6 @@
 package org.eclipse.osee.display.view.web.components;
 
 import org.eclipse.osee.display.api.components.SearchHeaderComponent;
-import org.eclipse.osee.display.api.components.SearchResultComponent;
-import org.eclipse.osee.display.api.data.DisplayOptions;
 import org.eclipse.osee.display.api.data.SearchResultMatch;
 import org.eclipse.osee.display.api.data.StyledText;
 import org.eclipse.osee.display.api.data.ViewArtifact;
@@ -29,7 +27,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Shawn F. Cook
  */
 @SuppressWarnings("serial")
-public class OseeSearchResultComponent extends VerticalLayout implements SearchResultComponent {
+public class OseeSearchResultComponent extends VerticalLayout { //implements SearchResult {
 
    private ViewArtifact artifact;
    private final OseeArtifactNameLinkComponent artifactName = new OseeArtifactNameLinkComponent();
@@ -85,37 +83,37 @@ public class OseeSearchResultComponent extends VerticalLayout implements SearchR
 
    private static int i = 0;
 
-   @Override
-   public void setArtifact(ViewArtifact artifact) {
-      this.artifact = artifact;
-      artifactName.setArtifact(this.artifact);
-      breadcrumbComp.setArtifact(this.artifact);
-      artifactType.setCaption(String.format("[%s]", artifact.getArtifactType()));
+   //   @Override
+   //   public void setArtifact(ViewArtifact artifact) {
+   //      this.artifact = artifact;
+   //      artifactName.setArtifact(this.artifact);
+   //      breadcrumbComp.setArtifact(this.artifact);
+   //      artifactType.setCaption(String.format("[%s]", artifact.getArtifactType()));
+   //
+   //   }
 
-   }
-
-   @Override
-   public void addSearchResultMatch(SearchResultMatch match) {
-      OseeSearchResultMatchComponent matchComp = new OseeSearchResultMatchComponent(match);
-      vLayout_Matches.addComponent(matchComp);
-   }
-
-   @Override
-   public void setErrorMessage(String shortMsg, String longMsg, MsgType msgType) {
-      OseeExceptionDialogComponent dlg =
-         new OseeExceptionDialogComponent(msgType, shortMsg, longMsg, getApplication().getMainWindow());
-   }
-
-   @Override
-   public void setDisplayOptions(DisplayOptions options) {
-      if (options != null) {
-         boolean showVerbose = options.getVerboseResults();
-         vLayout_Matches.setVisible(showVerbose);
-         breadcrumbComp.setVisible(showVerbose);
-      } else {
-         ComponentUtility.logWarn("OseeSearchResultComponent.setDisplayOptions - WARNING: null value detected.", this);
-      }
-   }
+   //   @Override
+   //   public void addSearchResultMatch(SearchResultMatch match) {
+   //      OseeSearchResultMatchComponent matchComp = new OseeSearchResultMatchComponent(match);
+   //      vLayout_Matches.addComponent(matchComp);
+   //   }
+   //
+   //   @Override
+   //   public void setErrorMessage(String shortMsg, String longMsg, MsgType msgType) {
+   //      OseeExceptionDialogComponent dlg =
+   //         new OseeExceptionDialogComponent(msgType, shortMsg, longMsg, getApplication().getMainWindow());
+   //   }
+   //
+   //   @Override
+   //   public void setDisplayOptions(DisplayOptions options) {
+   //      if (options != null) {
+   //         boolean showVerbose = options.isVerboseResults();
+   //         vLayout_Matches.setVisible(showVerbose);
+   //         breadcrumbComp.setVisible(showVerbose);
+   //      } else {
+   //         ComponentUtility.logWarn("OseeSearchResultComponent.setDisplayOptions - WARNING: null value detected.", this);
+   //      }
+   //   }
 
    private class OseeSearchResultMatchComponent extends HorizontalLayout {
       public OseeSearchResultMatchComponent(SearchResultMatch match) {
