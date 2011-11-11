@@ -108,6 +108,7 @@ public class AtsSearchCriteriaPresenter extends SearchCriteriaPresenter<AtsSearc
    public void setSelectedProgram(ViewId program) {
       onInit();
       getView().setSelectedProgram(program);
+      onProgramSelected(program);
    }
 
    public void setSelectedBuild(ViewId build) {

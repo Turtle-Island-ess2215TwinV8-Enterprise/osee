@@ -81,12 +81,47 @@ public class AtsSearchCriteriaPresenterTest {
       Assert.assertEquals(expectedBranchGuid, eventBus.getSearchCriteria().getCriteria(SearchCriteria.BRANCH_KEY));
    }
 
+   @Test
+   public void testSetSelectedProgram() {
+      MockAtsArtifactProvider provider = new MockAtsArtifactProvider();
+      AtsSearchCriteriaPresenter presenter = new AtsSearchCriteriaPresenter(provider);
+      MockAtsSearchCriteriaView view = new MockAtsSearchCriteriaView();
+      presenter.setView(view);
+
+      ReadableArtifact progArtifact = provider.getPrograms().iterator().next();
+      ViewId program = new ViewId(progArtifact.getGuid(), progArtifact.getName());
+      presenter.setSelectedProgram(program);
+
+      Assert.assertEquals(program.getGuid(), view.getSelectedProgram().getGuid());
+      Assert.assertEquals(program.getName(), view.getSelectedProgram().getName());
+      Assert.assertEquals(provider.getBuilds(program.getGuid()).size(), view.getBuilds().size());
+   }
+
+   @Test
+   public void testSetSelectedBuild() {
+      MockAtsArtifactProvider provider = new MockAtsArtifactProvider();
+      AtsSearchCriteriaPresenter presenter = new AtsSearchCriteriaPresenter(provider);
+      MockAtsSearchCriteriaView view = new MockAtsSearchCriteriaView();
+      presenter.setView(view);
+
+      ReadableArtifact progArtifact = provider.getPrograms().iterator().next();
+      ViewId program = new ViewId(progArtifact.getGuid(), progArtifact.getName());
+      presenter.setSelectedProgram(program);
+
+      ReadableArtifact buildArtifact = provider.getBuilds(program.getGuid()).iterator().next();
+      ViewId build = new ViewId(buildArtifact.getGuid(), buildArtifact.getName());
+      presenter.setSelectedBuild(build);
+
+      Assert.assertEquals(build, view.getSelectedBuild());
+   }
+
    public class MockAtsSearchCriteriaView implements AtsSearchCriteriaView {
 
       private List<ViewId> programs, builds;
       private boolean clearProgramsCalled = false, clearBuildsCalled = false;
       private SearchCriteria searchCriteria;
       private ViewId selectedBuild;
+      private ViewId selectedProgram;
 
       @Override
       public void setSelectedBuild(ViewId selectedBuild) {
@@ -212,7 +247,7 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public ViewId getSelectedProgram() {
-         return null;
+         return selectedProgram;
       }
 
       @Override
@@ -222,7 +257,7 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public void setSelectedProgram(ViewId program) {
-         //
+         selectedProgram = program;
       }
 
       @Override
@@ -233,10 +268,6 @@ public class AtsSearchCriteriaPresenterTest {
       @Override
       public void createControl() {
          //
-      }
-
-      @Override
-      public void updateCriteria(String key, Object value) {
       }
 
    }
