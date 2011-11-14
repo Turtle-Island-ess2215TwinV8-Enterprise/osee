@@ -38,4 +38,9 @@ public class View1 extends AbstractView {
       return null;
    }
 
+   @Override
+   public void createControl() {
+      //
+   }
+
 }

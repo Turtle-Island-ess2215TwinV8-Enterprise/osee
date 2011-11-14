@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.osee.display.mvp.presenter;
 
+import java.util.Collection;
 import org.eclipse.osee.display.mvp.event.EventBus;
 import org.eclipse.osee.display.mvp.view.View;
 import org.eclipse.osee.logger.Log;
@@ -36,5 +37,16 @@ public abstract class AbstractPresenterFactory implements PresenterFactory {
 
    protected boolean implementsType(Class<? extends Presenter<? extends View, ? extends EventBus>> concreteType, Class<? extends Presenter<? extends View, ? extends EventBus>> interfaceType) {
       return interfaceType.isAssignableFrom(concreteType);
+   }
+
+   protected Class<? extends AbstractPresenter<?, ?>> findPresenter(Collection<Class<? extends AbstractPresenter<?, ?>>> supportedTypes, Class<? extends Presenter<?, ?>> presenterType) {
+      Class<? extends AbstractPresenter<?, ?>> toReturn = null;
+      for (Class<? extends AbstractPresenter<?, ?>> presenterClazz : supportedTypes) {
+         if (implementsType(presenterClazz, presenterType)) {
+            toReturn = presenterClazz;
+            break;
+         }
+      }
+      return toReturn;
    }
 }

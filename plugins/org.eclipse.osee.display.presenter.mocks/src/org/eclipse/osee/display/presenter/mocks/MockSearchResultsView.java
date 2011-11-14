@@ -39,18 +39,22 @@ public class MockSearchResultsView implements SearchResultsView {
 
    @Override
    public void setLogger(Log logger) {
+      //
    }
 
    @Override
    public void displayMessage(String caption) {
+      //
    }
 
    @Override
    public void displayMessage(String caption, String description, MessageType messageType) {
+      //
    }
 
    @Override
    public void dispose() {
+      //
    }
 
    @Override
@@ -70,6 +74,7 @@ public class MockSearchResultsView implements SearchResultsView {
 
    @Override
    public void setViewListener(SearchResultsListener listener) {
+      //
    }
 
    @Override
@@ -105,6 +110,11 @@ public class MockSearchResultsView implements SearchResultsView {
    @Override
    public Object getContent() {
       return null;
+   }
+
+   @Override
+   public void createControl() {
+      //
    }
 
 }

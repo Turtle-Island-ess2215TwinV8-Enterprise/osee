@@ -55,4 +55,5 @@ public abstract class AbstractView implements View {
    }
 
    protected abstract void onDispose();
+
 }

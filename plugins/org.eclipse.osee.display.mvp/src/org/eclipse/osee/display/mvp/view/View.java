@@ -30,5 +30,7 @@ public interface View {
 
    boolean isDisposed();
 
+   void createControl();
+
    Object getContent();
 }

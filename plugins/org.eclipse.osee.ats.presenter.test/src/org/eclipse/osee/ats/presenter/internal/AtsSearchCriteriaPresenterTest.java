@@ -111,6 +111,7 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public void setSearchAllowed(boolean allowed) {
+         //
       }
 
       @Override
@@ -130,6 +131,7 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public void setStatus(SearchStatus status) {
+         //
       }
 
       @Override
@@ -139,6 +141,7 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public void setSearchCriteriaListener(SearchCriteriaListener listener) {
+         //
       }
 
       @Override
@@ -169,6 +172,7 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public void setAtsCriteriaViewListener(AtsSearchCriteriaListener listener) {
+         //
       }
 
       @Override
@@ -178,18 +182,22 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public void setLogger(Log logger) {
+         //
       }
 
       @Override
       public void displayMessage(String caption) {
+         //
       }
 
       @Override
       public void displayMessage(String caption, String description, MessageType messageType) {
+         //
       }
 
       @Override
       public void dispose() {
+         //
       }
 
       @Override
@@ -214,6 +222,17 @@ public class AtsSearchCriteriaPresenterTest {
 
       @Override
       public void setSelectedProgram(ViewId program) {
+         //
+      }
+
+      @Override
+      public void updateCriteria(String key, Object value) {
+         //
+      }
+
+      @Override
+      public void createControl() {
+         //
       }
 
       @Override

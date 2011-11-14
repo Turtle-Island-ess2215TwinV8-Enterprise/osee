@@ -169,19 +169,27 @@ public class MockArtifactView implements ArtifactView {
 
    @Override
    public void clearAttributes() {
+      //
    }
 
    @Override
    public void setViewListener(ArtifactViewListener listener) {
+      //
    }
 
    @Override
    public void displayMessage(String caption, String description, MessageType messageType) {
+      //
    }
 
    @Override
    public Object getContent() {
       return null;
+   }
+
+   @Override
+   public void createControl() {
+      //
    }
 
 }

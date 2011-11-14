@@ -37,4 +37,9 @@ public class View2 extends AbstractView {
    public Object getContent() {
       return null;
    }
+
+   @Override
+   public void createControl() {
+      //
+   }
 }

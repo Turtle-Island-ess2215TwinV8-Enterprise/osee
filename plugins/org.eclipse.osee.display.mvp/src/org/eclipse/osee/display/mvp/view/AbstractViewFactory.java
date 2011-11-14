@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.osee.display.mvp.view;
 
+import java.util.Collection;
 import org.eclipse.osee.logger.Log;
 
 /**
@@ -34,5 +35,16 @@ public abstract class AbstractViewFactory implements ViewFactory {
 
    protected boolean implementsType(Class<? extends View> concreteType, Class<? extends View> interfaceType) {
       return interfaceType.isAssignableFrom(concreteType);
+   }
+
+   protected Class<? extends AbstractView> findView(Collection<Class<? extends AbstractView>> supportedViews, Class<? extends View> type) {
+      Class<? extends AbstractView> toReturn = null;
+      for (Class<? extends AbstractView> clazz : supportedViews) {
+         if (implementsType(clazz, type)) {
+            toReturn = clazz;
+            break;
+         }
+      }
+      return toReturn;
    }
 }
