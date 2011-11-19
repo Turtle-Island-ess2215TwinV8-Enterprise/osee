@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OSEE X ATS
+Bundle-SymbolicName: org.eclipse.osee.x.ats
+Bundle-Version: 0.9.9.qualifier
+Bundle-Vendor: Eclipse Open System Engineering Environment
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.osee.x.ats
+Require-Bundle: org.eclipse.core.runtime;visibility:=reexport
+Import-Package: org.eclipse.osee.framework.core.exception,
+ org.eclipse.osee.framework.jdk.core.util
