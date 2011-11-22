@@ -8,17 +8,14 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats;
-
-import org.eclipse.osee.x.ats.query.AtsQuery;
+package org.eclipse.osee.x.ats.data;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface AtsApi {
+public interface RepositoryConfiguration extends AtsObject {
 
-   AtsQuery getQuery();
+   String getRepositoryId();
 
-   AtsReportFactory getReportFactory();
-
+   String getLocation();
 }

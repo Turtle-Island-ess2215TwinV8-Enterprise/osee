@@ -9,4 +9,7 @@ Service-Component: OSGI-INF/*.xml
 Import-Package: org.eclipse.osee.event,
  org.eclipse.osee.logger,
  org.eclipse.osee.orcs,
- org.eclipse.osee.x.ats
+ org.eclipse.osee.x.ats,
+ org.eclipse.osee.x.ats.data,
+ org.eclipse.osee.x.ats.query
+Require-Bundle: org.eclipse.core.runtime

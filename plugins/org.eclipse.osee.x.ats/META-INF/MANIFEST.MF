@@ -5,7 +5,10 @@ Bundle-SymbolicName: org.eclipse.osee.x.ats
 Bundle-Version: 0.9.9.qualifier
 Bundle-Vendor: Eclipse Open System Engineering Environment
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.eclipse.osee.x.ats
+Export-Package: org.eclipse.osee.x.ats,
+ org.eclipse.osee.x.ats.data,
+ org.eclipse.osee.x.ats.query
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport
-Import-Package: org.eclipse.osee.framework.core.exception,
+Import-Package: org.eclipse.osee.framework.core.data,
+ org.eclipse.osee.framework.core.exception,
  org.eclipse.osee.framework.jdk.core.util

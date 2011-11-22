@@ -8,17 +8,24 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats;
+package org.eclipse.osee.x.ats.data;
 
-import org.eclipse.osee.x.ats.query.AtsQuery;
+import java.util.Date;
+import org.eclipse.osee.ats.shared.LogType;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface AtsApi {
+public interface LogItem {
 
-   AtsQuery getQuery();
+   Date getDate();
 
-   AtsReportFactory getReportFactory();
+   String getUserId();
+
+   String getMessage();
+
+   LogType getType();
+
+   String getState();
 
 }

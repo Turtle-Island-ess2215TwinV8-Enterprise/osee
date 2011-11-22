@@ -10,15 +10,9 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats;
 
-import org.eclipse.osee.x.ats.query.AtsQuery;
-
 /**
  * @author Roberto E. Escobar
  */
-public interface AtsApi {
-
-   AtsQuery getQuery();
-
-   AtsReportFactory getReportFactory();
-
+public interface AtsReportFactory {
+   //
 }

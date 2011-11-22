@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Boeing.
+ * Copyright (c) 2011 Boeing.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,12 @@ package org.eclipse.osee.x.ats.data;
 /**
  * @author Roberto E. Escobar
  */
-public interface Program {
-   //
+public interface Action extends WorkUnit, HasTasks {
+
+   Product getProduct();
+
+   Action getRootCause();
+
+   Version getTargetedVersion();
+
 }

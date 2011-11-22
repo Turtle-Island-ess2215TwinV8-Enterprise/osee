@@ -8,17 +8,20 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats;
+package org.eclipse.osee.x.ats.data;
 
-import org.eclipse.osee.x.ats.query.AtsQuery;
+import org.eclipse.osee.framework.core.data.Identifiable;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface AtsApi {
+public interface Product extends AtsObject, Identifiable, HasVersions, HasProducts {
 
-   AtsQuery getQuery();
+   Team getTeam();
 
-   AtsReportFactory getReportFactory();
+   WorkDefinition getWorkDefinition();
 
+   RepositoryConfiguration getRepositoryConfiguration();
+
+   boolean isActionable();
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Boeing.
+ * Copyright (c) 2011 Boeing.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,8 @@ import org.eclipse.osee.event.EventService;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.OrcsApi;
 import org.eclipse.osee.x.ats.AtsApi;
+import org.eclipse.osee.x.ats.AtsReportFactory;
+import org.eclipse.osee.x.ats.query.AtsQuery;
 
 /**
  * @author Roberto E. Escobar
@@ -56,6 +58,17 @@ public class AtsApiImpl implements AtsApi {
    public void stop() {
       //
       getLogger().info("AtsApi stopped");
+   }
+
+   @Override
+   public AtsQuery getQuery() {
+      OrcsApi orcsApi = getOrcsApi();
+      return new AtsQueryImpl(orcsApi);
+   }
+
+   @Override
+   public AtsReportFactory getReportFactory() {
+      return null;
    }
 
 }
