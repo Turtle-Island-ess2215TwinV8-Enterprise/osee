@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.osee.ats.core.workflow;
 
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
 
 /**
  * @author Donald G. Dunne

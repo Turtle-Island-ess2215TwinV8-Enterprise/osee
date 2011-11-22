@@ -13,7 +13,7 @@ package org.eclipse.osee.ats.core.config;
 import java.util.Collection;
 import java.util.Set;
 import org.eclipse.osee.ats.core.internal.Activator;
-import org.eclipse.osee.ats.core.type.AtsRelationTypes;
+import org.eclipse.osee.ats.shared.AtsRelationTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.operation.EmptyOperation;
 import org.eclipse.osee.framework.core.operation.IOperation;

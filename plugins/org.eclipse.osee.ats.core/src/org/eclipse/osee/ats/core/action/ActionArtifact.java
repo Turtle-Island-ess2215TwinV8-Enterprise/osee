@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.osee.ats.core.config.ActionableItemArtifact;
 import org.eclipse.osee.ats.core.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.core.type.AtsRelationTypes;
+import org.eclipse.osee.ats.shared.AtsRelationTypes;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.Branch;

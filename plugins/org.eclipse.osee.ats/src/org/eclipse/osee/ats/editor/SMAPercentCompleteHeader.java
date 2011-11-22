@@ -12,10 +12,10 @@ package org.eclipse.osee.ats.editor;
 
 import java.text.NumberFormat;
 import java.util.logging.Level;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
 import org.eclipse.osee.ats.core.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.workflow.PercentCompleteTotalUtil;
 import org.eclipse.osee.ats.internal.Activator;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.logging.OseeLevel;
 import org.eclipse.osee.framework.logging.OseeLog;

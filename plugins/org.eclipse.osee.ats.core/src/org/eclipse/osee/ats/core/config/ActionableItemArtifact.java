@@ -13,8 +13,8 @@ package org.eclipse.osee.ats.core.config;
 
 import java.util.Arrays;
 import java.util.Collection;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
-import org.eclipse.osee.ats.core.type.AtsRelationTypes;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
+import org.eclipse.osee.ats.shared.AtsRelationTypes;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.Branch;

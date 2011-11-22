@@ -17,7 +17,7 @@ import org.eclipse.osee.ats.core.action.ActionManager;
 import org.eclipse.osee.ats.core.review.ReviewManager;
 import org.eclipse.osee.ats.core.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.team.TeamWorkFlowManager;
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
 import org.eclipse.osee.ats.util.xviewer.column.XViewerAtsColumn;
 import org.eclipse.osee.ats.world.WorldXViewerFactory;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;

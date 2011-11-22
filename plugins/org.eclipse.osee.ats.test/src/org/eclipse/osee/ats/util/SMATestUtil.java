@@ -12,12 +12,12 @@ package org.eclipse.osee.ats.util;
 
 import java.util.Arrays;
 import java.util.Collection;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
 import org.eclipse.osee.ats.core.workdef.StateDefinition;
 import org.eclipse.osee.ats.core.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.workflow.HoursSpentUtil;
 import org.eclipse.osee.ats.core.workflow.PercentCompleteTotalUtil;
 import org.eclipse.osee.ats.core.workflow.SMAState;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
 import org.eclipse.osee.framework.core.util.WorkPageType;
 import org.junit.Assert;
 

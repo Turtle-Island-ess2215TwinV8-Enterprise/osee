@@ -12,9 +12,9 @@
 package org.eclipse.osee.ats.actions.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
 import org.eclipse.osee.ats.help.ui.AtsHelpContext;
 import org.eclipse.osee.ats.internal.Activator;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
 import org.eclipse.osee.ats.workflow.ATSXWidgetOptionResolver;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Conditions;

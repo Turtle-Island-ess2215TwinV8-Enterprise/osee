@@ -8,7 +8,7 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.ats.core.workflow.log;
+package org.eclipse.osee.ats.shared;
 
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 

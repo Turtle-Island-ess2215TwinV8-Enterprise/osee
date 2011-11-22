@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ATS Shared
+Bundle-SymbolicName: org.eclipse.osee.ats.shared
+Bundle-Version: 0.9.9.qualifier
+Bundle-Vendor: Eclipse Open System Engineering Environment
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.osee.ats.shared
+Require-Bundle: org.eclipse.core.runtime
+Import-Package: org.eclipse.osee.framework.core.data,
+ org.eclipse.osee.framework.core.enums,
+ org.eclipse.osee.framework.core.exception

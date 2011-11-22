@@ -24,7 +24,7 @@ import org.eclipse.osee.ats.core.review.PeerToPeerReviewManager;
 import org.eclipse.osee.ats.core.task.TaskArtifact;
 import org.eclipse.osee.ats.core.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.workflow.ActionableItemManagerCore;
-import org.eclipse.osee.ats.core.workflow.ChangeType;
+import org.eclipse.osee.ats.shared.ChangeType;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.world.WorldEditor;
 import org.eclipse.osee.ats.world.WorldEditorSimpleProvider;

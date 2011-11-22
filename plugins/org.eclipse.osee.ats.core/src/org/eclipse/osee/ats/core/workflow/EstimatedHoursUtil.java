@@ -11,7 +11,7 @@
 package org.eclipse.osee.ats.core.workflow;
 
 import org.eclipse.osee.ats.core.action.ActionManager;
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.skynet.core.utility.Artifacts;

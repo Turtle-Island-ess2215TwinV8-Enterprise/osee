@@ -12,9 +12,9 @@ package org.eclipse.osee.ats.core.workflow;
 
 import java.util.Date;
 import java.util.Set;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
 import org.eclipse.osee.ats.core.workflow.log.LogItem;
-import org.eclipse.osee.ats.core.workflow.log.LogType;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
+import org.eclipse.osee.ats.shared.LogType;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.IWorkPage;

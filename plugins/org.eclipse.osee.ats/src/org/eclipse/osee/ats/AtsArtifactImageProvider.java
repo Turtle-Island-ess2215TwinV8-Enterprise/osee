@@ -11,10 +11,10 @@
 package org.eclipse.osee.ats;
 
 import org.eclipse.osee.ats.core.team.TeamWorkFlowManager;
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
 import org.eclipse.osee.ats.core.util.SubscribeManager;
 import org.eclipse.osee.ats.core.workflow.AbstractWorkflowArtifact;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
 import org.eclipse.osee.ats.util.FavoritesManager;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;

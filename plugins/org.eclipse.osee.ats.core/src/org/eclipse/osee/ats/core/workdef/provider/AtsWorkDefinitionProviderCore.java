@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.osee.ats.core.workdef.provider;
 
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
 import org.eclipse.osee.ats.core.workdef.ConvertAtsDslToWorkDefinition;
 import org.eclipse.osee.ats.core.workdef.ModelUtil;
 import org.eclipse.osee.ats.core.workdef.WorkDefinition;
 import org.eclipse.osee.ats.dsl.atsDsl.AtsDsl;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
 import org.eclipse.osee.framework.core.exception.ArtifactDoesNotExist;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeWrappedException;

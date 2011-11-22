@@ -12,9 +12,9 @@ package org.eclipse.osee.ats.review;
 
 import static org.junit.Assert.assertTrue;
 import java.util.Collection;
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
 import org.eclipse.osee.ats.navigate.SearchNavigateItem;
 import org.eclipse.osee.ats.navigate.VisitedItems;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
 import org.eclipse.osee.ats.util.DemoTestUtil;
 import org.eclipse.osee.ats.util.MassEditorUtil;
 import org.eclipse.osee.ats.util.NavigateTestUtil;

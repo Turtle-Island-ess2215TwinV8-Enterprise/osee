@@ -12,8 +12,8 @@ package org.eclipse.osee.ats.core.config;
 
 import static org.junit.Assert.assertFalse;
 import java.util.Arrays;
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
 import org.eclipse.osee.ats.core.util.AtsUtilCore;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.skynet.core.artifact.search.ArtifactQuery;
 

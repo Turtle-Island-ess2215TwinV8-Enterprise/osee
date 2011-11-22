@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import org.eclipse.osee.ats.core.config.TeamDefinitionArtifact;
 import org.eclipse.osee.ats.core.config.TeamDefinitionManager;
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
 import org.eclipse.osee.ats.task.TaskEditor;
 import org.eclipse.osee.ats.util.DemoTestUtil;
 import org.eclipse.osee.ats.util.NavigateTestUtil;

@@ -7,7 +7,7 @@ package org.eclipse.osee.ats.actions;
 
 import junit.framework.Assert;
 import org.eclipse.osee.ats.core.AtsTestUtil;
-import org.eclipse.osee.ats.core.type.AtsRelationTypes;
+import org.eclipse.osee.ats.shared.AtsRelationTypes;
 import org.eclipse.osee.framework.logging.SevereLoggingMonitor;
 import org.eclipse.osee.framework.skynet.core.UserManager;
 import org.eclipse.osee.support.test.util.TestUtil;

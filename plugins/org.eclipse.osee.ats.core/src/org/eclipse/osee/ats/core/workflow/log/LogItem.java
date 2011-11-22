@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import org.eclipse.osee.ats.core.internal.Activator;
+import org.eclipse.osee.ats.shared.LogType;
 import org.eclipse.osee.framework.core.enums.SystemUser;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.UserNotInDatabase;
@@ -50,8 +51,8 @@ public class LogItem {
          this.user = UserManager.getUserByUserId(userId);
       } catch (UserNotInDatabase ex) {
          this.user = UserManager.getUser(SystemUser.Guest);
-         OseeLog.logf(Activator.class, Level.SEVERE,
-            ex, "Error parsing ATS Log for %s - %s", hrid, ex.getLocalizedMessage());
+         OseeLog.logf(Activator.class, Level.SEVERE, ex, "Error parsing ATS Log for %s - %s", hrid,
+            ex.getLocalizedMessage());
       }
       this.type = type;
    }

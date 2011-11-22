@@ -8,7 +8,7 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.ats.core.type;
+package org.eclipse.osee.ats.shared;
 
 import java.util.HashMap;
 import java.util.Map;

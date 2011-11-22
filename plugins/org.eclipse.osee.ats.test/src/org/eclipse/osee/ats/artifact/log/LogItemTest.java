@@ -11,13 +11,13 @@
 package org.eclipse.osee.ats.artifact.log;
 
 import java.util.Date;
-import org.junit.Assert;
 import org.eclipse.osee.ats.core.workflow.log.LogItem;
-import org.eclipse.osee.ats.core.workflow.log.LogType;
+import org.eclipse.osee.ats.shared.LogType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.AHTML;
 import org.eclipse.osee.framework.jdk.core.util.DateUtil;
 import org.eclipse.osee.framework.skynet.core.UserManager;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**

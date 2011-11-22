@@ -12,10 +12,10 @@ package org.eclipse.osee.ats.column;
 
 import java.util.logging.Level;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
 import org.eclipse.osee.ats.core.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.workflow.EstimatedHoursUtil;
 import org.eclipse.osee.ats.internal.Activator;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
 import org.eclipse.osee.ats.util.xviewer.column.XViewerAtsAttributeValueColumn;
 import org.eclipse.osee.ats.world.WorldXViewerFactory;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;

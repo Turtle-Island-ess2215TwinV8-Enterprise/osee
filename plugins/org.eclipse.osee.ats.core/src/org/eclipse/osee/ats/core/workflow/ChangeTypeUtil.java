@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.osee.ats.core.workflow;
 
-import org.eclipse.osee.ats.core.type.AtsAttributeTypes;
+import org.eclipse.osee.ats.shared.AtsAttributeTypes;
+import org.eclipse.osee.ats.shared.ChangeType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 

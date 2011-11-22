@@ -13,8 +13,8 @@ package org.eclipse.osee.ats.navigate;
 
 import java.util.List;
 import org.eclipse.osee.ats.core.config.ActionableItemArtifact;
-import org.eclipse.osee.ats.core.type.AtsRelationTypes;
 import org.eclipse.osee.ats.internal.Activator;
+import org.eclipse.osee.ats.shared.AtsRelationTypes;
 import org.eclipse.osee.ats.util.widgets.dialog.AICheckTreeDialog;
 import org.eclipse.osee.framework.core.enums.Active;
 import org.eclipse.osee.framework.jdk.core.util.Collections;

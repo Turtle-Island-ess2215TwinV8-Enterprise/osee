@@ -17,7 +17,7 @@ import java.util.Set;
 import org.eclipse.osee.ats.AtsImage;
 import org.eclipse.osee.ats.core.review.AbstractReviewArtifact;
 import org.eclipse.osee.ats.core.task.TaskArtifact;
-import org.eclipse.osee.ats.core.type.AtsArtifactTypes;
+import org.eclipse.osee.ats.shared.AtsArtifactTypes;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.User;
