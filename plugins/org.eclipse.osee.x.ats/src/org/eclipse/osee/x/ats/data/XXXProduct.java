@@ -10,9 +10,20 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
+import org.eclipse.osee.framework.core.data.Identifiable;
+
 /**
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface Goal extends WorkUnit, HasWorkUnits {
-   //
+public interface XXXProduct extends ConfigObject, Identifiable, HasVersions, HasTeam, HasProduct {
+
+   @Override
+   XXXTeamDefinition getTeamDefinition();
+
+   XXXWorkDefinition getWorkDefinition();
+
+   RepositoryConfiguration getRepositoryConfiguration();
+
+   boolean isActionable();
 }

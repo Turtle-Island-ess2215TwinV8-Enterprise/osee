@@ -11,14 +11,22 @@
 package org.eclipse.osee.x.ats.data;
 
 /**
+ * Represents the Work to be done for related Team for related ActionableItems<br>
+ * <br>
+ * Client Model Correlation: TeamWorkflow
+ * 
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface Action extends WorkUnit, HasTasks {
+public interface Action extends WorkUnit, HasAssignees, HasTargetedVersion, HasProduct, HasTasks, HasActionableItems, HasTeam, HasWorkingBranch {
 
-   Product getProduct();
+   @Override
+   XXXVersion getTargetedVersion();
 
-   Action getRootCause();
+   XXXProduct getProduct();
 
-   Version getTargetedVersion();
+   ActionGroup getAction();
 
+   @Override
+   XXXTeamDefinition getTeamDefinition();
 }

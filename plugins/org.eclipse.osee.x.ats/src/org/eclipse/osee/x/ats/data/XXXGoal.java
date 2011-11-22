@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
-public interface Team extends AtsObject {
+/**
+ * @author Roberto E. Escobar
+ * @author Donald G. Dunne
+ */
+public interface XXXGoal extends WorkUnit, HasWorkUnits {
    //
 }

@@ -10,18 +10,15 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
-import org.eclipse.osee.framework.core.data.Identifiable;
+import java.util.Collection;
 
 /**
+ * Client Model Correlation: Action
+ * 
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface Product extends AtsObject, Identifiable, HasVersions, HasProducts {
+public interface ActionGroup extends AtsObject {
 
-   Team getTeam();
-
-   WorkDefinition getWorkDefinition();
-
-   RepositoryConfiguration getRepositoryConfiguration();
-
-   boolean isActionable();
+   Collection<Action> getTeams();
 }

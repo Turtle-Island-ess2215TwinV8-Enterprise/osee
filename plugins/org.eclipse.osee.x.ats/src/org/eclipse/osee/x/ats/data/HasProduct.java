@@ -10,9 +10,14 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
+import java.util.Collection;
+
 /**
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface WorkDefinition extends AtsObject {
-   //
+public interface HasProduct {
+
+   Collection<XXXProduct> getProducts();
+
 }

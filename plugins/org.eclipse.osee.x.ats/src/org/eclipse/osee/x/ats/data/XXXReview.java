@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
-import org.eclipse.osee.framework.core.data.Identifiable;
-
 /**
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface Version extends Identifiable, AtsObject {
+public interface XXXReview extends WorkUnit, HasTasks {
    //
 }

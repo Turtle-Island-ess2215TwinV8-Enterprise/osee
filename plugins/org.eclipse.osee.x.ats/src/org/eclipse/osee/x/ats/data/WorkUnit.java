@@ -14,9 +14,12 @@ import java.util.Collection;
 
 /**
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
 public interface WorkUnit extends AtsObject {
 
    Collection<LogItem> getStatusHistory();
+
+   XXXWorkDefinition getWorkDefinition();
 
 }

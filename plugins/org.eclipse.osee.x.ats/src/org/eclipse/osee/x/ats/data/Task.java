@@ -12,6 +12,7 @@ package org.eclipse.osee.x.ats.data;
 
 /**
  * @author Shawn F. Cook
+ * @author Donald G. Dunne
  */
 public interface Task extends WorkUnit {
    //
