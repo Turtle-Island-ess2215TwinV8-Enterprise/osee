@@ -8,16 +8,8 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.user;
 
-import java.util.Collection;
-
-/**
- * @author Roberto E. Escobar
- * @author Donald G. Dunne
- */
-public interface HasProduct {
-
-   Collection<XXXProduct> getProducts();
-
+public interface XXXAssignee extends XXXRole {
+   //
 }

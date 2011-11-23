@@ -18,15 +18,10 @@ package org.eclipse.osee.x.ats.data;
  * @author Roberto E. Escobar
  * @author Donald G. Dunne
  */
-public interface Action extends WorkUnit, HasAssignees, HasTargetedVersion, HasProduct, HasTasks, HasActionableItems, HasTeam, HasWorkingBranch {
+public interface Action extends WorkUnit, HasTasks {
 
-   @Override
-   XXXVersion getTargetedVersion();
+   Version getTargetedVersion();
 
-   XXXProduct getProduct();
+   Product getProduct();
 
-   ActionGroup getAction();
-
-   @Override
-   XXXTeamDefinition getTeamDefinition();
 }

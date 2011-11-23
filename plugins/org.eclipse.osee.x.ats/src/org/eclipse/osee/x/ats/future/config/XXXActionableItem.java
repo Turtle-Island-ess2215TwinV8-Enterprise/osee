@@ -8,12 +8,13 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.config;
+
+import org.eclipse.osee.x.ats.future.user.HasLeads;
 
 /**
- * @author Roberto E. Escobar
  * @author Donald G. Dunne
  */
-public interface XXXWorkDefinition extends ConfigObject {
+public interface XXXActionableItem extends ConfigObject, HasLeads {
    //
 }

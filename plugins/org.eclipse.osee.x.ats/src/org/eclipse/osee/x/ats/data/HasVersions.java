@@ -17,6 +17,6 @@ import java.util.Collection;
  */
 public interface HasVersions {
 
-   Collection<XXXVersion> getVersions();
+   Collection<Version> getVersions();
 
 }

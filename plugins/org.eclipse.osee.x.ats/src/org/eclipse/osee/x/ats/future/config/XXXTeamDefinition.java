@@ -8,16 +8,19 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.config;
 
-import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
+import org.eclipse.osee.x.ats.data.HasVersions;
+import org.eclipse.osee.x.ats.future.user.HasLeads;
+import org.eclipse.osee.x.ats.future.user.HasMembers;
 
 /**
- * @author Roberto E. Escobar
+ * Represents the Team responsible for performing IWork.<br>
+ * <br>
+ * Old Model: TeamDefinition
+ * 
+ * @author Donald G. Dunne
  */
-public interface HasTasks {
-
-   Collection<Task> getTasks() throws AtsException;
-
+public interface XXXTeamDefinition extends ConfigObject, HasVersions, HasWorkDefinition, HasMembers, HasLeads {
+   //
 }

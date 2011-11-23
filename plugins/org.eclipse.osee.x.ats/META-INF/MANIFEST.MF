@@ -9,6 +9,7 @@ Export-Package: org.eclipse.osee.x.ats,
  org.eclipse.osee.x.ats.data,
  org.eclipse.osee.x.ats.query
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport
-Import-Package: org.eclipse.osee.framework.core.data,
+Import-Package: org.eclipse.osee.ats.shared,
+ org.eclipse.osee.framework.core.data,
  org.eclipse.osee.framework.core.exception,
  org.eclipse.osee.framework.jdk.core.util

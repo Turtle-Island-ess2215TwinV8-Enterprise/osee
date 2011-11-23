@@ -10,14 +10,15 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
-import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
 
 /**
+ * Represents the Version, Build or Timeframe that work is to be accomplished in<br>
+ * <br>
+ * Old Model: Version
+ * 
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface HasTasks {
-
-   Collection<Task> getTasks() throws AtsException;
-
+public interface Version extends AtsData {
+   //
 }

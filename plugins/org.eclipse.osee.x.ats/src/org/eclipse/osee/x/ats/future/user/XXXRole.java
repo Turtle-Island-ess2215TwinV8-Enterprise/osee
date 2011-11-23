@@ -8,16 +8,10 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.user;
 
-import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
+import org.eclipse.osee.framework.core.data.Identifiable;
 
-/**
- * @author Roberto E. Escobar
- */
-public interface HasTasks {
-
-   Collection<Task> getTasks() throws AtsException;
-
+public interface XXXRole extends Identifiable {
+   //
 }

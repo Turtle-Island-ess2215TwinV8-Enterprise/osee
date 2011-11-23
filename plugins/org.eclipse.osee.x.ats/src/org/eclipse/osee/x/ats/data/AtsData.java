@@ -10,14 +10,12 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
-import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
+import org.eclipse.osee.framework.core.data.Identifiable;
+import org.eclipse.osee.framework.core.data.Readable;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface HasTasks {
-
-   Collection<Task> getTasks() throws AtsException;
-
+public interface AtsData extends Identifiable, Readable {
+   //
 }

@@ -11,13 +11,13 @@
 package org.eclipse.osee.x.ats.data;
 
 import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
 
 /**
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface HasTasks {
+public interface HasProducts {
 
-   Collection<Task> getTasks() throws AtsException;
+   Collection<Product> getProducts();
 
 }

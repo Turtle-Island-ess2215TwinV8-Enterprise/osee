@@ -8,16 +8,18 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.config;
 
 import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
+import org.eclipse.osee.x.ats.data.Action;
 
 /**
+ * Client Model Correlation: Action
+ * 
  * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface HasTasks {
+public interface ActionGroup {
 
-   Collection<Task> getTasks() throws AtsException;
-
+   Collection<Action> getTeams();
 }

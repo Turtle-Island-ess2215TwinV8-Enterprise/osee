@@ -8,16 +8,15 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.core.internal.data;
 
-import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
+import org.eclipse.osee.orcs.data.ReadableArtifact;
+import org.eclipse.osee.x.ats.data.Version;
 
-/**
- * @author Roberto E. Escobar
- */
-public interface HasTasks {
+public class VersionImpl extends AbstractAtsData implements Version {
 
-   Collection<Task> getTasks() throws AtsException;
+   public VersionImpl(ReadableArtifact proxiedObject) {
+      super(proxiedObject);
+   }
 
 }

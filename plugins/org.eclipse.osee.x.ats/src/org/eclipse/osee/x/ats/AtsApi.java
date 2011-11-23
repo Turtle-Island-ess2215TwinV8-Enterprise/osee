@@ -21,4 +21,5 @@ public interface AtsApi {
 
    AtsReportFactory getReportFactory();
 
+   AtsGraph getGraph();
 }

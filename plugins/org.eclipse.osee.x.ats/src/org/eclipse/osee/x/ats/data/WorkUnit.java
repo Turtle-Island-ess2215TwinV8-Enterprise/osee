@@ -10,16 +10,14 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
-import java.util.Collection;
+import org.eclipse.osee.framework.core.data.HasDescription;
 
 /**
  * @author Roberto E. Escobar
  * @author Donald G. Dunne
  */
-public interface WorkUnit extends AtsObject {
+public interface WorkUnit extends AtsData, HasDescription {
 
-   Collection<LogItem> getStatusHistory();
-
-   XXXWorkDefinition getWorkDefinition();
+   WorkHistory getHistory();
 
 }

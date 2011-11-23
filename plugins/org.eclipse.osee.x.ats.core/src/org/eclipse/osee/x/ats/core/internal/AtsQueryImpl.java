@@ -13,7 +13,7 @@ package org.eclipse.osee.x.ats.core.internal;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import org.eclipse.osee.framework.core.data.ResultSet;
-import org.eclipse.osee.orcs.OrcsApi;
+import org.eclipse.osee.orcs.search.QueryFactory;
 import org.eclipse.osee.x.ats.AtsException;
 import org.eclipse.osee.x.ats.data.WorkUnit;
 import org.eclipse.osee.x.ats.query.AtsQuery;
@@ -24,8 +24,10 @@ import org.eclipse.osee.x.ats.query.WorkUnitType;
  */
 public class AtsQueryImpl implements AtsQuery {
 
-   public AtsQueryImpl(OrcsApi orcsApi) {
-      //
+   private final QueryFactory factory;
+
+   public AtsQueryImpl(QueryFactory factory) {
+      this.factory = factory;
    }
 
    @Override

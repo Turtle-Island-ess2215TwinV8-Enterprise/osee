@@ -8,16 +8,11 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.user;
 
 import java.util.Collection;
-import org.eclipse.osee.x.ats.AtsException;
 
-/**
- * @author Roberto E. Escobar
- */
-public interface HasTasks {
+public interface HasAssignees {
 
-   Collection<Task> getTasks() throws AtsException;
-
+   Collection<XXXAssignee> getAssignees();
 }

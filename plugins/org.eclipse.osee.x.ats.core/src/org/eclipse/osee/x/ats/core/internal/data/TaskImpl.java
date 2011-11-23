@@ -8,12 +8,21 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.core.internal.data;
 
-/**
- * @author Roberto E. Escobar
- * @author Donald G. Dunne
- */
-public interface XXXGoal extends WorkUnit, HasWorkUnits {
-   //
+import org.eclipse.osee.orcs.data.ReadableArtifact;
+import org.eclipse.osee.x.ats.data.Task;
+import org.eclipse.osee.x.ats.data.WorkHistory;
+
+public class TaskImpl extends AbstractAtsData implements Task {
+
+   public TaskImpl(ReadableArtifact proxiedObject) {
+      super(proxiedObject);
+   }
+
+   @Override
+   public WorkHistory getHistory() {
+      return null;
+   }
+
 }

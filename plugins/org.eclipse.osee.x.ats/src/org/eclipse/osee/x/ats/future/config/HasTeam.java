@@ -8,14 +8,12 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.config;
 
 /**
- * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface RepositoryConfiguration extends AtsObject {
+public interface HasTeam {
 
-   String getRepositoryId();
-
-   String getLocation();
+   XXXTeamDefinition getTeamDefinition();
 }

@@ -11,9 +11,12 @@
 package org.eclipse.osee.x.ats.core.internal;
 
 import org.eclipse.osee.event.EventService;
+import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.ApplicationContext;
 import org.eclipse.osee.orcs.OrcsApi;
 import org.eclipse.osee.x.ats.AtsApi;
+import org.eclipse.osee.x.ats.AtsGraph;
 import org.eclipse.osee.x.ats.AtsReportFactory;
 import org.eclipse.osee.x.ats.query.AtsQuery;
 
@@ -62,8 +65,7 @@ public class AtsApiImpl implements AtsApi {
 
    @Override
    public AtsQuery getQuery() {
-      OrcsApi orcsApi = getOrcsApi();
-      return new AtsQueryImpl(orcsApi);
+      return new AtsQueryImpl(orcsApi.getQueryFactory(getContext()));
    }
 
    @Override
@@ -71,4 +73,20 @@ public class AtsApiImpl implements AtsApi {
       return null;
    }
 
+   @Override
+   public AtsGraph getGraph() {
+      ApplicationContext context = getContext();
+      OrcsApi orcsApi = getOrcsApi();
+      return new AtsGraphImpl(orcsApi.getQueryFactory(context), orcsApi.getGraph(context));
+   }
+
+   ApplicationContext getContext() {
+      return new ApplicationContext() {
+
+         @Override
+         public String getSessionId() {
+            return GUID.create();
+         }
+      };
+   }
 }

@@ -8,11 +8,11 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.user;
 
-/**
- * @author Roberto E. Escobar
- */
-public interface AtsObject extends Readable {
-   //
+import java.util.Collection;
+
+public interface XXXMember extends XXXRole {
+
+   Collection<XXXRole> getMembers();
 }

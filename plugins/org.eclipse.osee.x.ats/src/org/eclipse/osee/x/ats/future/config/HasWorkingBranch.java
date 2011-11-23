@@ -8,22 +8,11 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.config;
 
-import org.eclipse.osee.framework.core.data.Identifiable;
+import org.eclipse.osee.framework.core.data.IOseeBranch;
 
-/**
- * @author Roberto E. Escobar
- * @author Donald G. Dunne
- */
-public interface XXXProduct extends ConfigObject, Identifiable, HasVersions, HasTeam, HasProduct {
+public interface HasWorkingBranch {
 
-   @Override
-   XXXTeamDefinition getTeamDefinition();
-
-   XXXWorkDefinition getWorkDefinition();
-
-   RepositoryConfiguration getRepositoryConfiguration();
-
-   boolean isActionable();
+   IOseeBranch getWorkingBranch();
 }

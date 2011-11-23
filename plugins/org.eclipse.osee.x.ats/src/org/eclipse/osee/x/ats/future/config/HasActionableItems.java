@@ -8,15 +8,14 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.config;
+
+import java.util.Collection;
 
 /**
- * @author Roberto E. Escobar
+ * @author Donald G. Dunne
  */
-public interface Entity extends AtsObject {
+public interface HasActionableItems {
 
-   String getId();
-
-   boolean isActive();
-
+   Collection<XXXActionableItem> getActionableItems();
 }

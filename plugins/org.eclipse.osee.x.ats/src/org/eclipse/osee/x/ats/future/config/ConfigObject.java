@@ -8,17 +8,12 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.x.ats.data;
+package org.eclipse.osee.x.ats.future.config;
 
-import java.util.Collection;
 
 /**
- * Client Model Correlation: Action
- * 
- * @author Roberto E. Escobar
  * @author Donald G. Dunne
  */
-public interface ActionGroup extends AtsObject {
-
-   Collection<Action> getTeams();
+public interface ConfigObject {
+   //
 }

@@ -10,16 +10,10 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.data;
 
-import org.eclipse.osee.framework.core.data.Identifiable;
-
 /**
- * Represents the Version, Build or Timeframe that work is to be accomplished in<br>
- * <br>
- * Old Model: Version
- * 
  * @author Roberto E. Escobar
  * @author Donald G. Dunne
  */
-public interface XXXVersion extends Identifiable, ConfigObject {
+public interface Goal extends WorkUnit, HasWorkUnits {
    //
 }
