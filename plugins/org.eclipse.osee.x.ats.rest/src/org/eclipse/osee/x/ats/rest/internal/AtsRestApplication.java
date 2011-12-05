@@ -10,10 +10,11 @@
  *******************************************************************************/
 package org.eclipse.osee.x.ats.rest.internal;
 
-import java.util.Collections;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.core.Application;
-import org.eclipse.osee.x.ats.AtsApi;
+import lba.ats.rest.ReportProvider;
 
 /**
  * Get application.wadl at this context to get rest documentation
@@ -22,19 +23,19 @@ import org.eclipse.osee.x.ats.AtsApi;
  */
 public class AtsRestApplication extends Application {
 
-   private static AtsApi atsApi;
-
-   public void setAtsApi(AtsApi atsApi) {
-      AtsRestApplication.atsApi = atsApi;
-   }
-
-   public static AtsApi getAtsApi() {
-      return atsApi;
-   }
+   private final Collection<ReportProvider> reportProviders = new HashSet<ReportProvider>();
 
    @Override
    public Set<Class<?>> getClasses() {
-      return Collections.<Class<?>> singleton(ProgramsResource.class);
+      Set<Class<?>> classes = new HashSet<Class<?>>();
+      for (ReportProvider provider : reportProviders) {
+         classes.add(provider.getClass());
+      }
+      return classes;
+   }
+
+   public void addReportProvider(ReportProvider reportProvider) {
+      reportProviders.add(reportProvider);
    }
 
 }

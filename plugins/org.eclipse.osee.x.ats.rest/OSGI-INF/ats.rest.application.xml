@@ -4,6 +4,6 @@
    <service>
       <provide interface="javax.ws.rs.core.Application"/>
    </service>
-   <property name="context.name" type="String" value="ats"/>
-   <reference bind="setAtsApi" cardinality="1..1" interface="org.eclipse.osee.x.ats.AtsApi" name="AtsApi" policy="static"/>
+   <property name="context.name" type="String" value="reports"/>
+   <reference bind="addReportProvider" cardinality="1..n" interface="lba.ats.rest.ReportProvider" name="ReportProvider" policy="static"/>
 </scr:component>
