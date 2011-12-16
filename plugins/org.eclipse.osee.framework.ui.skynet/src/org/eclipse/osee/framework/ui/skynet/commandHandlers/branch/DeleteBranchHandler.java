@@ -18,10 +18,10 @@ import org.eclipse.osee.framework.skynet.core.artifact.BranchManager;
  * @author Karol M. Wilk
  * @author Roberto E. Escobar
  */
-public final class DeleteBranchHandler extends GeneralBranchHandler {
+public final class DeleteBranchHandler extends AbstractBranchHandler {
 
    public DeleteBranchHandler() {
-      super(OpTypeEnum.DELETE);
+      super("delete", "Delete Branch");
    }
 
    @Override

@@ -12,7 +12,10 @@ package org.eclipse.osee.framework.ui.skynet.widgets.xBranch;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -24,6 +27,7 @@ import org.eclipse.nebula.widgets.xviewer.XViewerTextFilter;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.help.ui.OseeHelpContext;
+import org.eclipse.osee.framework.jdk.core.util.Collections;
 import org.eclipse.osee.framework.logging.OseeLevel;
 import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.osee.framework.skynet.core.User;
@@ -38,8 +42,10 @@ import org.eclipse.osee.framework.ui.skynet.util.PromptChangeUtil;
 import org.eclipse.osee.framework.ui.swt.ImageManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Jeff C. Phillips
@@ -56,11 +62,36 @@ public class BranchXViewer extends XViewer {
    public void handleDoubleClick() {
       ArrayList<Branch> branches = xBranchViewer.getSelectedBranches();
       if (branches != null && !branches.isEmpty()) {
+         Set<Branch> notExplorable = new HashSet<Branch>();
+         Set<Branch> archived = new LinkedHashSet<Branch>();
          for (Branch branch : branches) {
-            if (!branch.getBranchType().isSystemRootBranch()) {
+            if (branch.getArchiveState().isArchived()) {
+               archived.add(branch);
+            } else if (branch.getBranchType().isSystemRootBranch()) {
+               notExplorable.add(branch);
+            } else {
                ArtifactExplorer.exploreBranch(branch);
                BranchManager.setLastBranch(branch);
             }
+         }
+
+         if (!archived.isEmpty() || !notExplorable.isEmpty()) {
+            Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+            StringBuilder builder = new StringBuilder();
+            builder.append("The following branches are not explorable:\n");
+            if (!archived.isEmpty()) {
+               builder.append("[");
+               builder.append(Collections.toString("],\n[", archived));
+               builder.append("]\n\nNOTE: Unarchive the branch to enable exploring");
+            }
+
+            if (!notExplorable.isEmpty()) {
+               builder.append("[");
+               builder.append(Collections.toString("],\n[", notExplorable));
+               builder.append("]");
+               builder.append("\n\nSystem branches are not explorable");
+            }
+            MessageDialog.openWarning(shell, "Open Artifact Explorer", builder.toString());
          }
       }
    }

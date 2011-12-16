@@ -107,7 +107,7 @@ public class XBranchContentProvider implements ITreeContentProvider {
          if (isAdmin && showMergeBranches) {
             branchTypes.add(BranchType.MERGE);
          }
-         if (isAdmin && showArchivedBranches) {
+         if (showArchivedBranches) {
             branchState = BranchArchivedState.ALL;
          }
          if (showChildBranchesAtMainLevel) {

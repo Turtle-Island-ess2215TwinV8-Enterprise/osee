@@ -18,9 +18,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osee.framework.access.AccessControlManager;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.exception.OseeExceptions;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
-import org.eclipse.osee.framework.ui.plugin.util.AWorkbench;
 import org.eclipse.osee.framework.ui.plugin.util.CommandHandler;
 import org.eclipse.osee.framework.ui.skynet.commandHandlers.Handlers;
 import org.eclipse.osee.framework.ui.swt.Displays;
@@ -28,44 +28,36 @@ import org.eclipse.osee.framework.ui.swt.Displays;
 /**
  * @author Karol M. Wilk
  */
-public abstract class GeneralBranchHandler extends CommandHandler {
-   public enum OpTypeEnum {
-      DELETE("delete", "Delete Branch"),
-      PURGE("purge", "Purge Branch");
+public abstract class AbstractBranchHandler extends CommandHandler {
 
-      private final String dialogType;
-      private final String dialogTitle;
+   private final String actionName;
+   private final String dialogTitle;
 
-      private OpTypeEnum(String type, String title) {
-         dialogType = type;
-         dialogTitle = type;
-      }
-   };
-   private final OpTypeEnum type;
-
-   public GeneralBranchHandler(OpTypeEnum type) {
-      this.type = type;
+   protected AbstractBranchHandler(String actionName, String dialogTitle) {
+      this.actionName = actionName;
+      this.dialogTitle = dialogTitle;
    }
 
-   public abstract void performOperation(final List<Branch> branches);
+   public abstract void performOperation(final List<Branch> branches) throws OseeCoreException;
 
    @Override
-   public Object executeWithException(ExecutionEvent arg0) {
-      IStructuredSelection selections =
-         (IStructuredSelection) AWorkbench.getActivePage().getActivePart().getSite().getSelectionProvider().getSelection();
+   public Object executeWithException(ExecutionEvent arg0) throws OseeCoreException {
+      try {
+         IStructuredSelection selections = getCurrentSelection();
 
-      List<Branch> selectedBranches = Handlers.getBranchesFromStructuredSelection(selections);
+         List<Branch> selectedBranches = Handlers.getBranchesFromStructuredSelection(selections);
 
-      MessageDialog dialog =
-         new MessageDialog(Displays.getActiveShell(), type.dialogTitle, null, buildDialogMessage(selectedBranches,
-            type.dialogType), MessageDialog.QUESTION, new String[] {
-            IDialogConstants.YES_LABEL,
-            IDialogConstants.NO_LABEL}, 1);
+         MessageDialog dialog =
+            new MessageDialog(Displays.getActiveShell(), dialogTitle, null, buildDialogMessage(selectedBranches,
+               actionName), MessageDialog.QUESTION,
+               new String[] {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL}, 1);
 
-      if (dialog.open() == 0) {
-         performOperation(selectedBranches);
+         if (dialog.open() == 0) {
+            performOperation(selectedBranches);
+         }
+      } catch (Exception ex) {
+         OseeExceptions.wrapAndThrow(ex);
       }
-
       return null;
    }
 

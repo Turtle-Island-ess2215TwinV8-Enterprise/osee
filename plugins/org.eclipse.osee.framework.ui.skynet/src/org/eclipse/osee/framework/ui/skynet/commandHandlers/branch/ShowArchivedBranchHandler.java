@@ -11,17 +11,12 @@
 package org.eclipse.osee.framework.ui.skynet.commandHandlers.branch;
 
 import java.util.Map;
-import java.util.logging.Level;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.osee.framework.access.AccessControlManager;
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.osee.framework.skynet.core.utility.DbUtil;
-import org.eclipse.osee.framework.ui.skynet.internal.Activator;
 import org.eclipse.osee.framework.ui.skynet.widgets.xBranch.BranchOptionsEnum;
 import org.eclipse.osee.framework.ui.skynet.widgets.xBranch.BranchView;
 import org.eclipse.ui.PlatformUI;
@@ -62,15 +57,8 @@ public class ShowArchivedBranchHandler extends AbstractHandler implements IEleme
 
    @Override
    public boolean isEnabled() {
-      boolean isValid = false;
+      boolean isValid = !DbUtil.isDbInit();
       service.refreshElements(COMMAND_ID, null);
-      if (!DbUtil.isDbInit()) {
-         try {
-            isValid = AccessControlManager.isOseeAdmin();
-         } catch (OseeCoreException ex) {
-            OseeLog.log(Activator.class, Level.SEVERE, ex);
-         }
-      }
       return isValid;
    }
 }

@@ -22,10 +22,10 @@ import org.eclipse.osee.framework.ui.skynet.internal.Activator;
  * @author Karol M. Wilk
  * @author Jeff C. Phillips
  */
-public final class PurgeBranchHandler extends GeneralBranchHandler {
+public final class PurgeBranchHandler extends AbstractBranchHandler {
 
    public PurgeBranchHandler() {
-      super(OpTypeEnum.PURGE);
+      super("purge", "Purge Branch");
    }
 
    @Override
