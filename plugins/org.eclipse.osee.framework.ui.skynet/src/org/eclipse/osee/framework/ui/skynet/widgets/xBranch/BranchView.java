@@ -157,7 +157,8 @@ public class BranchView extends GenericViewPart implements IBranchEventListener,
          @Override
          public void run() {
             try {
-               if (branchEvent.getEventType() == BranchEventType.Renamed) {
+               BranchEventType eventType = branchEvent.getEventType();
+               if (eventType == BranchEventType.Renamed || eventType == BranchEventType.ArchiveStateUpdated) {
                   xBranchWidget.refresh();
                } else {
                   xBranchWidget.loadData();

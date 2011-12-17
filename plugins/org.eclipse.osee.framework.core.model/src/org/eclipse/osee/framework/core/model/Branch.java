@@ -27,6 +27,7 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.cache.BranchFilter;
 import org.eclipse.osee.framework.core.model.internal.fields.AssociatedArtifactField;
 import org.eclipse.osee.framework.core.model.internal.fields.CollectionField;
+import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 
 /**
@@ -120,6 +121,11 @@ public class Branch extends AbstractOseeType<String> implements IAdaptable, IOse
    public void setArchived(boolean isArchived) {
       BranchArchivedState newValue = BranchArchivedState.fromBoolean(isArchived);
       setFieldLogException(BranchField.BRANCH_ARCHIVED_STATE_FIELD_KEY, newValue);
+   }
+
+   public void internalSetArchivedState(BranchArchivedState state) throws OseeCoreException {
+      Conditions.checkExpressionFailOnTrue(state == BranchArchivedState.ALL, "%s is not a valid state", state);
+      setFieldLogException(BranchField.BRANCH_ARCHIVED_STATE_FIELD_KEY, state);
    }
 
    public void setBranchState(BranchState branchState) {

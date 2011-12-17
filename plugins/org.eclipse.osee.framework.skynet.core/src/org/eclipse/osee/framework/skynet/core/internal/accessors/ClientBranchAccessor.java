@@ -13,8 +13,10 @@ package org.eclipse.osee.framework.skynet.core.internal.accessors;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import org.eclipse.osee.framework.core.data.OseeServerContext;
+import org.eclipse.osee.framework.core.enums.BranchArchivedState;
 import org.eclipse.osee.framework.core.enums.CacheOperation;
 import org.eclipse.osee.framework.core.enums.CoreTranslatorId;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -24,6 +26,7 @@ import org.eclipse.osee.framework.core.message.BranchCacheUpdateUtil;
 import org.eclipse.osee.framework.core.model.AbstractOseeType;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.BranchFactory;
+import org.eclipse.osee.framework.core.model.BranchField;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.cache.IOseeCache;
 import org.eclipse.osee.framework.core.model.cache.TransactionCache;
@@ -74,22 +77,50 @@ public class ClientBranchAccessor extends AbstractClientDataAccessor<String, Bra
       store(branchCache, types);
    }
 
-   public void store(IOseeCache<String, Branch> cache, Collection<Branch> branches) throws OseeCoreException {
-
+   private void store(IOseeCache<String, Branch> cache, Collection<Branch> branches) throws OseeCoreException {
       Map<String, String> parameters = new HashMap<String, String>();
       parameters.put("function", CacheOperation.STORE.name());
 
       BranchCacheStoreRequest request = BranchCacheStoreRequest.fromCache(branches);
+      Map<Branch, Boolean> moved = notifyBranchMoveInProgress(branches);
+
       AcquireResult updateResponse =
          HttpClientMessage.send(OseeServerContext.CACHE_CONTEXT, parameters,
             CoreTranslatorId.BRANCH_CACHE_STORE_REQUEST, request, null);
 
       if (updateResponse.wasSuccessful()) {
+         for (Entry<Branch, Boolean> entry : moved.entrySet()) {
+            Branch branch = entry.getKey();
+            branch.setArchived(entry.getValue());
+         }
+
          sendChangeEvents(branches);
          for (Branch branch : branches) {
             branch.clearDirty();
          }
       }
+   }
+
+   private Map<Branch, Boolean> notifyBranchMoveInProgress(Collection<Branch> branches) {
+      Map<Branch, Boolean> toMove = new HashMap<Branch, Boolean>();
+      for (Branch branch : branches) {
+         try {
+            if (branch.isFieldDirty(BranchField.BRANCH_ARCHIVED_STATE_FIELD_KEY)) {
+               BranchArchivedState state = branch.getArchiveState();
+               if (!state.isBeingArchived() && !state.isBeingUnarchived()) {
+                  toMove.put(branch, state.isArchived());
+                  BranchArchivedState newState =
+                     state.isArchived() ? BranchArchivedState.ARCHIVED_IN_PROGRESS : BranchArchivedState.UNARCHIVED_IN_PROGRESS;
+                  branch.internalSetArchivedState(newState);
+               }
+               OseeEventManager.kickBranchEvent(this,
+                  new BranchEvent(BranchEventType.ArchiveStateUpdated, branch.getGuid()), branch.getId());
+            }
+         } catch (Exception ex) {
+            OseeLog.log(Activator.class, Level.SEVERE, ex);
+         }
+      }
+      return toMove;
    }
 
    private void sendChangeEvents(Collection<Branch> branches) {
@@ -101,6 +132,15 @@ public class ClientBranchAccessor extends AbstractClientDataAccessor<String, Bra
             } catch (Exception ex) {
                OseeLog.log(Activator.class, Level.SEVERE, ex);
             }
+         }
+
+         try {
+            if (branch.isFieldDirty(BranchField.BRANCH_ARCHIVED_STATE_FIELD_KEY)) {
+               OseeEventManager.kickBranchEvent(this,
+                  new BranchEvent(BranchEventType.ArchiveStateUpdated, branch.getGuid()), branch.getId());
+            }
+         } catch (Exception ex) {
+            OseeLog.log(Activator.class, Level.SEVERE, ex);
          }
 
          try {

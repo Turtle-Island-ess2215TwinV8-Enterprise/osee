@@ -12,11 +12,15 @@ package org.eclipse.osee.framework.core.datastore.cache;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osee.framework.core.datastore.BranchMoveOperation;
 import org.eclipse.osee.framework.core.datastore.internal.Activator;
+import org.eclipse.osee.framework.core.enums.BranchArchivedState;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.AbstractOseeType;
 import org.eclipse.osee.framework.core.model.Branch;
@@ -97,8 +101,11 @@ public class BranchStoreOperation extends AbstractDbTxOperation {
       List<Object[]> updateData = new ArrayList<Object[]>();
       List<Object[]> deleteData = new ArrayList<Object[]>();
 
+      Map<Branch, Boolean> toMove = new HashMap<Branch, Boolean>();
+
       for (Branch branch : branches) {
          if (isDataDirty(branch)) {
+            boolean isMoveAllowed = true;
             switch (branch.getStorageState()) {
                case CREATED:
                   branch.setId(getDatabaseService().getSequence().getNextBranchId());
@@ -108,17 +115,25 @@ public class BranchStoreOperation extends AbstractDbTxOperation {
                   updateData.add(toUpdateValues(branch));
                   break;
                case PURGED:
+                  isMoveAllowed = false;
                   deleteData.add(toDeleteValues(branch));
                   break;
                default:
                   break;
             }
-         }
-         if (branch.isFieldDirty(BranchField.BRANCH_ARCHIVED_STATE_FIELD_KEY)) {
-            Operations.executeAsJob(new BranchMoveOperation(getDatabaseService(),
-               branch.getArchiveState().isArchived(), branch), false);
-         }
 
+            if (isMoveAllowed) {
+               if (branch.isFieldDirty(BranchField.BRANCH_ARCHIVED_STATE_FIELD_KEY)) {
+                  BranchArchivedState state = branch.getArchiveState();
+                  if (!state.isBeingArchived() && !state.isBeingUnarchived()) {
+                     toMove.put(branch, state.isArchived());
+                     BranchArchivedState newState =
+                        state.isArchived() ? BranchArchivedState.ARCHIVED_IN_PROGRESS : BranchArchivedState.UNARCHIVED_IN_PROGRESS;
+                     branch.internalSetArchivedState(newState);
+                  }
+               }
+            }
+         }
       }
       getDatabaseService().runBatchUpdate(connection, INSERT_BRANCH, insertData);
       getDatabaseService().runBatchUpdate(connection, UPDATE_BRANCH, updateData);
@@ -131,6 +146,11 @@ public class BranchStoreOperation extends AbstractDbTxOperation {
          eventSender.send(branches);
       } catch (OseeCoreException ex) {
          OseeLog.log(Activator.class, Level.SEVERE, "Error creating branch update relay", ex);
+      }
+
+      for (Entry<Branch, Boolean> entry : toMove.entrySet()) {
+         Operations.executeAsJob(
+            new BranchMoveOperation(eventSender, getDatabaseService(), entry.getValue(), entry.getKey()), false);
       }
    }
 
