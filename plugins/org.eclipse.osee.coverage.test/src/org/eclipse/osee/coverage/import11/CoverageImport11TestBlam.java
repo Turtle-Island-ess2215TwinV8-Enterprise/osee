@@ -14,19 +14,20 @@ import java.util.Arrays;
 import org.eclipse.osee.coverage.util.CoverageImportTestBlam;
 
 /**
- * Test that adding a top level coverage unit (not under a package) works; import12 will delete it. <br>
+ * Delete NavigationButton3 coverage unit <br>
  * <br>
  * 
  * @author Donald G. Dunne
  */
 public class CoverageImport11TestBlam extends CoverageImportTestBlam {
 
-   public static String NAME = "Test Import 10";
+   public static String NAME = "Test Import 11";
 
    public CoverageImport11TestBlam() {
       super(NAME, Arrays.asList(
       //
-      "import11/TopLevelButton1.java"
+         "import11/cnd/DisplayButton1.java", "import11/cnd/DisplayButton2.java", "import11/cnd/DisplayButton3.java", //
+         "import11/cnd/disp1/Page1.java", "import11/cnd/disp1/Page2.java" //
       //
       ));
    }
