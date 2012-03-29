@@ -205,6 +205,7 @@ public class CoverageEditorMergeTab extends FormPage implements ISaveable {
                         XResultDataUI.report(rd, "Import");
                         handleSearchButtonPressed();
                         updateTitles();
+                        loadImportViewer(true, false);
                      }
                   });
                   return Status.OK_STATUS;
@@ -419,7 +420,6 @@ public class CoverageEditorMergeTab extends FormPage implements ISaveable {
                }
             }
             handleImportSelected();
-            loadImportViewer(true, false);
          } catch (OseeCoreException ex) {
             OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
          }
