@@ -182,7 +182,9 @@ public class CoverageEditorMergeTab extends FormPage implements ISaveable {
          new CheckBoxDialog("Import Items", String.format("Importing [%d] items.", mergeItems.size()),
             "Save Import Record?");
       if (dialog.open() == 0) {
-
+         xImportViewer2.getXViewer().setInput(new MessageMergeItem("Merging..."));
+         xImportViewer2.getXViewer().refresh();
+         loading = true;
          Job job = new Job("Coverage Merge") {
 
             @Override
