@@ -204,11 +204,13 @@ public class CoverageEditorMergeTab extends FormPage implements ISaveable {
                   Displays.ensureInDisplayThread(new Runnable() {
                      @Override
                      public void run() {
+                        setLoading(false);
                         XResultDataUI.report(rd, "Import");
                         handleSearchButtonPressed();
                         updateTitles();
                         loadImportViewer(true, false);
                      }
+
                   });
                   return Status.OK_STATUS;
                } catch (OseeCoreException ex) {
@@ -327,6 +329,10 @@ public class CoverageEditorMergeTab extends FormPage implements ISaveable {
          // do nothing
       }
 
+   }
+
+   private void setLoading(boolean loading) {
+      this.loading = loading;
    }
 
    private void loadImportViewer(boolean force, boolean debugReport) {
