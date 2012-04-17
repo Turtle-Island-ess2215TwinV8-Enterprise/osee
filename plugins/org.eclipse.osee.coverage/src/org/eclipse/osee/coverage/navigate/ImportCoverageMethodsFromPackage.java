@@ -12,7 +12,9 @@ package org.eclipse.osee.coverage.navigate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osee.coverage.action.ConfigureCoverageMethodsAction;
 import org.eclipse.osee.coverage.internal.Activator;
 import org.eclipse.osee.coverage.merge.MatchItem;
 import org.eclipse.osee.coverage.merge.MergeManager;
@@ -79,9 +81,13 @@ public class ImportCoverageMethodsFromPackage extends XNavigateItemAction {
             return;
          }
 
+         @SuppressWarnings("unused")
+         Set<Artifact> artifactLoadCache = ConfigureCoverageMethodsAction.bulkLoadCoveragePackage(fromPackageArt);
          OseeCoveragePackageStore store = new OseeCoveragePackageStore(fromPackageArt);
          CoveragePackage fromPackage = store.getCoveragePackage();
 
+         @SuppressWarnings("unused")
+         Set<Artifact> artifactLoadCache2 = ConfigureCoverageMethodsAction.bulkLoadCoveragePackage(toPackageArt);
          store = new OseeCoveragePackageStore(toPackageArt);
          CoveragePackage toPackage = store.getCoveragePackage();
 
@@ -106,39 +112,57 @@ public class ImportCoverageMethodsFromPackage extends XNavigateItemAction {
 
    public void importDispositionsFromPackage(XResultData data, CoveragePackage fromPackage, CoveragePackage toPackage) throws OseeStateException {
       data.logWithFormat("Merging dispositions from [%s] to [%s]\n\n", fromPackage.getName(), toPackage.getName());
-
-      processDispositionsRecurse(data, fromPackage, toPackage);
+      DispoCounter counter = new DispoCounter();
+      processDispositionsRecurse(counter, data, fromPackage, toPackage);
+      data.log("\n\nTotals: " + counter.toString());
    }
 
-   private void processDispositionsRecurse(XResultData data, ICoverage coverage, CoveragePackage toPackage) throws OseeStateException {
+   public class DispoCounter {
+      public int numItems = 0;
+      public int numDispo = 0;
+      public int numMatch = 0;
+      public int numNoMatch = 0;
+
+      @Override
+      public String toString() {
+         return String.format("Num Items %s; Num Dispo %s; Num Match %s; Num NoMatch %s", numItems, numDispo, numMatch,
+            numNoMatch);
+      }
+   }
+
+   private void processDispositionsRecurse(DispoCounter counter, XResultData data, ICoverage coverage, CoveragePackage toPackage) throws OseeStateException {
       if (coverage instanceof CoverageItem) {
+         counter.numItems++;
          CoverageItem item = (CoverageItem) coverage;
          if (isManualDisp(item)) {
+            counter.numDispo++;
             data.logWithFormat("%s - Merge disp [%s] ", CoverageUtil.getFullPath(item, false),
                item.getCoverageMethod().name);
-            importDisposition(data, item, toPackage);
+            importDisposition(counter, data, item, toPackage);
          }
       }
       if (coverage instanceof ICoverageUnitProvider) {
          ICoverageUnitProvider unitProvider = (ICoverageUnitProvider) coverage;
          for (CoverageUnit unit : unitProvider.getCoverageUnits()) {
             System.out.println("Merging " + unit.getName());
-            processDispositionsRecurse(data, unit, toPackage);
+            processDispositionsRecurse(counter, data, unit, toPackage);
          }
       }
       if (coverage instanceof ICoverageItemProvider) {
          ICoverageItemProvider itemProvider = (ICoverageItemProvider) coverage;
          for (CoverageItem unit : itemProvider.getCoverageItems()) {
-            processDispositionsRecurse(data, unit, toPackage);
+            processDispositionsRecurse(counter, data, unit, toPackage);
          }
       }
    }
 
-   private void importDisposition(XResultData data, CoverageItem fromItem, CoveragePackage toPackage) throws OseeStateException {
+   private void importDisposition(DispoCounter counter, XResultData data, CoverageItem fromItem, CoveragePackage toPackage) throws OseeStateException {
       // First, attempt to find this coverage item
       MatchItem matchItem = MergeManager.getPackageCoverageItem(toPackage, fromItem);
       if (matchItem.isMatch()) {
-         data.logWithFormat("MATCH");
+         counter.numMatch++;
+         data.logWithFormat("MATCH [%s][%s]", matchItem.getPackageItem().getOrderNumber(),
+            matchItem.getImportItem().getOrderNumber());
          CoverageItem toItem = (CoverageItem) matchItem.getPackageItem();
          if (toItem.getCoverageMethod().name.equals(CoverageOptionManager.Test_Unit.name) || toItem.getCoverageMethod().name.equals(CoverageOptionManager.Exception_Handling.name)) {
             data.logWithFormat(" - KEEP CURRENT [%s]\n", toItem.getCoverageMethod().name);
@@ -147,6 +171,7 @@ public class ImportCoverageMethodsFromPackage extends XNavigateItemAction {
          }
 
       } else {
+         counter.numNoMatch++;
          data.logError("NO MATCH");
       }
    }
