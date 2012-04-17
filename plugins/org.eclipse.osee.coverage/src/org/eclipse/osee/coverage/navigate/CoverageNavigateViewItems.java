@@ -60,6 +60,7 @@ public class CoverageNavigateViewItems implements XNavigateViewItems {
       items.add(new XNavigateItemAction(null, new ConfigureCoverageMethodsAction(),
          ConfigureCoverageMethodsAction.OSEE_IMAGE));
       items.add(new XNavigateItemAction(null, new CompareTwoStringsAction(), FrameworkImage.EDIT));
+      items.add(new ImportCoverageMethodsFromPackage());
 
       try {
          if (SystemGroup.OseeAdmin.isCurrentUserMember()) {
