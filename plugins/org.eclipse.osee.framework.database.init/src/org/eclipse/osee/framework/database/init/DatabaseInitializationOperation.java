@@ -258,20 +258,18 @@ public class DatabaseInitializationOperation {
    }
 
    public static void executeWithoutPrompting(String choice) throws OseeCoreException {
-      new DatabaseInitializationOperation(choice, false).execute();
-   }
-
-   public static void executeWithPromptsAndChoice(String choice) throws OseeCoreException {
-      new DatabaseInitializationOperation(choice, false).execute();
+      executeWithParams(choice, false);
    }
 
    public static void executeWithPrompts() throws OseeCoreException {
-      new DatabaseInitializationOperation(null, true).execute();
+      executeWithParams(null, true);
    }
 
    public static void executeConfigureFromJvmProperties() throws OseeCoreException {
-      boolean arePromptsAllowed = OseeClientProperties.promptOnDbInit();
-      String predefinedChoice = OseeClientProperties.getChoiceOnDbInit();
-      new DatabaseInitializationOperation(predefinedChoice, arePromptsAllowed).execute();
+      executeWithParams(OseeClientProperties.getChoiceOnDbInit(), OseeClientProperties.promptOnDbInit());
+   }
+
+   public static void executeWithParams(String choice, boolean promptsAllowed) throws OseeCoreException {
+      new DatabaseInitializationOperation(choice, promptsAllowed).execute();
    }
 }

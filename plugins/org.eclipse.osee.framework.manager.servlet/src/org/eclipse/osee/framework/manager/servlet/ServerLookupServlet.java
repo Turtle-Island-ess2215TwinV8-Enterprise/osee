@@ -37,7 +37,6 @@ public class ServerLookupServlet extends UnsecuredOseeHttpServlet {
       super(logger);
       this.lookupService = lookupService;
       this.applicationServerManager = applicationServerManager;
-
    }
 
    @Override
@@ -60,8 +59,6 @@ public class ServerLookupServlet extends UnsecuredOseeHttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(
                String.format("Unable to locate application server matching version [%s]", version));
-            response.getWriter().flush();
-            response.getWriter().close();
          } else {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             info.write(stream);
@@ -75,6 +72,7 @@ public class ServerLookupServlet extends UnsecuredOseeHttpServlet {
       } catch (Exception ex) {
          getLogger().error(ex, "Failed to process application server lookup request [%s]", request.toString());
          response.getWriter().write(Lib.exceptionToString(ex));
+      } finally {
          response.getWriter().flush();
          response.getWriter().close();
       }

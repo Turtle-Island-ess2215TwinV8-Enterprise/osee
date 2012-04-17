@@ -35,69 +35,23 @@ public class XWorkingBranchEnablement {
    }
 
    public boolean isCreateBranchButtonEnabled() {
-      if (disableAll) {
-         return false;
-      }
-      try {
-         ensurePopulated();
-         return !workingBranchCommitInProgress && !workingBranchCreationInProgress && !workingBranchInWork && !committedBranchExists;
-      } catch (OseeCoreException ex) {
-         OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-      }
-      return false;
-
+      return !disableAll && ensurePopulatedLogError() && !workingBranchCommitInProgress && !workingBranchCreationInProgress && !workingBranchInWork && !committedBranchExists;
    }
 
    public boolean isShowArtifactExplorerButtonEnabled() {
-      if (disableAll) {
-         return false;
-      }
-      try {
-         ensurePopulated();
-         return workingBranch != null && getStatus().isChangesPermitted();
-      } catch (OseeCoreException ex) {
-         OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-      }
-      return false;
+      return !disableAll && ensurePopulatedLogError() && workingBranch != null && getStatus().changesPermitted;
    }
 
    public boolean isShowChangeReportButtonEnabled() {
-      if (disableAll) {
-         return false;
-      }
-      try {
-         ensurePopulated();
-         return workingBranchInWork || committedBranchExists;
-      } catch (OseeCoreException ex) {
-         OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-      }
-      return false;
+      return !disableAll && ensurePopulatedLogError() && (workingBranchInWork || committedBranchExists);
    }
 
    public boolean isDeleteBranchButtonEnabled() {
-      if (disableAll) {
-         return false;
-      }
-      try {
-         ensurePopulated();
-         return workingBranchInWork && !committedBranchExists;
-      } catch (OseeCoreException ex) {
-         OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-      }
-      return false;
+      return !disableAll && ensurePopulatedLogError() && workingBranchInWork && !committedBranchExists;
    }
 
    public boolean isFavoriteBranchButtonEnabled() {
-      if (disableAll) {
-         return false;
-      }
-      try {
-         ensurePopulated();
-         return workingBranchInWork;
-      } catch (OseeCoreException ex) {
-         OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-      }
-      return false;
+      return !disableAll && ensurePopulatedLogError() && workingBranchInWork;
    }
 
    public synchronized void refresh() {
@@ -105,8 +59,8 @@ public class XWorkingBranchEnablement {
       disableAll = false;
    }
 
-   public BranchStatus getStatus() throws OseeCoreException {
-      ensurePopulated();
+   public BranchStatus getStatus() {
+      ensurePopulatedLogError();
       if (teamArt != null) {
          if (workingBranchCreationInProgress) {
             return BranchStatus.Changes_NotPermitted__CreationInProgress;
@@ -119,21 +73,6 @@ public class XWorkingBranchEnablement {
          }
       }
       return BranchStatus.Not_Started;
-   }
-
-   private synchronized void ensurePopulated() throws OseeCoreException {
-      if (populated) {
-         return;
-      }
-      workingBranch = AtsBranchManagerCore.getWorkingBranch(teamArt, true);
-      workingBranchCreationInProgress =
-         teamArt.isWorkingBranchCreationInProgress() || (workingBranch != null && workingBranch.getBranchState() == BranchState.CREATION_IN_PROGRESS);
-      workingBranchCommitInProgress =
-         teamArt.isWorkingBranchCommitInProgress() || workingBranch != null && workingBranch.getBranchState() == BranchState.COMMIT_IN_PROGRESS;
-      workingBranchInWork = AtsBranchManagerCore.isWorkingBranchInWork(teamArt);
-      committedBranchExists = AtsBranchManagerCore.isCommittedBranchExists(teamArt);
-      disableAll = workingBranchCommitInProgress;
-      populated = true;
    }
 
    public Branch getWorkingBranch() {
@@ -150,5 +89,31 @@ public class XWorkingBranchEnablement {
          "disableAll [%s] CreateInProgress [%s] CommitInProgress [%s] InWorkBranch [%s] CommittedBranch [%s] Branch [%s]",
          disableAll, workingBranchCreationInProgress, workingBranchCommitInProgress, workingBranchInWork,
          committedBranchExists, workingBranch);
+   }
+
+   private synchronized void ensurePopulated() throws OseeCoreException {
+      if (!populated) {
+         workingBranch = AtsBranchManagerCore.getWorkingBranch(teamArt, true);
+         workingBranchCreationInProgress =
+            teamArt.isWorkingBranchCreationInProgress() || (workingBranch != null && workingBranch.getBranchState() == BranchState.CREATION_IN_PROGRESS);
+         workingBranchCommitInProgress =
+            teamArt.isWorkingBranchCommitInProgress() || workingBranch != null && workingBranch.getBranchState() == BranchState.COMMIT_IN_PROGRESS;
+         workingBranchInWork = AtsBranchManagerCore.isWorkingBranchInWork(teamArt);
+         committedBranchExists = AtsBranchManagerCore.isCommittedBranchExists(teamArt);
+         disableAll = workingBranchCommitInProgress;
+         populated = true;
+      }
+   }
+
+   private boolean ensurePopulatedLogError() {
+      boolean attemptedToPopulate = false;
+      try {
+         ensurePopulated();
+      } catch (OseeCoreException ex) {
+         OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
+      } finally {
+         attemptedToPopulate = true;
+      }
+      return attemptedToPopulate;
    }
 }

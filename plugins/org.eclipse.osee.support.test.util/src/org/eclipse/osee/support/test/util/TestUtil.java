@@ -95,7 +95,7 @@ public class TestUtil {
       for (IHealthStatus hStatus : monitorLog.getLogsAtLevel(level)) {
          // do not count the valid ignored logs
          for (String str : ignoreLogging) {
-            if (hStatus.getMessage().startsWith(str) == false) {
+            if (!hStatus.getMessage().startsWith(str)) {
                count++;
             }
          }
@@ -144,30 +144,27 @@ public class TestUtil {
 
    public static void checkThatIncreased(Map<String, Integer> prevCount, Map<String, Integer> postCount) {
       for (String name : prevCount.keySet()) {
+         Integer postC = postCount.get(name);
+         Integer prevC = prevCount.get(name);
          if (!OseeProperties.isInTest()) {
-            String incStr = postCount.get(name) > prevCount.get(name) ? "Increased" : "ERROR, Not Increased";
-            System.out.println(String.format(incStr + ": [%s] pre[%d] vs post[%d]", name, prevCount.get(name),
-               postCount.get(name)));
+            String incStr = postC > prevC ? "Increased" : "ERROR, Not Increased";
+            System.out.println(String.format(incStr + ": [%s] pre[%d] vs post[%d]", name, prevC, postC));
          }
-      }
-      for (String name : prevCount.keySet()) {
-         Assert.assertTrue(String.format("[%s] did not increase as expected: pre[%d] vs post[%d]", name,
-            prevCount.get(name), postCount.get(name)), postCount.get(name) > prevCount.get(name));
+         Assert.assertTrue(String.format("[%s] did not increase as expected: pre[%d] vs post[%d]", name, prevC, postC),
+            postC > prevC);
       }
    }
 
    public static void checkThatEqual(Map<String, Integer> prevCount, Map<String, Integer> postCount) {
       for (String tableName : prevCount.keySet()) {
+         Integer postC = postCount.get(tableName);
+         Integer prevC = prevCount.get(tableName);
          if (!OseeProperties.isInTest()) {
-            String equalStr = postCount.get(tableName).equals(prevCount.get(tableName)) ? "Equal" : "ERROR, NotEqual";
-            System.out.println(String.format(equalStr + ": [%s] pre[%d] post[%d]", tableName, prevCount.get(tableName),
-               postCount.get(tableName)));
+            String equalStr = postC.equals(prevC) ? "Equal" : "ERROR, NotEqual";
+            System.out.println(String.format(equalStr + ": [%s] pre[%d] post[%d]", tableName, prevC, postC));
          }
-      }
-      for (String tableName : prevCount.keySet()) {
-         Assert.assertTrue(
-            String.format("[%s] count not equal pre[%d] post[%d]", tableName, prevCount.get(tableName),
-               postCount.get(tableName)), postCount.get(tableName).equals(prevCount.get(tableName)));
+         Assert.assertTrue(String.format("[%s] count not equal pre[%d] post[%d]", tableName, prevC, postC),
+            postC.equals(prevC));
       }
    }
 

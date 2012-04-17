@@ -91,20 +91,12 @@ public class XWorkingBranch extends GenericXWidget implements IArtifactWidget, I
       Changes_NotPermitted__CreationInProgress("Branch Being Created - No Changes Permitted", false),
       Changes_NotPermitted__CommitInProgress("Branch Being Committed - No Changes Permitted", false);
 
-      private final String displayName;
-      private final boolean changesPermitted;
+      public final String displayName;
+      public final boolean changesPermitted;
 
       private BranchStatus(String displayName, boolean changesPermitted) {
          this.displayName = displayName;
          this.changesPermitted = changesPermitted;
-      }
-
-      public String getDisplayName() {
-         return displayName;
-      }
-
-      public boolean isChangesPermitted() {
-         return changesPermitted;
       }
    }
 
@@ -336,14 +328,10 @@ public class XWorkingBranch extends GenericXWidget implements IArtifactWidget, I
 
    public void refreshLabel() {
       if (labelWidget != null && Widgets.isAccessible(labelWidget) && !getLabel().equals("")) {
-         try {
-            Branch workBranch = enablement.getWorkingBranch();
-            String labelStr =
-               getLabel() + ": " + enablement.getStatus().getDisplayName() + (workBranch != null ? " - " + workBranch.getShortName() : "");
-            labelWidget.setText(labelStr);
-         } catch (OseeCoreException ex) {
-            OseeLog.log(Activator.class, Level.SEVERE, ex);
-         }
+         Branch workBranch = enablement.getWorkingBranch();
+         String labelStr =
+            getLabel() + ": " + enablement.getStatus().displayName + (workBranch != null ? " - " + workBranch.getShortName() : "");
+         labelWidget.setText(labelStr);
          if (getToolTip() != null) {
             labelWidget.setToolTipText(getToolTip());
          }
@@ -384,32 +372,25 @@ public class XWorkingBranch extends GenericXWidget implements IArtifactWidget, I
    }
 
    public void refreshOnBranchEvent() {
-      if (teamArt == null || labelWidget == null || labelWidget.isDisposed()) {
-         return;
-      }
-      Runnable runnable = new Runnable() {
-         @Override
-         public void run() {
-            try {
+      if (teamArt != null || labelWidget != null || !labelWidget.isDisposed()) {
+         new Thread(new Runnable() {
+            @Override
+            public void run() {
                enablement.refresh();
                enablement.getStatus();
-            } catch (OseeCoreException ex) {
-               OseeLog.log(Activator.class, Level.SEVERE, ex);
-            }
-            Displays.ensureInDisplayThread(new Runnable() {
-               @Override
-               public void run() {
-                  if (Widgets.isAccessible(createBranchButton)) {
-                     refreshEnablement();
-                     refreshLabel();
-                     refreshLockImage();
+               Displays.ensureInDisplayThread(new Runnable() {
+                  @Override
+                  public void run() {
+                     if (Widgets.isAccessible(createBranchButton)) {
+                        refreshEnablement();
+                        refreshLabel();
+                        refreshLockImage();
+                     }
                   }
-               }
-            });
-         }
-      };
-      Thread thread = new Thread(runnable);
-      thread.start();
+               });
+            }
+         }).start();
+      }
    }
 
    @Override

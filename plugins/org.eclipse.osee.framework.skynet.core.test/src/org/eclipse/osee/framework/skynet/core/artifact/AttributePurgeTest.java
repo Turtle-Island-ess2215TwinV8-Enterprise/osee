@@ -39,7 +39,7 @@ public class AttributePurgeTest extends AbstractPurgeTest {
    @Override
    public void runPurgeOperation() throws OseeCoreException {
       // Create some software artifacts
-      Branch branch = BranchManager.getBranch(DemoSawBuilds.SAW_Bld_2.getName());
+      Branch branch = BranchManager.getBranch(DemoSawBuilds.SAW_Bld_2);
       SkynetTransaction transaction = TransactionManager.createTransaction(branch, "Test purge artifacts");
       Collection<Artifact> softArts =
          FrameworkTestUtil.createSimpleArtifacts(CoreArtifactTypes.SoftwareRequirement, 10, getClass().getSimpleName(),
