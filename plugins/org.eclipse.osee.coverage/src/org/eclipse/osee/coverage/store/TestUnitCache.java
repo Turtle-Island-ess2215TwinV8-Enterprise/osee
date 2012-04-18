@@ -38,7 +38,7 @@ public class TestUnitCache implements ITestUnitProvider {
       HASHMAP_SIZE);
 
    private int lastId;
-   private final HashBiMap<Integer, String> idToNameCache;
+   private final static HashBiMap<Integer, String> idToNameCache = HashBiMap.create(HASHMAP_SIZE);
 
    private final ITestUnitStore testUnitStore;
 
@@ -47,7 +47,6 @@ public class TestUnitCache implements ITestUnitProvider {
 
    public TestUnitCache(ITestUnitStore testUnitStore) {
       super();
-      this.idToNameCache = HashBiMap.create(HASHMAP_SIZE);
       this.lastId = 0;
       this.ensurePopulatedRanOnce = false;
       this.cacheIsDirty = false;
