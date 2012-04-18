@@ -91,10 +91,10 @@ public class ImportCoverageMethodsFromPackage extends XNavigateItemAction {
          store = new OseeCoveragePackageStore(toPackageArt);
          CoveragePackage toPackage = store.getCoveragePackage();
 
-         if (!MessageDialog.openConfirm(Displays.getActiveShell(), getName(),
-            String.format("Merging dispositions from [%s] to [%s]\n\n", fromPackage.getName(), toPackage.getName()))) {
-            return;
-         }
+         //         if (!MessageDialog.openConfirm(Displays.getActiveShell(), getName(),
+         //            String.format("Merging dispositions from [%s] to [%s]\n\n", fromPackage.getName(), toPackage.getName()))) {
+         //            return;
+         //         }
 
          importDispositionsFromPackage(data, fromPackage, toPackage);
 
