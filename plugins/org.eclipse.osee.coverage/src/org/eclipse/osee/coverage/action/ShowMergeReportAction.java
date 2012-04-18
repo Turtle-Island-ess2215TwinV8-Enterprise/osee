@@ -179,7 +179,7 @@ public class ShowMergeReportAction extends Action {
       Lib.deleteDir(dir);
    }
 
-   private boolean isFile(ICoverage coverage) {
+   public static boolean isFile(ICoverage coverage) {
       return coverage.getName().endsWith(".ada") || coverage.getName().endsWith(".adb") || coverage.getName().endsWith(
          ".c") || coverage.getName().endsWith(".java");
    }
