@@ -11,7 +11,6 @@
 
 package org.eclipse.osee.ats.actions;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osee.ats.AtsImage;
 import org.eclipse.osee.ats.AtsOpenOption;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
@@ -27,9 +26,8 @@ public class OpenTeamDefinitionAction extends AbstractAtsAction {
    private final TeamWorkFlowArtifact teamArt;
 
    public OpenTeamDefinitionAction(TeamWorkFlowArtifact teamArt) {
-      super();
+      super("Open Team Definition", ImageManager.getImageDescriptor(AtsImage.TEAM_DEFINITION));
       this.teamArt = teamArt;
-      setText("Open Team Definition");
       setToolTipText(getText());
    }
 
@@ -39,10 +37,4 @@ public class OpenTeamDefinitionAction extends AbstractAtsAction {
          AtsUtil.openATSAction(teamArt.getTeamDefinition(), AtsOpenOption.OpenOneOrPopupSelect);
       }
    }
-
-   @Override
-   public ImageDescriptor getImageDescriptor() {
-      return ImageManager.getImageDescriptor(AtsImage.TEAM_DEFINITION);
-   }
-
 }

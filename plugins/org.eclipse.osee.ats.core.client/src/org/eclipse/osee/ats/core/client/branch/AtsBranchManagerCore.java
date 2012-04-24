@@ -38,6 +38,7 @@ import org.eclipse.osee.ats.core.model.IAtsUser;
 import org.eclipse.osee.ats.core.users.AtsUsers;
 import org.eclipse.osee.ats.core.workdef.DecisionReviewDefinition;
 import org.eclipse.osee.ats.core.workdef.PeerReviewDefinition;
+import org.eclipse.osee.ats.core.workdef.StateDefinition;
 import org.eclipse.osee.ats.core.workdef.StateEventType;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.enums.BranchState;
@@ -640,8 +641,9 @@ public class AtsBranchManagerCore {
          throw new OseeStateException("Invalid stateEventType [%s]", stateEventType);
       }
       // Create any decision and peerToPeer reviews for createBranch and commitBranch
-      for (DecisionReviewDefinition decRevDef : teamArt.getStateDefinition().getDecisionReviews()) {
-         if (decRevDef.getStateEventType() != null && decRevDef.getStateEventType().equals(stateEventType)) {
+      StateDefinition stateDefinition = teamArt.getStateDefinition();
+      for (DecisionReviewDefinition decRevDef : stateDefinition.getDecisionReviews()) {
+         if (stateEventType.equals(decRevDef.getStateEventType())) {
             DecisionReviewArtifact decArt =
                DecisionReviewDefinitionManager.createNewDecisionReview(decRevDef, transaction, teamArt, createdDate,
                   createdBy);
@@ -650,8 +652,8 @@ public class AtsBranchManagerCore {
             }
          }
       }
-      for (PeerReviewDefinition peerRevDef : teamArt.getStateDefinition().getPeerReviews()) {
-         if (peerRevDef.getStateEventType() != null && peerRevDef.getStateEventType().equals(stateEventType)) {
+      for (PeerReviewDefinition peerRevDef : stateDefinition.getPeerReviews()) {
+         if (stateEventType.equals(peerRevDef.getStateEventType())) {
             PeerToPeerReviewArtifact peerArt =
                PeerReviewDefinitionManager.createNewPeerToPeerReview(peerRevDef, transaction, teamArt, createdDate,
                   createdBy);

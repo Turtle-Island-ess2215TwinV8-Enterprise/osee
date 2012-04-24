@@ -116,21 +116,6 @@ public class Collections {
     * Noted:<br/>
     * A - B
     * </p>
-    * <p>
-    * <br/>
-    * Examples:<br/>
-    * { 1, 2, 3 } - { 1, 4, 3 } = { 2 } <br/>
-    * <br/>
-    * { 1, 4, 3 } - { 1, 2, 3 } = { 4 }
-    * </p>
-    * Meaning:
-    * <ul>
-    * <li>elements outside of B</li>
-    * <li>all elements unique to A</li>
-    * </ul>
-    * </p>
-    * 
-    * @return relative set complement of B in A.
     */
    public static <T> List<T> setComplement(Collection<T> set_A, Collection<T> set_B) {
       ArrayList<T> complement = new ArrayList<T>(set_A.size());
