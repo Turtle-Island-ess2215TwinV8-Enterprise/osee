@@ -92,7 +92,7 @@ public class ImportCoverageMethodsBlam extends AbstractBlam {
       boolean isPersistTransaction = variableMap.getBoolean(CHKBOX_PERSIST_TRANSACTION);
       ImportCoverageMethodsOperation operation =
          new ImportCoverageMethodsOperation(fromPackageArt, toPackageArt, resultsDir, isPersistTransaction);
-      Operations.executeAsJob(operation, false);
+      Operations.executeWork(operation, monitor);
    }
 
    @Override
@@ -103,22 +103,9 @@ public class ImportCoverageMethodsBlam extends AbstractBlam {
          toBranchWidget.addListener(new Listener() {
             @Override
             public void handleEvent(Event event) {
-               IOseeBranch toBranch = toBranchWidget.getSelection();
-               try {
-                  if (toPackageListWidget != null) {
-                     toPackageListWidget.setContentProvider(new ArtifactContentProvider());
-                     toPackageListWidget.setLabelProvider(new ArtifactLabelProvider());
-                     List<Object> arts = new LinkedList<Object>();
-                     arts.addAll(OseeCoveragePackageStore.getCoveragePackageArtifacts(toBranch));
-                     toPackageListWidget.setInput(arts);
-                     toPackageListWidget.setEditable(true);
-                     toPackageListWidget.refresh();
-                  }
-               } catch (OseeCoreException ex) {
-                  OseeLog.log(Activator.class, Level.SEVERE, ex);
-               }
-
+               updateToPackageListWidget();
             }
+
          });
       }
       if (xWidget.getLabel().equalsIgnoreCase(TO_PACKAGE_ARTIFACT)) {
@@ -130,6 +117,8 @@ public class ImportCoverageMethodsBlam extends AbstractBlam {
             @Override
             public void handleEvent(Event event) {
                IOseeBranch fromBranch = fromBranchWidget.getSelection();
+               toBranchWidget.setSelection(fromBranch);
+               updateToPackageListWidget();
                try {
                   if (fromPackageListWidget != null) {
                      fromPackageListWidget.setContentProvider(new ArtifactContentProvider());
@@ -149,6 +138,23 @@ public class ImportCoverageMethodsBlam extends AbstractBlam {
       }
       if (xWidget.getLabel().equalsIgnoreCase(FROM_PACKAGE_ARTIFACT)) {
          fromPackageListWidget = (XComboViewer) xWidget;
+      }
+   }
+
+   private void updateToPackageListWidget() {
+      IOseeBranch toBranch = toBranchWidget.getSelection();
+      try {
+         if (toPackageListWidget != null) {
+            toPackageListWidget.setContentProvider(new ArtifactContentProvider());
+            toPackageListWidget.setLabelProvider(new ArtifactLabelProvider());
+            List<Object> arts = new LinkedList<Object>();
+            arts.addAll(OseeCoveragePackageStore.getCoveragePackageArtifacts(toBranch));
+            toPackageListWidget.setInput(arts);
+            toPackageListWidget.setEditable(true);
+            toPackageListWidget.refresh();
+         }
+      } catch (OseeCoreException ex) {
+         OseeLog.log(Activator.class, Level.SEVERE, ex);
       }
    }
 

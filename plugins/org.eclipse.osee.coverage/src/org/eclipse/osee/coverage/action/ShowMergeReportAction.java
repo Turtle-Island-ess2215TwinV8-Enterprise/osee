@@ -58,7 +58,7 @@ public class ShowMergeReportAction extends Action {
       super("Show Merge Report", IAction.AS_PUSH_BUTTON);
    }
 
-   private void getCoverageUnitContentsRecurse(StringBuilder contents, ICoverage coverage) throws OseeCoreException {
+   public static void getCoverageUnitContentsRecurse(StringBuilder contents, ICoverage coverage) throws OseeCoreException {
       if (coverage instanceof CoverageUnit) {
          CoverageUnit unit = (CoverageUnit) coverage;
          contents.append("   " + coverage.getName() + System.getProperty("line.separator"));
@@ -105,7 +105,7 @@ public class ShowMergeReportAction extends Action {
       return folder;
    }
 
-   private void createCoverageUnitFile(String baseDir, CoverageUnit unit) throws OseeCoreException {
+   public static void createCoverageUnitFile(String baseDir, CoverageUnit unit) throws OseeCoreException {
       try {
          StringBuilder contents = new StringBuilder();
          getCoverageUnitContentsRecurse(contents, unit);
@@ -131,11 +131,15 @@ public class ShowMergeReportAction extends Action {
       StringBuilder importStr = new StringBuilder();
       recurseCreateReport(getIptDir(), importStr, importCoverageEditorItem);
 
-      createLaunchFile();
+      createLaunchFile(baseDir);
+      launchFile(baseDir);
+   }
+
+   public static void launchFile(String baseDir) {
       Program.launch(baseDir + System.getProperty("file.separator") + "merge.bat");
    }
 
-   private void createLaunchFile() throws OseeCoreException {
+   public void createLaunchFile(String baseDir) throws OseeCoreException {
       try {
          File outFile = new File(baseDir + System.getProperty("file.separator") + "merge.bat");
          String contents =

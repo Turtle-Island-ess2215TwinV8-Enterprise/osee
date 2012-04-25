@@ -25,7 +25,6 @@ import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.enums.CoreRelationTypes;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.exception.OseeStateException;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.core.util.XResultData;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
@@ -72,6 +71,8 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
          Set<Artifact> artifactLoadCache = ConfigureCoverageMethodsAction.bulkLoadCoveragePackage(fromPackageArt);
          OseeCoveragePackageStore fromPackageStore = new OseeCoveragePackageStore(fromPackageArt);
          CoveragePackage fromPackage = fromPackageStore.getCoveragePackage();
+         int numCoverageUnits = fromPackage.getCoverageUnitCount(true);
+         monitor.beginTask(getName(), numCoverageUnits);
 
          @SuppressWarnings("unused")
          Set<Artifact> artifactLoadCache2 = ConfigureCoverageMethodsAction.bulkLoadCoveragePackage(toPackageArt);
@@ -81,10 +82,13 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
          String title =
             String.format("Merging dispositions from [%s] to [%s]\n\n", fromPackage.getName(), toPackage.getName());
          ImportCoverageMethodsCounter counter = new ImportCoverageMethodsCounter();
-         processDispositionsRecurse(counter, data, fromPackage, toPackage);
+
+         // Merge Dispositions
+         processDispositionsRecurse(monitor, counter, data, fromPackage, toPackage);
          data.log("\n\nTotals: " + counter.toString());
          data.log(title);
 
+         // Persist Merge
          if (isPersistTransaction) {
             data.log("Persisting...");
             OseeCoveragePackageStore persistStore =
@@ -95,6 +99,7 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
             }
          }
 
+         // Display results in OSEE and results dir
          data.log("Complete\n\nResults at " + resultsDir);
          String html =
             XResultDataUI.report(data, "Merge Dispositions", Manipulations.HRID_CMD_HYPER, Manipulations.ERROR_RED,
@@ -121,19 +126,21 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
             importReportArt.persist(String.format("Import Coverage Method Report for [%s]", toPackage.getName()));
          }
 
+         // Open results dir
+         if (Desktop.isDesktopSupported()) {
+            Desktop desktop = Desktop.getDesktop();
+            desktop.open(new File(resultsDir));
+         }
       } catch (OseeCoreException ex) {
          OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
          data.logErrorWithFormat("Exception [%s] (see log)", ex.getLocalizedMessage());
          XResultDataUI.report(data, "Merge Dispositions - Error");
+      } finally {
+         monitor.done();
       }
-      if (Desktop.isDesktopSupported()) {
-         Desktop desktop = Desktop.getDesktop();
-         desktop.open(new File(resultsDir));
-      }
-      monitor.done();
    }
 
-   private void processDispositionsRecurse(ImportCoverageMethodsCounter counter, XResultData data, ICoverage fromCoverage, CoveragePackage toPackage) throws OseeStateException {
+   private void processDispositionsRecurse(IProgressMonitor monitor, ImportCoverageMethodsCounter counter, XResultData data, ICoverage fromCoverage, CoveragePackage toPackage) throws OseeCoreException {
       //      String onlyProcessCoverageFile = "copr_crew_input.update.2.ada"; // Uncomment to debug single file
       String onlyProcessCoverageFile = "";
       if (fromCoverage instanceof CoverageItem) {
@@ -151,22 +158,24 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
          for (CoverageUnit unit : unitProvider.getCoverageUnits()) {
             if (Strings.isValid(onlyProcessCoverageFile) && ShowMergeReportAction.isFile(unit) && !unit.getName().equals(
                onlyProcessCoverageFile)) {
-               System.out.println("skipping " + unit);
                continue;
             }
             System.out.println("Merging " + unit.getName());
-            processDispositionsRecurse(counter, data, unit, toPackage);
+            processDispositionsRecurse(monitor, counter, data, unit, toPackage);
          }
       }
       if (fromCoverage instanceof ICoverageItemProvider) {
          ICoverageItemProvider itemProvider = (ICoverageItemProvider) fromCoverage;
          for (CoverageItem unit : itemProvider.getCoverageItems()) {
-            processDispositionsRecurse(counter, data, unit, toPackage);
+            processDispositionsRecurse(monitor, counter, data, unit, toPackage);
          }
+      }
+      if (fromCoverage instanceof CoverageUnit) {
+         monitor.worked(1);
       }
    }
 
-   private void importDisposition(ImportCoverageMethodsCounter counter, XResultData data, CoverageItem fromItem, CoveragePackage toPackage) {
+   private void importDisposition(ImportCoverageMethodsCounter counter, XResultData data, CoverageItem fromItem, CoveragePackage toPackage) throws OseeCoreException {
       // First, attempt to find this coverage item
       ImportMatch matchItem = findMatch(fromItem, toPackage);
       if (matchItem.isMatch()) {
@@ -179,6 +188,7 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
          } else if (toItem.getCoverageMethod().getName().equals(fromItem.getCoverageMethod().getName())) {
             data.log(" - ALREADY SET");
          } else {
+            counter.numImported++;
             data.log(" - IMPORTED");
             toItem.setCoverageMethod(fromItem.getCoverageMethod());
             if (!toItem.getRationale().equals(fromItem.getRationale())) {
@@ -201,12 +211,33 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
       } else {
          counter.numNoMatch++;
          CoverageUnit fromFile = getFileCoverageUnit(fromItem);
+         if (!counter.fileToErrorCount.contains(fromFile.getName())) {
+            outputFileToResults(resultsDir, "from", fromFile);
+            CoverageUnit matchingToFile = getFileCoverageUnitFromNameRecurseDown(toPackage, fromFile.getName());
+            if (matchingToFile != null) {
+               outputFileToResults(resultsDir, "to", matchingToFile);
+            }
+         }
          counter.fileToErrorCount.put(fromFile.getName());
          data.logErrorWithFormat("NO MATCH [%s]", matchItem.getDescription());
          data.logWithFormat("   --> Notes [%s]\n", getNonNullValue(fromItem.getNotes()));
          data.logWithFormat("   --> Task [%s][%s]\n", getNonNullValue(fromItem.getWorkProductTaskGuid()),
             getNonNullValue(fromItem.getWorkProductTaskStr()));
       }
+   }
+
+   private String getPkgDir(String baseDir, String dirName) {
+      String dir = baseDir + System.getProperty("file.separator") + dirName;
+      File file = new File(dir);
+      if (!file.exists()) {
+         file.mkdir();
+      }
+      return dir;
+   }
+
+   private void outputFileToResults(String baseDir, String dirName, CoverageUnit unit) throws OseeCoreException {
+      String unitDirName = getPkgDir(baseDir, dirName);
+      ShowMergeReportAction.createCoverageUnitFile(unitDirName, unit);
    }
 
    private String getNonNullValue(String value) {
@@ -265,7 +296,6 @@ public class ImportCoverageMethodsOperation extends org.eclipse.osee.framework.c
          toMethod = weakUnits.iterator().next();
          description += "picked MED; ";
       }
-
       // TODO may want to handle case where 2 strong or med; see if item name / order match
 
       if (toMethod == null) {
