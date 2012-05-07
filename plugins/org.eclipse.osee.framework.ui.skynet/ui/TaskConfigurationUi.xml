@@ -1,4 +1,5 @@
 <xWidgets>
 	<XWidget xwidgetType="XAtsProgramComboWidget" displayName="Program" />
 	<XWidget xwidgetType="XListDropViewer" displayName="Version Artifacts" />
+	<XWidget xwidgetType="XListDropViewer" displayName="Task Configuration Artifacts" />
 </xWidgets>
