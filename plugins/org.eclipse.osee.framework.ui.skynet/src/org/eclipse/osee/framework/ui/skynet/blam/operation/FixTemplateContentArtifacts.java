@@ -338,7 +338,6 @@ public class FixTemplateContentArtifacts extends AbstractBlam {
       private final String uri;
 
       public AttrData(String gammaId, String hrid, String uri) {
-         super();
          this.gammaId = gammaId;
          this.hrid = hrid;
          this.uri = uri;

@@ -85,7 +85,7 @@ public class CopyAtsConfigurationBlam extends AbstractBlam {
          new CopyAtsValidation(data, resultData).validate();
          if (resultData.isErrors() || !data.isPersistChanges()) {
             resultData.log("Validation Complete");
-            XResultDataUI.report(resultData,getName());
+            XResultDataUI.report(resultData, getName());
             return;
          }
 
@@ -113,10 +113,10 @@ public class CopyAtsConfigurationBlam extends AbstractBlam {
    @Override
    public void widgetCreated(XWidget xWidget, FormToolkit toolkit, Artifact art, DynamicXWidgetLayout dynamicXWidgetLayout, XModifiedListener modListener, boolean isEditable) throws OseeCoreException {
       super.widgetCreated(xWidget, toolkit, art, dynamicXWidgetLayout, modListener, isEditable);
-      if (xWidget.getLabel().equals("Top Team Definition to Copy From (most like new config)")) {
+      String label = xWidget.getLabel();
+      if ("Top Team Definition to Copy From (most like new config)".equals(label)) {
          xTeamDefinitionCombo = (XTeamDefinitionCombo) xWidget;
-      }
-      if (xWidget.getLabel().equals("Top Actionable Item to Copy From")) {
+      } else if ("Top Actionable Item to Copy From".equals(label)) {
          xActionableItemCombo = (XActionableItemCombo) xWidget;
       }
    }

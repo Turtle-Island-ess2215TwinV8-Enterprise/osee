@@ -423,7 +423,7 @@ public class AHTML {
       return addHeaderRowMultiColumnTable(strs.toArray(new String[strs.size()]));
    }
 
-   public static String addHeaderRowMultiColumnTable(String[] str) {
+   public static String addHeaderRowMultiColumnTable(String... str) {
       return addHeaderRowMultiColumnTable(str, null);
    }
 

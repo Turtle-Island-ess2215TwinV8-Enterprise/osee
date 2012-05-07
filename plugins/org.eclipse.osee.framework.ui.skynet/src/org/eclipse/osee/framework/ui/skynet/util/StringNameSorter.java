@@ -15,14 +15,9 @@ import org.eclipse.jface.viewers.ViewerSorter;
 
 public class StringNameSorter extends ViewerSorter {
 
-   public StringNameSorter() {
-      super();
-   }
-
    @Override
    @SuppressWarnings("unchecked")
    public int compare(Viewer viewer, Object o1, Object o2) {
-
       return getComparator().compare(o1.toString(), o2.toString());
    }
 

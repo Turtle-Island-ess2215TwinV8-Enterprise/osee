@@ -52,6 +52,7 @@ public final class CoreArtifactTypes {
    public static final IArtifactType SystemDesign = TokenFactory.createArtifactType(0x000000000000002CL, "System Design");
    public static final IArtifactType SystemFunction = TokenFactory.createArtifactType(0x0000000000000023L, "System Function");
    public static final IArtifactType SystemRequirement = TokenFactory.createArtifactType(0x000000000000001EL, "System Requirement");
+   public static final IArtifactType TaskCreation = TokenFactory.createArtifactType(0x1000000000000198L, "Task Creation");
    public static final IArtifactType TestCase = TokenFactory.createArtifactType(0x0000000000000052L, "Test Case");
    public static final IArtifactType TestInformationSheet = TokenFactory.createArtifactType(0x0000000000000029L, "Test Information Sheet");
    public static final IArtifactType TestPlanElement = TokenFactory.createArtifactType(0x0000000000000025L, "Test Plan Element");

@@ -13,7 +13,6 @@ package org.eclipse.osee.framework.database.core;
 import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.jdk.core.util.Strings;
 
 /**
  * @author Donald G. Dunne
@@ -65,10 +64,7 @@ public class OseeInfo {
     */
    public static boolean isCacheEnabled(String key) throws OseeCoreException {
       String dbProperty = OseeInfo.getCachedValue(key);
-      if (Strings.isValid(dbProperty)) {
-         return dbProperty.equals("true");
-      }
-      return false;
+      return "true".equals(dbProperty);
    }
 
    public static void setEnabled(String key, boolean enabled) throws OseeCoreException {
@@ -89,10 +85,7 @@ public class OseeInfo {
     */
    public static boolean isBoolean(String key) throws OseeCoreException {
       String dbProperty = OseeInfo.getValue(key);
-      if (Strings.isValid(dbProperty)) {
-         return dbProperty.equals("true");
-      }
-      return false;
+      return "true".equals(dbProperty);
    }
 
    public static void putValue(String key, String value) throws OseeCoreException {

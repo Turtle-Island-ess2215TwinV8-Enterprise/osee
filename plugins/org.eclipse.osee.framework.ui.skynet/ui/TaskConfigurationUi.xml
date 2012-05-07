@@ -1,0 +1,4 @@
+<xWidgets>
+	<XWidget xwidgetType="XAtsProgramComboWidget" displayName="Program" />
+	<XWidget xwidgetType="XListDropViewer" displayName="Version Artifacts" />
+</xWidgets>

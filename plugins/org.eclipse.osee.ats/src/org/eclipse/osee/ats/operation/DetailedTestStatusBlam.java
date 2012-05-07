@@ -597,7 +597,7 @@ public class DetailedTestStatusBlam extends AbstractBlam {
    @Override
    public void widgetCreated(XWidget xWidget, FormToolkit toolkit, Artifact art, DynamicXWidgetLayout dynamicXWidgetLayout, XModifiedListener modListener, boolean isEditable) {
       String widgetName = xWidget.getLabel();
-      if (widgetName.equals("Program")) {
+      if ("Program".equals(widgetName)) {
          XAtsProgramComboWidget programWidget = (XAtsProgramComboWidget) xWidget;
          programWidget.getComboViewer().addSelectionChangedListener(new ProgramSelectionListener());
       }
@@ -611,7 +611,6 @@ public class DetailedTestStatusBlam extends AbstractBlam {
       legacyIdToImplementers.put(legacyId, implementers);
 
       for (TaskArtifact task : tasks) {
-
          taskNameMatcher.reset(task.getName());
          if (taskNameMatcher.find()) {
             String requirementName = taskNameMatcher.group(2);

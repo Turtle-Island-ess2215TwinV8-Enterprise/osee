@@ -36,10 +36,6 @@ public class BlamEditor extends FormEditor implements IDirtiableEditor {
    private BlamEditorActionBarContributor actionBarContributor;
    private BlamOverviewPage overviewPage;
 
-   public BlamEditor() {
-      super();
-   }
-
    public BlamEditorActionBarContributor getActionBarContributor() {
       if (actionBarContributor == null) {
          actionBarContributor = new BlamEditorActionBarContributor(this);

@@ -19,6 +19,11 @@ abstract artifactType "ats.Ats Artifact" extends "Artifact" {
    attribute "ats.Goal Order Vote"
 }
 
+artifactType "TaskCreation" extends "Artifact" {
+   guid "ABR52KH7FwMFi9CFsLgA"
+   uuid 0x1000000000000198
+}
+
 artifactType "ats.Review" extends "ats.State Machine" {
    guid "ABMa6P4TwzXA1b8K3RAA"
    uuid 0x0000000000000040

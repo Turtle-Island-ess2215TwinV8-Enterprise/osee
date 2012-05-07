@@ -405,6 +405,14 @@
          name="CopyAtsConfigurationBlam"
          point="org.eclipse.osee.framework.ui.skynet.BlamOperation">
       <Operation
+            className="org.eclipse.osee.ats.config.TaskConfiguration">
+      </Operation>
+   </extension>
+   <extension
+         id="TaskConfiguration"
+         name="TaskConfiguration"
+         point="org.eclipse.osee.framework.ui.skynet.BlamOperation">
+      <Operation
             className="org.eclipse.osee.ats.config.copy.CopyAtsConfigurationBlam">
       </Operation>
    </extension>

@@ -75,11 +75,6 @@ public class ShowNextTypeRemoteIds extends AbstractBlam {
    }
 
    @Override
-   public String getName() {
-      return "Show Next OseeType Remote_Ids";
-   }
-
-   @Override
    public String getDescriptionUsage() {
       return "Return the next remote_ids for Artifact, Attribute, Relation and Enum types for both Framework (org.eclipse.osee) and Local (Origin) Types.";
    }

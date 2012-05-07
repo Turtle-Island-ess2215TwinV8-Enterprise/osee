@@ -56,6 +56,7 @@ public abstract class AbstractBlam implements IDynamicWidgetLayoutListener {
 
    public enum BlamUiSource {
       DEFAULT,
+      EMPTY,
       FILE
    }
 
@@ -90,6 +91,30 @@ public abstract class AbstractBlam implements IDynamicWidgetLayoutListener {
       return generatedName.toString();
    }
 
+   /**
+    * Example usage of VariableMap parameter:
+    *
+    * <pre>
+    * ui:
+    * {@code
+    * <xWidgets>
+    *    <XWidget xwidgetType="XComboWidget" displayName="Program1" />
+    * </xWidgets>
+    * }
+    * </pre>
+    *
+    * Variable mapping:
+    *
+    * <pre>
+    * {@code
+    * ...
+    *    (SpecificType) variableMap.getValue("Program1");
+    * ...
+    * }
+    * </pre>
+    *
+    * @param variableMap mapping of displayName to widget.
+    */
    public void runOperation(VariableMap variableMap, IProgressMonitor monitor) throws Exception {
       throw new OseeStateException(
          "either runOperation or createOperation but be overriden by subclesses of AbstractBlam");
@@ -109,6 +134,8 @@ public abstract class AbstractBlam implements IDynamicWidgetLayoutListener {
       switch (source) {
          case FILE:
             return getXWidgetsXmlFromUiFile(getClass().getSimpleName(), Activator.PLUGIN_ID);
+         case EMPTY:
+            return AbstractBlam.emptyXWidgetsXml;
          case DEFAULT:
          default:
             return AbstractBlam.branchXWidgetXml;
@@ -121,8 +148,7 @@ public abstract class AbstractBlam implements IDynamicWidgetLayoutListener {
     * @param className class name of blam
     * @param nameOfBundle name of bundle i.e. org.eclipse.rcp.xyz
     * @return contents of the {@code /bundleName/ui/<className>Ui.xml }
-    * @throws OseeCoreException usually {@link IOException} or {@link NullPointerException} wrapped in
-    * {@link OseeCoreException}
+    * @throws OseeCoreException usually {@link IOException} or {@link NullPointerException} (if resource not found).
     */
    public String getXWidgetsXmlFromUiFile(String className, String nameOfBundle) throws OseeCoreException {
       String file = String.format("ui/%sUi.xml", className);

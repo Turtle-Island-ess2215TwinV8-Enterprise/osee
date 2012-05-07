@@ -107,8 +107,8 @@ public class XListDropViewer extends XListViewer implements IXWidgetInputAddable
                      TextTransfer transfer = TextTransfer.getInstance();
                      String data = (String) cb.getContents(transfer);
                      Branch branch = BranchSelectionDialog.getBranchFromUser();
-                     Operations.executeAsJob(new StringGuidsToArtifactListOperation(new ClientLogger(
-                        Activator.class), data, branch, XListDropViewer.this), true);
+                     Operations.executeAsJob(new StringGuidsToArtifactListOperation(new ClientLogger(Activator.class),
+                        data, branch, XListDropViewer.this), true);
                   } finally {
                      cb.dispose();
                   }

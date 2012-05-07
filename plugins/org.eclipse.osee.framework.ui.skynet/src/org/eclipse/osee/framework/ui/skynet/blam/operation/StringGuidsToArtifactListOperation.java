@@ -63,27 +63,24 @@ public class StringGuidsToArtifactListOperation extends AbstractOperation {
             monitor.worked(guidIndex + 1);
          }
 
-         try {
-            //written to minimize calls to db VS individuals gets (+cost of overhead)
-            if (!monitor.isCanceled()) {
-               monitor.subTask(subTaskName);
-               monitor.beginTask(subTaskName, costOfArtifactRetrieval);
-               artifacts.addAll(ArtifactQuery.getArtifactListFromIds(validGuids, this.branch));
-               monitor.done();
-               monitor.worked(costOfArtifactRetrieval);
+         if (!validGuids.isEmpty()) {
+            try {
+               //written to minimize calls to db VS individuals gets (+cost of overhead)
+               if (!monitor.isCanceled()) {
+                  monitor.subTask(subTaskName);
+                  artifacts.addAll(ArtifactQuery.getArtifactListFromIds(validGuids, this.branch));
+                  monitor.done();
+                  monitor.worked(costOfArtifactRetrieval);
+               }
+            } catch (Exception ex) {
+               getLogger().log(ex);
             }
-         } catch (Exception ex) {
-            getLogger().log(ex);
          }
-
-         monitor.done();
-
          widget.addToInput(artifacts);
       } else {
          getLogger().logf("Problem with arguments for this operation: %s",
-            Strings.buildStatment(Arrays.asList(new String[] {"rawGuidsData", "branch", "widget"})), " or ");
-         monitor.setCanceled(true);
-         monitor.done();
+            Strings.buildStatment(Arrays.asList("rawGuidsData", "branch", "widget")), " or ");
       }
+      monitor.done();
    }
 }

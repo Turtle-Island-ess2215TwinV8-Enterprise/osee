@@ -33,11 +33,11 @@ public class ImageCaptureBlam extends AbstractBlam {
 
    public Point topLeftPoint;
    public Point botRightPoint;
-   public boolean listenerAdded = false;
 
-   @Override
-   public String getName() {
-      return "Image Capture";
+   public ImageCaptureBlam() {
+      super("Image Capture",
+         "Mouse Down on top left location, Mouse Up on bottom right.  Only works within bounds of workbench window.",
+         BlamUiSource.EMPTY);
    }
 
    @Override
@@ -75,16 +75,6 @@ public class ImageCaptureBlam extends AbstractBlam {
          }
       }
    };
-
-   @Override
-   public String getXWidgetsXml() {
-      return "<xWidgets></xWidgets>";
-   }
-
-   @Override
-   public String getDescriptionUsage() {
-      return "Mouse Down on top left location, Mouse Up on bottom right.  Only works within bounds of workbench window.";
-   }
 
    @Override
    public Collection<String> getCategories() {
