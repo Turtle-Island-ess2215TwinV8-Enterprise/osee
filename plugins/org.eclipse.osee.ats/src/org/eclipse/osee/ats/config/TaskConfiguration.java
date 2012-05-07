@@ -235,8 +235,9 @@ public class TaskConfiguration extends AbstractBlam {
                   version = (VersionArtifact) iter.next();
 
                   final Map<String, Artifact> stringTotaskCreationMap = new HashMap<String, Artifact>();
-                  Operations.executeAsJob(new TaskConfigurationQueryOperation("Search for task configuration setup...",
-                     NullOperationLogger.getSingleton(), version, stringTotaskCreationMap), true);
+                  Operations.executeAsJob(new TaskConfigurationQueryOperation(
+                     "Search for task configuration(s) setup...", NullOperationLogger.getSingleton(), version,
+                     stringTotaskCreationMap), true);
 
                   final ISelectionChangedListener taskCreationListener = new ISelectionChangedListener() {
                      private final Map<String, Artifact> map = stringTotaskCreationMap;
