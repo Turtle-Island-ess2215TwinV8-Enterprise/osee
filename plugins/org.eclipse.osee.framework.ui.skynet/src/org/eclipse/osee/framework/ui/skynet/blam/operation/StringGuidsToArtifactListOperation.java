@@ -60,7 +60,7 @@ public class StringGuidsToArtifactListOperation extends AbstractOperation {
             if (GUID.isValid(guids[guidIndex])) {
                validGuids.add(guids[guidIndex]);
             }
-            monitor.worked(guidIndex + 1);
+            monitor.worked(guidIndex);
          }
 
          if (!validGuids.isEmpty()) {

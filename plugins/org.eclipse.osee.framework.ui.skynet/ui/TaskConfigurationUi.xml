@@ -1,5 +1,8 @@
 <xWidgets>
+	<XWidget xwidgetType="XCheckBox" displayName="Delete mode (selected Task Configuration artifact(s) will be deleted)" labelAfter="true" horizontalLabel="true"/>/>
 	<XWidget xwidgetType="XAtsProgramComboWidget" displayName="Program" />
 	<XWidget xwidgetType="XListDropViewer" displayName="Version Artifacts" />
 	<XWidget xwidgetType="XListDropViewer" displayName="Task Configuration Artifacts" />
+	<XWidget xwidgetType="XListDropViewer" displayName="Available Team Definitions" />
+	<XWidget xwidgetType="XListDropViewer" displayName="Available Version Artifacts" />
 </xWidgets>

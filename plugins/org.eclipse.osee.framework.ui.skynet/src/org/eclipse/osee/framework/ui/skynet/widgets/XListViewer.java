@@ -384,4 +384,13 @@ public class XListViewer extends GenericXWidget {
    public void setDefaultSelected(Object defaultSelectedObject) {
       this.defaultSelectedObject = defaultSelectedObject;
    }
+
+   public void setVisible(boolean visible) {
+      getControl().setVisible(visible);
+      getLabelWidget().setVisible(visible);
+   }
+
+   public boolean isVisible() {
+      return getControl().isVisible() && getLabelWidget().isVisible();
+   }
 }

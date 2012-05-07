@@ -47,11 +47,7 @@ public class TeamVersionListDialog extends SelectionDialog {
    private final TeamDefinitionArtifact teamDef;
 
    public TeamVersionListDialog(Active active) {
-      super(Displays.getActiveShell());
-      this.active = active;
-      this.teamDef = null;
-      setTitle("Select Version");
-      setMessage("Select Version");
+      this(null, active);
    }
 
    public TeamVersionListDialog(TeamDefinitionArtifact teamDef, Active active) {
