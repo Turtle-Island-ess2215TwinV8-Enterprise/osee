@@ -112,6 +112,11 @@ public class TaskConfiguration extends AbstractBlam {
                   getClass().getSimpleName(), version));
             }
          } else {
+            if (selectedTeamDefinition == null || selectedVersion == null) {
+               monitor.setCanceled(true);
+               throw new OseeStateException("Missing selections of selectedVersion and selectedTeamDefinition");
+            }
+
             Artifact taskConfiguration =
                ArtifactTypeManager.addArtifact(CoreArtifactTypes.UniversalGroup, version.getBranch(),
                   TASK_CONFIGURATION);

@@ -95,7 +95,6 @@ public abstract class AbstractBlam implements IDynamicWidgetLayoutListener {
     * Example usage of VariableMap parameter:
     *
     * <pre>
-    * ui:
     * {@code
     * <xWidgets>
     *    <XWidget xwidgetType="XComboWidget" displayName="Program1" />
