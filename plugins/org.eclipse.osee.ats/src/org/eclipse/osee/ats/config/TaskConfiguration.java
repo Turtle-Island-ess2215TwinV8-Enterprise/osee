@@ -75,6 +75,8 @@ public class TaskConfiguration extends AbstractBlam {
    private TeamDefinitionArtifact selectedTeamDefinition;
    private VersionArtifact selectedVersion;
 
+   private final Set<Artifact> selectedTaskConfigurationArtifacts;
+
    private static Set<Class<?>> keyTypes;
    static {
       keyTypes = new HashSet<Class<?>>(2);
@@ -86,6 +88,7 @@ public class TaskConfiguration extends AbstractBlam {
       super(null, String.format(
          "Creates new %s artifact on selected Version artifacts, associates via Parent-Child relationship.",
          TASK_CONFIGURATION), BlamUiSource.FILE);
+      selectedTaskConfigurationArtifacts = new HashSet<Artifact>();
    }
 
    @Override
@@ -94,34 +97,50 @@ public class TaskConfiguration extends AbstractBlam {
          monitor = new NullProgressMonitor();
       }
 
-      Artifact taskConfiguration = null;
+      boolean deleteTaskConfiguration = map.getBoolean(DELETE_CHECKBOX);
+
       if (version != null) {
+
          String workStatement =
-            String.format("Created \"%s\" artifact on Version Artifact:[%s]", TASK_CONFIGURATION, version);
-         monitor.beginTask(workStatement, 3);
+            String.format("%s \"%s\" artifact", deleteTaskConfiguration ? "Created" : "Deleted", TASK_CONFIGURATION);
+         monitor.beginTask(workStatement, deleteTaskConfiguration ? 1 : 3);
 
-         taskConfiguration =
-            ArtifactTypeManager.addArtifact(CoreArtifactTypes.UniversalGroup, version.getBranch(), TASK_CONFIGURATION);
-         monitor.worked(1);
+         if (deleteTaskConfiguration) {
+            for (Artifact taskConfiguration : selectedTaskConfigurationArtifacts) {
+               taskConfiguration.delete();
+               taskConfiguration.persist(String.format("[%s] removed Task configuration from [%s]",
+                  getClass().getSimpleName(), version));
+            }
+         } else {
+            Artifact taskConfiguration =
+               ArtifactTypeManager.addArtifact(CoreArtifactTypes.UniversalGroup, version.getBranch(),
+                  TASK_CONFIGURATION);
+            monitor.worked(1);
 
-         version.addChild(taskConfiguration);
-         monitor.worked(1);
+            version.addChild(taskConfiguration);
+            monitor.worked(1);
 
-         taskConfiguration.addAttribute(CoreAttributeTypes.Description, String.format(
-            "%s artifact relates 2 key artifacts to determine automatic task creation for a particular Branch",
-            TASK_CONFIGURATION));
-         monitor.worked(1);
+            taskConfiguration.addAttribute(CoreAttributeTypes.Description, String.format(
+               "%s artifact relates 2 key artifacts to determine automatic task creation for a particular Branch",
+               TASK_CONFIGURATION));
+            monitor.worked(1);
 
-         taskConfiguration.addRelation(CoreRelationTypes.Universal_Grouping__Members, selectedTeamDefinition);
-         taskConfiguration.addRelation(CoreRelationTypes.Universal_Grouping__Members, selectedVersion);
+            taskConfiguration.addRelation(CoreRelationTypes.Universal_Grouping__Members, selectedTeamDefinition);
+            taskConfiguration.addRelation(CoreRelationTypes.Universal_Grouping__Members, selectedVersion);
 
-         version.persist(String.format("[%s] added Task configuration to [%s]", getClass().getSimpleName(), version));
+            version.persist(String.format("[%s] added Task configuration to [%s]", getClass().getSimpleName(), version));
+         }
 
          //redraw available option widgets
-         availableTeamDefinitionsWidget.setInput(null);
-         availableOtherVersionsWidget.setInput(null);
-         selectedVersion = null;
-         selectedTeamDefinition = null;
+         Displays.ensureInDisplayThread(new Runnable() {
+            @Override
+            public void run() {
+               availableTeamDefinitionsWidget.setInput(null);
+               availableOtherVersionsWidget.setInput(null);
+               selectedVersion = null;
+               selectedTeamDefinition = null;
+            }
+         });
       } else {
          throw new OseeStateException("Version artifact not selected");
       }
@@ -139,7 +158,6 @@ public class TaskConfiguration extends AbstractBlam {
          versionsWidget.addSelectionChangedListener(new VersionChangedListener());
       } else if (TASK_CONFIGURATION_ARTIFACTS.equalsIgnoreCase(label)) {
          taskConfigurationArtifacts = (XListViewer) xWidget;
-         //taskConfigurationArtifacts.addSelectionChangedListener(new TaskConfigurationChangedListener());
       } else if (AVAILABLE_TEAM_DEFINITIONS.equalsIgnoreCase(label)) {
          availableTeamDefinitionsWidget = (XListViewer) xWidget;
          availableTeamDefinitionsWidget.addSelectionChangedListener(new AvailTeamDefinitionSelectedListener());
@@ -182,6 +200,7 @@ public class TaskConfiguration extends AbstractBlam {
                      }
                   } catch (OseeCoreException ex) {
                      OseeLog.log(
+
                         Activator.class,
                         Level.INFO,
                         String.format("Unable to retrieve artifacts in %s",
@@ -245,7 +264,7 @@ public class TaskConfiguration extends AbstractBlam {
                   }
 
                   //show currently stored task configuration artifacts - show their keys
-                  final Map<String, Artifact> nameTotaskCreation = new HashMap<String, Artifact>();
+                  final Map<String, Artifact> stringTotaskCreationMap = new HashMap<String, Artifact>();
                   try {
                      for (Artifact taskCreationNode : version.getChildren()) {
                         if (taskCreationNode.isOfType(CoreArtifactTypes.UniversalGroup)) {
@@ -262,7 +281,7 @@ public class TaskConfiguration extends AbstractBlam {
                                  String.format("[%s]:[%s] --- [%s]:[%s]", key1.getArtifactTypeName(), key1.getName(),
                                     key2.getArtifactTypeName(), key2.getName());
 
-                              nameTotaskCreation.put(guiName, taskCreationNode);
+                              stringTotaskCreationMap.put(guiName, taskCreationNode);
                            }
                         }
                      }
@@ -270,11 +289,32 @@ public class TaskConfiguration extends AbstractBlam {
                      OseeLog.log(Activator.class, Level.INFO,
                         String.format("Unable to retrieve %s artifacts", TASK_CONFIGURATION));
                   }
+
+                  final ISelectionChangedListener taskCreationListener = new ISelectionChangedListener() {
+                     private final Map<String, Artifact> map = stringTotaskCreationMap;
+
+                     @Override
+                     public void selectionChanged(SelectionChangedEvent event) {
+                        IStructuredSelection selection =
+                           (IStructuredSelection) event.getSelectionProvider().getSelection();
+                        Iterator<?> iter = selection.iterator();
+                        if (iter.hasNext()) {
+                           String name = (String) iter.next();
+                           Artifact value = map.get(name);
+                           if (value != null) {
+                              selectedTaskConfigurationArtifacts.add(value);
+                           }
+                        }
+                     }
+                  };
+
                   Displays.ensureInDisplayThread(new Runnable() {
                      @Override
                      public void run() {
-                        taskConfigurationArtifacts.setInput(nameTotaskCreation.keySet());
+                        taskConfigurationArtifacts.setInput(stringTotaskCreationMap.keySet());
+                        availableTeamDefinitionsWidget.setInput(teamDefs);
                         availableOtherVersionsWidget.setInput(versionArtifacts);
+                        taskConfigurationArtifacts.addSelectionChangedListener(taskCreationListener);
                      }
                   });
                }
@@ -312,6 +352,7 @@ public class TaskConfiguration extends AbstractBlam {
                         Level.SEVERE,
                         AvailTeamDefinitionSelectedListener.class.getSimpleName() + " unable to update versions. Ex: " + ex);
                   }
+                  filteredVersions.remove(version);
 
                   Displays.ensureInDisplayThread(new Runnable() {
                      @Override
@@ -387,11 +428,4 @@ public class TaskConfiguration extends AbstractBlam {
       }
       return versions;
    }
-
-   private class TaskConfigurationChangedListener implements ISelectionChangedListener {
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-         IStructuredSelection selection = (IStructuredSelection) event.getSelectionProvider().getSelection();
-      }
-   };
 }
