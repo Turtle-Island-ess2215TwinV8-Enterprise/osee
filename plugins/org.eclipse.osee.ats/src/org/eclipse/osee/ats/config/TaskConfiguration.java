@@ -211,18 +211,6 @@ public class TaskConfiguration extends AbstractBlam {
       @Override
       public void selectionChanged(SelectionChangedEvent event) {
          IStructuredSelection selection = (IStructuredSelection) event.getSelectionProvider().getSelection();
-
-         //         Iterator<?> iter = selection.iterator();
-         //         if (iter.hasNext()) {
-         //            Artifact selectedVersion = (Artifact) iter.next();
-         //            try {
-         //               for (Artifact artifact : selectedVersion.getChildren()) {
-         //                  System.out.println("artifact : " + artifact);
-         //               }
-         //            } catch (OseeCoreException ex) {
-         //               //
-         //            }
-         //         }
       }
    };
 }
