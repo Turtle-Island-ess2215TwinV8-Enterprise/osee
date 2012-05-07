@@ -125,9 +125,7 @@ public class XListViewer extends GenericXWidget {
    }
 
    public void setInputArtifacts(Collection<? extends Artifact> arts) {
-      ArrayList<Object> objs = new ArrayList<Object>();
-      objs.addAll(arts);
-      setInput(objs);
+      setInput(new ArrayList<Object>(arts));
    }
 
    public void addSelectionChangedListener(ISelectionChangedListener listener) {
