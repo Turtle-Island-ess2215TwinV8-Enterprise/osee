@@ -30,14 +30,14 @@ import org.eclipse.osee.framework.core.operation.OperationLogger;
 import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 
-public class TaskConfigurationQuery extends AbstractOperation {
+public class TaskConfigurationQueryOperation extends AbstractOperation {
    private final Class<?>[] KEYS = {VersionArtifact.class, TeamDefinitionArtifact.class};
 
    private final Set<Class<?>> keyTypes;
    private final Artifact version;
    private final Map<String, Artifact> taskConfigurationStorage;
 
-   public TaskConfigurationQuery(String operationName, OperationLogger logger, Artifact versionArtifact, Map<String, Artifact> storage) {
+   public TaskConfigurationQueryOperation(String operationName, OperationLogger logger, Artifact versionArtifact, Map<String, Artifact> storage) {
       super(operationName, "org.eclipse.osee.ats.config.TaskConfigurationQuery", logger);
       this.version = versionArtifact;
       this.keyTypes = new HashSet<Class<?>>(Arrays.asList(KEYS));

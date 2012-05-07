@@ -235,7 +235,7 @@ public class TaskConfiguration extends AbstractBlam {
                   version = (VersionArtifact) iter.next();
 
                   final Map<String, Artifact> stringTotaskCreationMap = new HashMap<String, Artifact>();
-                  Operations.executeAsJob(new TaskConfigurationQuery("Search for task configuration setup...",
+                  Operations.executeAsJob(new TaskConfigurationQueryOperation("Search for task configuration setup...",
                      NullOperationLogger.getSingleton(), version, stringTotaskCreationMap), true);
 
                   final ISelectionChangedListener taskCreationListener = new ISelectionChangedListener() {
@@ -281,14 +281,16 @@ public class TaskConfiguration extends AbstractBlam {
          IStructuredSelection selection = (IStructuredSelection) event.getSelectionProvider().getSelection();
          final Iterator<?> iter = selection.iterator();
          if (iter.hasNext()) {
-            final Set<Artifact> result = new HashSet<Artifact>();
             new Thread(new Runnable() {
                @Override
                public void run() {
+
+                  final Set<Artifact> result = new HashSet<Artifact>();
+
                   selectedTeamDefinition = (TeamDefinitionArtifact) iter.next();
 
-                  Operations.executeAsJob(new FilterVersionOperation("Filtering Version Artifacts", result,
-                     selectedTeamDefinition, version), true);
+                  Operations.executeAsJob(new FilterVersionOperation("Filtering Version Artifacts",
+                     getVersions(TaskConfiguration.this.program), result, selectedTeamDefinition, version), true);
 
                   Displays.ensureInDisplayThread(new Runnable() {
                      @Override
@@ -298,7 +300,7 @@ public class TaskConfiguration extends AbstractBlam {
                      }
                   });
                }
-            });
+            }).start();
          }
       }
    }
