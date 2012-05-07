@@ -29,12 +29,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.osee.ats.core.client.config.IAtsProgram;
 import org.eclipse.osee.ats.core.client.config.TeamDefinitionArtifact;
 import org.eclipse.osee.ats.core.client.version.VersionArtifact;
-import org.eclipse.osee.framework.core.data.IRelationTypeSide;
 import org.eclipse.osee.framework.core.enums.CoreArtifactTypes;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.enums.CoreRelationTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
+import org.eclipse.osee.framework.jdk.core.util.Collections;
 import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.skynet.core.artifact.ArtifactTypeManager;
@@ -49,12 +49,16 @@ import org.eclipse.osee.framework.ui.swt.Displays;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * TODO: refactor threads into "workers" with input and output
+ * TODO:
+ * <ul>
+ * <li>refactor threads into "workers" with input and output</li>
+ * <li>after you hit play, reset certain widgets</li>
+ * </ul>
  */
 public class TaskConfiguration extends AbstractBlam {
    private static final String TASK_CONFIGURATION = TaskConfiguration.class.getSimpleName();
    private static final String TASK_CONFIGURATION_ARTIFACTS = "Task Configuration Artifacts";
-   private static final String TEAM_DEFINITIONS = "Available Team Definitions";
+   private static final String AVAILABLE_TEAM_DEFINITIONS = "Available Team Definitions";
    private static final String AVAILABLE_VERSION_ARTIFACTS = "Available Version Artifacts";
    private static final String PROGRAM = "Program";
    private static final String VERSION_ARTIFACTS = "Version Artifacts";
@@ -67,6 +71,9 @@ public class TaskConfiguration extends AbstractBlam {
    private XListViewer availableOtherVersionsWidget;
    private IAtsProgram program;
    private VersionArtifact version;
+
+   private TeamDefinitionArtifact selectedTeamDefinition;
+   private VersionArtifact selectedVersion;
 
    private static Set<Class<?>> keyTypes;
    static {
@@ -105,7 +112,16 @@ public class TaskConfiguration extends AbstractBlam {
             TASK_CONFIGURATION));
          monitor.worked(1);
 
+         taskConfiguration.addRelation(CoreRelationTypes.Universal_Grouping__Members, selectedTeamDefinition);
+         taskConfiguration.addRelation(CoreRelationTypes.Universal_Grouping__Members, selectedVersion);
+
          version.persist(String.format("[%s] added Task configuration to [%s]", getClass().getSimpleName(), version));
+
+         //redraw available option widgets
+         availableTeamDefinitionsWidget.setInput(null);
+         availableOtherVersionsWidget.setInput(null);
+         selectedVersion = null;
+         selectedTeamDefinition = null;
       } else {
          throw new OseeStateException("Version artifact not selected");
       }
@@ -124,12 +140,12 @@ public class TaskConfiguration extends AbstractBlam {
       } else if (TASK_CONFIGURATION_ARTIFACTS.equalsIgnoreCase(label)) {
          taskConfigurationArtifacts = (XListViewer) xWidget;
          //taskConfigurationArtifacts.addSelectionChangedListener(new TaskConfigurationChangedListener());
-      } else if (TEAM_DEFINITIONS.equalsIgnoreCase(label)) {
+      } else if (AVAILABLE_TEAM_DEFINITIONS.equalsIgnoreCase(label)) {
          availableTeamDefinitionsWidget = (XListViewer) xWidget;
          availableTeamDefinitionsWidget.addSelectionChangedListener(new AvailTeamDefinitionSelectedListener());
       } else if (AVAILABLE_VERSION_ARTIFACTS.equalsIgnoreCase(label)) {
          availableOtherVersionsWidget = (XListViewer) xWidget;
-         //otherVersionsWidget.addSelectionChangedListener(new VersionChangedListener());
+         availableOtherVersionsWidget.addSelectionChangedListener(new AvailableVersionArtifacts());
       } else if (DELETE_CHECKBOX.equalsIgnoreCase(label)) {
          xWidget.addXModifiedListener(new XModifiedListener() {
             @Override
@@ -158,16 +174,18 @@ public class TaskConfiguration extends AbstractBlam {
                   program = (IAtsProgram) iter.next();
 
                   final Collection<VersionArtifact> versionArtifacts = new ArrayList<VersionArtifact>();
-                  final List<Artifact> teamDefs = new ArrayList<Artifact>();
 
                   try {
                      TeamDefinitionArtifact holdingTeamDef = program.getTeamDefHoldingVersions();
                      if (holdingTeamDef != null) {
-                        teamDefs.addAll(holdingTeamDef.getDescendants());
                         versionArtifacts.addAll(holdingTeamDef.getVersionsArtifacts());
                      }
                   } catch (OseeCoreException ex) {
-                     System.out.println("Error while processing. Exception:" + ex);
+                     OseeLog.log(
+                        Activator.class,
+                        Level.INFO,
+                        String.format("Unable to retrieve artifacts in %s",
+                           ProgramChangedListener.class.getSimpleName()));
                   }
 
                   Displays.ensureInDisplayThread(new Runnable() {
@@ -175,8 +193,6 @@ public class TaskConfiguration extends AbstractBlam {
                      public void run() {
                         version = null;
                         versionsWidget.setInput(versionArtifacts);
-                        availableTeamDefinitionsWidget.setInput(teamDefs);
-                        availableOtherVersionsWidget.setInput(versionArtifacts);
                         taskConfigurationArtifacts.setInput(null);
                      }
                   });
@@ -197,6 +213,38 @@ public class TaskConfiguration extends AbstractBlam {
                if (iter.hasNext()) {
                   version = (VersionArtifact) iter.next();
 
+                  //filter out from avail versions to assign once selected -- same as avail team definitions
+                  final Collection<VersionArtifact> versionArtifacts = new ArrayList<VersionArtifact>();
+                  try {
+                     TeamDefinitionArtifact holdingTeamDef = program.getTeamDefHoldingVersions();
+                     if (holdingTeamDef != null) {
+                        versionArtifacts.addAll(holdingTeamDef.getVersionsArtifacts());
+                     }
+                     versionArtifacts.remove(version);
+                  } catch (OseeCoreException ex) {
+                     OseeLog.log(
+                        Activator.class,
+                        Level.INFO,
+                        String.format("Unable to retrieve artifacts in %s",
+                           VersionChangedListener.class.getSimpleName()));
+                  }
+
+                  //insert all team definitions -- same as versions
+                  final List<Artifact> teamDefs = new ArrayList<Artifact>();
+                  try {
+                     TeamDefinitionArtifact holdingTeamDef = program.getTeamDefHoldingVersions();
+                     if (holdingTeamDef != null) {
+                        teamDefs.addAll(holdingTeamDef.getDescendants());
+                     }
+                  } catch (OseeCoreException ex) {
+                     OseeLog.log(
+                        Activator.class,
+                        Level.INFO,
+                        String.format("Unable to retrieve artifacts in %s",
+                           ProgramChangedListener.class.getSimpleName()));
+                  }
+
+                  //show currently stored task configuration artifacts - show their keys
                   final Map<String, Artifact> nameTotaskCreation = new HashMap<String, Artifact>();
                   try {
                      for (Artifact taskCreationNode : version.getChildren()) {
@@ -226,6 +274,7 @@ public class TaskConfiguration extends AbstractBlam {
                      @Override
                      public void run() {
                         taskConfigurationArtifacts.setInput(nameTotaskCreation.keySet());
+                        availableOtherVersionsWidget.setInput(versionArtifacts);
                      }
                   });
                }
@@ -243,40 +292,31 @@ public class TaskConfiguration extends AbstractBlam {
             @Override
             public void run() {
                if (iter.hasNext()) {
-
-                  final Set<VersionArtifact> availVersions = getVersionsSet(TaskConfiguration.this.program);
-
+                  final Set<Artifact> filteredVersions =
+                     new HashSet<Artifact>(getVersionsSet(TaskConfiguration.this.program));
                   try {
-                     //----- start candidate for recursive code ------
-                     TeamDefinitionArtifact availTeamDefintion = (TeamDefinitionArtifact) iter.next();
-                     List<Artifact> taskConfigurations =
-                        availTeamDefintion.getRelatedArtifacts(CoreRelationTypes.Universal_Grouping__Group); //path step 1
-                     if (!taskConfigurations.isEmpty()) {
-                        for (Artifact artifact : taskConfigurations) {
-                           List<Artifact> versionList =
-                              artifact.getRelatedArtifacts(CoreRelationTypes.Universal_Grouping__Members); //path step 2
-                           if (!versionList.isEmpty()) {
-                              for (Artifact artifact2 : versionList) {
-                                 if (artifact2 instanceof VersionArtifact) {
-                                    availVersions.remove(artifact2);
-                                 }
-                              }
+                     selectedTeamDefinition = (TeamDefinitionArtifact) iter.next();
+                     for (Artifact taskConf : selectedTeamDefinition.getRelatedArtifacts(CoreRelationTypes.Universal_Grouping__Group)) {
+                        List<Artifact> keys =
+                           taskConf.getRelatedArtifacts(CoreRelationTypes.Universal_Grouping__Members);
+                        for (int i = 0; i < keys.size(); i++) {
+                           if (keys.get(i).equals(selectedTeamDefinition)) {
+                              filteredVersions.remove(keys.get(keys.size() - 1 - i));
+                              break;
                            }
                         }
                      }
-                     //----- end candidate for recursive code ------
-
                   } catch (Exception ex) {
                      OseeLog.log(
                         Activator.class,
                         Level.SEVERE,
-                        AvailTeamDefinitionSelectedListener.class.getSimpleName() + " unable to update versions. Ex:" + ex);
+                        AvailTeamDefinitionSelectedListener.class.getSimpleName() + " unable to update versions. Ex: " + ex);
                   }
 
                   Displays.ensureInDisplayThread(new Runnable() {
                      @Override
                      public void run() {
-                        availableOtherVersionsWidget.setInput(availVersions);
+                        availableOtherVersionsWidget.setInput(filteredVersions);
                      }
                   });
                }
@@ -285,19 +325,24 @@ public class TaskConfiguration extends AbstractBlam {
       }
    };
 
-   /**
-    * Just traverse to the end and return first specific type
-    */
-   private List<Artifact> navigatePath(Artifact startNode, Class<?> searchedItem, IRelationTypeSide[] path, int pathIndex) throws OseeCoreException {
-      if (pathIndex < path.length) {
-         return navigatePath(startNode.getRelatedArtifacts(path[pathIndex]).iterator().next(), searchedItem, path,
-            pathIndex + 1);
+   private class AvailableVersionArtifacts implements ISelectionChangedListener {
+      @Override
+      public void selectionChanged(SelectionChangedEvent event) {
+         IStructuredSelection selection = (IStructuredSelection) event.getSelectionProvider().getSelection();
+         final Iterator<?> iter = selection.iterator();
+         new Thread(new Runnable() {
+            @Override
+            public void run() {
+               if (iter.hasNext()) {
+                  selectedVersion = (VersionArtifact) iter.next();
+               }
+            }
+         }).start();
       }
-      return startNode.getRelatedArtifacts(path[path.length - 1]);
-   }
+   };
 
    /**
-    * Pulls first found keys from child node and returns it as a list. <br/>
+    * Pulls first found keys from child node and returns it as a set. <br/>
     * Will loop till it finds first 2 or runs out of member nodes.
     *
     * <pre>
@@ -328,16 +373,16 @@ public class TaskConfiguration extends AbstractBlam {
       }
    }
 
-   private Set<VersionArtifact> getVersionsSet(IAtsProgram program) {
-      Set<VersionArtifact> versions = new HashSet<VersionArtifact>();
+   private Set<Artifact> getVersionsSet(IAtsProgram program) {
+      Set<Artifact> versions = new HashSet<Artifact>();
       try {
          Collection<VersionArtifact> pulled = program.getTeamDefHoldingVersions().getVersionsArtifacts();
          if (!pulled.isEmpty()) {
-            versions.addAll(pulled);
+            versions.addAll(Collections.castAll(Artifact.class, pulled));
          }
       } catch (OseeCoreException ex) {
          OseeLog.log(Activator.class, Level.SEVERE, String.format(
-            "Unable to get version artifacts [%s].getVersionsSet() for program: [%s], Excetion:[%s]",
+            "Unable to get version artifacts [%s].getVersionsSet() for program: [%s], Exception:[%s]",
             TaskConfiguration.class.getSimpleName(), program, ex));
       }
       return versions;
