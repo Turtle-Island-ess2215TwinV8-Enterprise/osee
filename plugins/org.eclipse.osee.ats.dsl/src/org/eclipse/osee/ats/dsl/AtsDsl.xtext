@@ -6,7 +6,28 @@ AtsDsl:
 	('workDefinition' workDef=WorkDef)?
 	('userDefinition' userDef+=UserDef)*
 	('teamDefinition' teamDef+=TeamDef)*
-	('actionableItem' actionableItemDef+=ActionableItemDef)*;
+	('actionableItem' actionableItemDef+=ActionableItemDef)*
+	('program' program = Program)?
+;
+
+Program:
+	name = STRING
+	'{'
+		version += Version
+	'}'
+;
+
+Version:
+	'version' name = STRING
+	('{'
+		'parallel configuration' configurationId = ProgramParallelConfiguration
+	'}')?
+;
+
+ProgramParallelConfiguration:
+	name = ID
+;
+
 
 USER_DEF_REFERENCE:
 	STRING;
