@@ -25,7 +25,11 @@ Version:
 ;
 
 ProgramParallelConfiguration:
-	name = ID
+	name = STRING
+//	'{'
+//	   program = Program
+//	   version = Version
+//	'}'
 ;
 
 
