@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import org.eclipse.osee.executor.admin.HasCancellation;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
+import org.eclipse.osee.framework.core.data.ResultSet;
+import org.eclipse.osee.framework.core.data.ResultSetList;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.orcs.core.ds.ArtifactBuilder;
 import org.eclipse.osee.orcs.core.ds.DataLoader;
@@ -64,7 +66,7 @@ public class ArtifactLoaderFactoryImpl implements ArtifactLoaderFactory {
    }
 
    @SuppressWarnings("unchecked")
-   public <T> T create(SessionContext sessionContext, DataLoader loader) {
+   private <T> T create(SessionContext sessionContext, DataLoader loader) {
       InvocationHandler handler = new LoaderInvocationHandler(sessionContext, loader, builderFactory);
       Class<?>[] types = new Class<?>[] {ArtifactLoader.class};
       return (T) Proxy.newProxyInstance(ArtifactLoader.class.getClassLoader(), types, handler);
@@ -91,6 +93,12 @@ public class ArtifactLoaderFactoryImpl implements ArtifactLoaderFactory {
                cancellation = (HasCancellation) args[0];
             }
             toReturn = load(cancellation);
+         } else if (isGetResults(method)) {
+            HasCancellation cancellation = null;
+            if (args != null && args.length > 0) {
+               cancellation = (HasCancellation) args[0];
+            }
+            toReturn = getResults(cancellation);
          } else {
             Method delegateMethod = getMethodFor(proxied.getClass(), method);
             toReturn = delegateMethod.invoke(proxied, args);
@@ -101,8 +109,17 @@ public class ArtifactLoaderFactoryImpl implements ArtifactLoaderFactory {
          return toReturn;
       }
 
+      private ResultSet<ArtifactReadable> getResults(HasCancellation cancellation) throws OseeCoreException {
+         List<ArtifactReadable> data = load(cancellation);
+         return new ResultSetList<ArtifactReadable>(data);
+      }
+
       private boolean isLoad(Method method) {
          return "load".equals(method.getName());
+      }
+
+      private boolean isGetResults(Method method) {
+         return "getResults".equals(method.getName());
       }
 
       private List<ArtifactReadable> load(HasCancellation cancellation) throws OseeCoreException {
