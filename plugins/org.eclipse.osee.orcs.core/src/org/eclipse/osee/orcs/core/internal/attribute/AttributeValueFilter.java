@@ -11,11 +11,12 @@
 package org.eclipse.osee.orcs.core.internal.attribute;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.orcs.core.internal.util.DataMatcher;
 
 /**
  * @author Roberto E. Escobar
  */
-public class AttributeValueFilter<T> extends AttributeFilter {
+public class AttributeValueFilter<T> extends DataMatcher<Attribute<?>> {
    private final T toMatch;
 
    public AttributeValueFilter(T value) {

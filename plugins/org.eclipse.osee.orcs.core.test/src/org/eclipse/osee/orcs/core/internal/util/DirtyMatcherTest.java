@@ -8,11 +8,12 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.attribute;
+package org.eclipse.osee.orcs.core.internal.util;
 
 import static org.mockito.Mockito.when;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.internal.attribute.AttributeDirtyFilter.DirtyFlag;
+import org.eclipse.osee.orcs.core.internal.util.DirtyMatcher.DirtyFlag;
+import org.eclipse.osee.orcs.data.Modifiable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,40 +21,40 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Test Case for {@link AttributeDirtyFilter}
+ * Test Case for {@link DirtyMatcher}
  * 
  * @author Roberto E. Escobar
  */
-@SuppressWarnings("rawtypes")
-public class AttributeDirtyFilterTest {
+public class DirtyMatcherTest {
 
    // @formatter:off
-   @Mock private Attribute dirtyAttr;
-   @Mock private Attribute noneDirtyAttr;
+   @Mock private Modifiable dirty;
+   @Mock private Modifiable notDirty;
    // @formatter:on
 
    @Before
-   public void init() {
+   public void init() throws OseeCoreException {
       MockitoAnnotations.initMocks(this);
 
-      when(dirtyAttr.isDirty()).thenReturn(true);
-      when(noneDirtyAttr.isDirty()).thenReturn(false);
+      when(dirty.isDirty()).thenReturn(true);
+      when(notDirty.isDirty()).thenReturn(false);
    }
 
    @Test
    public void testAcceptDirties() throws OseeCoreException {
-      Assert.assertFalse(filter(DirtyFlag.DIRTY).accept(noneDirtyAttr));
-      Assert.assertTrue(filter(DirtyFlag.DIRTY).accept(dirtyAttr));
+      Assert.assertFalse(filter(DirtyFlag.DIRTY).accept(notDirty));
+      Assert.assertTrue(filter(DirtyFlag.DIRTY).accept(dirty));
    }
 
    @Test
    public void testAcceptNoneDirties() throws OseeCoreException {
-      Assert.assertTrue(filter(DirtyFlag.NON_DIRTY).accept(noneDirtyAttr));
-      Assert.assertFalse(filter(DirtyFlag.NON_DIRTY).accept(dirtyAttr));
+      Assert.assertTrue(filter(DirtyFlag.NON_DIRTY).accept(notDirty));
+      Assert.assertFalse(filter(DirtyFlag.NON_DIRTY).accept(dirty));
    }
 
-   private AttributeFilter filter(DirtyFlag flag) {
-      return new AttributeDirtyFilter(flag);
+   @SuppressWarnings({"rawtypes", "unchecked"})
+   private DataMatcher<Modifiable> filter(DirtyFlag flag) {
+      return new DirtyMatcher(flag);
    }
 
 }

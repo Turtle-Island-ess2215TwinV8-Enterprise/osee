@@ -8,26 +8,27 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.attribute;
+package org.eclipse.osee.orcs.core.internal.util;
 
 import org.eclipse.osee.framework.core.enums.DeletionFlag;
+import org.eclipse.osee.orcs.data.HasDeleteState;
 
 /**
  * @author Roberto E. Escobar
  */
-public class AttributeDeletedFilter extends AttributeFilter {
+public class DeletedMatcher<T extends HasDeleteState> extends DataMatcher<T> {
 
    private final boolean checkNeeded;
 
-   public AttributeDeletedFilter(DeletionFlag includeDeleted) {
+   public DeletedMatcher(DeletionFlag includeDeleted) {
       this.checkNeeded = !includeDeleted.areDeletedAllowed();
    }
 
    @Override
-   public boolean accept(Attribute<?> attribute) {
+   public boolean accept(T data) {
       boolean result = true;
       if (checkNeeded) {
-         result = !attribute.isDeleted();
+         result = !data.isDeleted();
       }
       return result;
    }

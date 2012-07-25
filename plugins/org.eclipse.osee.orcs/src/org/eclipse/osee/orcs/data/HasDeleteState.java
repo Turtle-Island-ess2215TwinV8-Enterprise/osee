@@ -10,22 +10,11 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.data;
 
-import org.eclipse.osee.framework.core.data.IArtifactType;
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 /**
  * @author Roberto E. Escobar
- * @author Andrew M. Finkbeiner
  */
-public interface ArtifactWriteable extends ArtifactReadable, AttributesWriteable, Modifiable {
+public interface HasDeleteState {
 
-   void setArtifactType(IArtifactType artifactType) throws OseeCoreException;
-
-   @Override
-   boolean isDirty() throws OseeCoreException;
-
-   void setName(String name) throws OseeCoreException;
-
-   void delete() throws OseeCoreException;
-
+   boolean isDeleted();
 }

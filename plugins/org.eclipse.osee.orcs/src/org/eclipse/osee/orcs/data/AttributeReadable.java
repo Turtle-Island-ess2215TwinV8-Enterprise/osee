@@ -19,7 +19,7 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
  * @author Roberto E. Escobar
  * @author Andrew M. Finkbeiner
  */
-public interface AttributeReadable<T> extends Readable {
+public interface AttributeReadable<T> extends Readable, HasDeleteState {
 
    int getId();
 
@@ -34,8 +34,6 @@ public interface AttributeReadable<T> extends Readable {
    T getValue() throws OseeCoreException;
 
    String getDisplayableString() throws OseeCoreException;
-
-   boolean isDeleted();
 
    @Override
    String toString();

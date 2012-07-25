@@ -10,31 +10,28 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.core.internal.attribute;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.data.ResultSet;
 import org.eclipse.osee.framework.core.enums.DeletionFlag;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.type.AttributeType;
-import org.eclipse.osee.framework.jdk.core.type.HashCollection;
-import org.eclipse.osee.orcs.core.internal.attribute.AttributeDirtyFilter.DirtyFlag;
+import org.eclipse.osee.orcs.core.internal.util.AbstractTypeCollection;
+import org.eclipse.osee.orcs.core.internal.util.DataMatcher;
+import org.eclipse.osee.orcs.core.internal.util.DeletedMatcher;
+import org.eclipse.osee.orcs.core.internal.util.DirtyMatcher;
+import org.eclipse.osee.orcs.core.internal.util.DirtyMatcher.DirtyFlag;
 
 /**
  * @author Roberto E. Escobar
  */
-public class AttributeCollection {
+public class AttributeCollection extends AbstractTypeCollection<AttributeType, Attribute<?>, IAttributeType, Attribute<?>> {
 
-   private static final AttributeFilter FILTER_NONE_DIRTY = new AttributeDirtyFilter(DirtyFlag.DIRTY);
-   private static final AttributeFilter INCLUDE_DELETED = new AttributeDeletedFilter(DeletionFlag.INCLUDE_DELETED);
-   private static final AttributeFilter EXCLUDE_DELETED = new AttributeDeletedFilter(DeletionFlag.EXCLUDE_DELETED);
-
-   private final HashCollection<IAttributeType, Attribute<?>> attributes =
-      new HashCollection<IAttributeType, Attribute<?>>(false, LinkedHashSet.class, 12);
+   //@formatter:off
+   private static final DataMatcher<Attribute<?>> DIRTY_MATCHER = new DirtyMatcher<Attribute<?>>(DirtyFlag.DIRTY);
+   private static final DataMatcher<Attribute<?>> INCLUDE_DELETED = new DeletedMatcher<Attribute<?>>(DeletionFlag.INCLUDE_DELETED);
+   private static final DataMatcher<Attribute<?>> EXCLUDE_DELETED = new DeletedMatcher<Attribute<?>>(DeletionFlag.EXCLUDE_DELETED);
+   //@formatter:on
 
    private final AttributeExceptionFactory exceptionFactory;
 
@@ -43,113 +40,61 @@ public class AttributeCollection {
       this.exceptionFactory = exceptionFactory;
    }
 
-   public void addAttribute(IAttributeType type, Attribute<?> attribute) {
-      attributes.put(type, attribute);
-   }
-
-   public void removeAttribute(IAttributeType attributeType, Attribute<?> attribute) {
-      attributes.removeValue(attributeType, attribute);
-   }
-
-   public List<Attribute<?>> getAllAttributes() {
-      return attributes.getValues();
-   }
-
-   public Collection<AttributeType> getExistingTypes(DeletionFlag includeDeleted) throws OseeCoreException {
-      List<AttributeType> toReturn = new ArrayList<AttributeType>();
-      for (Attribute<?> attribute : getAttributeList(includeDeleted)) {
-         toReturn.add(attribute.getAttributeType());
-      }
-      return toReturn;
-   }
-
-   public List<Attribute<Object>> getAttributeListDirties() throws OseeCoreException {
-      return getListByFilter(attributes.getValues(), FILTER_NONE_DIRTY);
-   }
-
-   public boolean hasAttributesDirty() {
-      return hasItemMatchingFilter(attributes.getValues(), FILTER_NONE_DIRTY);
-   }
-
    //////////////////////////////////////////////////////////////
 
-   public <T> ResultSet<Attribute<T>> getAttributeSet(IAttributeType attributeType, DeletionFlag includeDeleted) throws OseeCoreException {
-      List<Attribute<T>> result = getListByFilter(attributes.getValues(attributeType), includeDeleted);
+   public <T> ResultSet<Attribute<T>> getResultSet(IAttributeType attributeType, DeletionFlag includeDeleted) throws OseeCoreException {
+      List<Attribute<T>> result = getList(attributeType, includeDeleted);
       return new AttributeResultSet<T>(exceptionFactory, attributeType, result);
    }
 
-   public <T> ResultSet<Attribute<T>> getAttributeSet(DeletionFlag includeDeleted) throws OseeCoreException {
-      return getSetByFilter(attributes.getValues(), includeDeleted);
-   }
-
    public <T> ResultSet<Attribute<T>> getAttributeSetFromString(IAttributeType attributeType, DeletionFlag includeDeleted, String value) throws OseeCoreException {
-      AttributeFilter filter = new AttributeDeletedFilter(includeDeleted);
+      DataMatcher<Attribute<?>> filter = getDeletedFilter(includeDeleted);
       filter = filter.and(new AttributeFromStringFilter(value));
-      return getSetByFilter(attributes.getValues(attributeType), filter);
+      return getSetByFilter(attributeType, filter);
    }
 
    public <T> ResultSet<Attribute<T>> getAttributeSetFromValue(IAttributeType attributeType, DeletionFlag includeDeleted, T value) throws OseeCoreException {
-      AttributeFilter filter = new AttributeDeletedFilter(includeDeleted);
+      DataMatcher<Attribute<?>> filter = getDeletedFilter(includeDeleted);
       filter = filter.and(new AttributeValueFilter<T>(value));
-      return getSetByFilter(attributes.getValues(attributeType), filter);
+      return getSetByFilter(attributeType, filter);
    }
 
-   private <T> ResultSet<Attribute<T>> getSetByFilter(Collection<Attribute<?>> source, DeletionFlag includeDeleted) throws OseeCoreException {
-      return getSetByFilter(source, DeletionFlag.INCLUDE_DELETED == includeDeleted ? INCLUDE_DELETED : EXCLUDE_DELETED);
-   }
-
-   //////////////////////////////////////////////////////////////
-
-   public <T> List<Attribute<T>> getAttributeList(IAttributeType attributeType, DeletionFlag includeDeleted) throws OseeCoreException {
-      return getListByFilter(attributes.getValues(attributeType), includeDeleted);
-   }
-
-   public <T> List<Attribute<T>> getAttributeList(DeletionFlag includeDeleted) throws OseeCoreException {
-      return getListByFilter(attributes.getValues(), includeDeleted);
-   }
-
-   private <T> List<Attribute<T>> getListByFilter(Collection<Attribute<?>> source, DeletionFlag includeDeleted) throws OseeCoreException {
-      return getListByFilter(source, DeletionFlag.INCLUDE_DELETED == includeDeleted ? INCLUDE_DELETED : EXCLUDE_DELETED);
+   public <T> List<Attribute<T>> getList(IAttributeType attributeType, DeletionFlag includeDeleted) throws OseeCoreException {
+      return getListByFilter(attributeType, getDeletedFilter(includeDeleted));
    }
 
    //////////////////////////////////////////////////////////////
 
-   private <T> AttributeResultSet<T> getSetByFilter(Collection<Attribute<?>> source, AttributeFilter filter) throws OseeCoreException {
-      List<Attribute<T>> values = getListByFilter(source, filter);
-      return new AttributeResultSet<T>(exceptionFactory, values);
+   @Override
+   protected DataMatcher<Attribute<?>> getDeletedFilter(DeletionFlag includeDeleted) {
+      return DeletionFlag.INCLUDE_DELETED == includeDeleted ? INCLUDE_DELETED : EXCLUDE_DELETED;
    }
 
-   @SuppressWarnings("unchecked")
-   private <T> List<Attribute<T>> getListByFilter(Collection<Attribute<?>> source, AttributeFilter filter) throws OseeCoreException {
-      List<Attribute<T>> toReturn;
-      if (source != null && !source.isEmpty()) {
-         toReturn = new LinkedList<Attribute<T>>();
-         for (Attribute<?> attribute : source) {
-            if (filter.accept(attribute)) {
-               toReturn.add((Attribute<T>) attribute);
-            }
-         }
-      } else {
-         toReturn = Collections.emptyList();
-      }
-      return toReturn;
+   @Override
+   protected DataMatcher<Attribute<?>> getDirtyMatcher() {
+      return DIRTY_MATCHER;
    }
 
-   private boolean hasItemMatchingFilter(Collection<Attribute<?>> source, AttributeFilter filter) {
-      boolean result = false;
-      if (source != null && !source.isEmpty()) {
-         for (Attribute<?> attribute : source) {
-            try {
-               if (filter.accept(attribute)) {
-                  result = true;
-                  break;
-               }
-            } catch (OseeCoreException ex) {
-               // do nothing
-            }
-         }
-      }
-      return result;
+   @Override
+   protected AttributeType getType(Attribute<?> data) {
+      return data.getAttributeType();
+   }
+
+   @SuppressWarnings({"unchecked", "rawtypes"})
+   @Override
+   protected ResultSet<Attribute<?>> createResultSet(List<Attribute<?>> values) {
+      return new AttributeResultSet(exceptionFactory, values);
+   }
+
+   @SuppressWarnings({"unchecked", "rawtypes"})
+   @Override
+   protected <T extends Attribute<?>> ResultSet<T> createResultSet(IAttributeType attributeType, List<T> values) {
+      return new AttributeResultSet(exceptionFactory, attributeType, values);
+   }
+
+   @Override
+   protected Attribute<?> asMatcherData(Attribute<?> data) {
+      return data;
    }
 
 }

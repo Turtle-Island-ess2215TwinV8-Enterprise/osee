@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Boeing.
+ * Copyright (c) 2004, 2007 Boeing.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,23 +8,15 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.attribute;
+package org.eclipse.osee.orcs.data;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.internal.util.DataMatcher;
 
 /**
  * @author Roberto E. Escobar
  */
-public class AttributeFromStringFilter extends DataMatcher<Attribute<?>> {
-   private final String toMatch;
+public interface Modifiable {
 
-   public AttributeFromStringFilter(String value) {
-      toMatch = value;
-   }
+   boolean isDirty() throws OseeCoreException;
 
-   @Override
-   public boolean accept(Attribute<?> attribute) throws OseeCoreException {
-      return toMatch.equals(String.valueOf(attribute.getValue()));
-   }
 }

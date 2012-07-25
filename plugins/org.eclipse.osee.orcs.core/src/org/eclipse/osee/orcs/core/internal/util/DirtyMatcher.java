@@ -8,12 +8,15 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.attribute;
+package org.eclipse.osee.orcs.core.internal.util;
+
+import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.orcs.data.Modifiable;
 
 /**
  * @author Roberto E. Escobar
  */
-public class AttributeDirtyFilter extends AttributeFilter {
+public class DirtyMatcher<T extends Modifiable> extends DataMatcher<T> {
 
    public static enum DirtyFlag {
       DIRTY,
@@ -22,17 +25,17 @@ public class AttributeDirtyFilter extends AttributeFilter {
 
    private final DirtyFlag dirtyFlag;
 
-   public AttributeDirtyFilter(DirtyFlag includeDirty) {
+   public DirtyMatcher(DirtyFlag includeDirty) {
       this.dirtyFlag = includeDirty;
    }
 
    @Override
-   public boolean accept(Attribute<?> attribute) {
+   public boolean accept(T data) throws OseeCoreException {
       boolean result = true;
       if (dirtyFlag == DirtyFlag.DIRTY) {
-         result = attribute.isDirty();
+         result = data.isDirty();
       } else if (dirtyFlag == DirtyFlag.NON_DIRTY) {
-         result = !attribute.isDirty();
+         result = !data.isDirty();
       }
       return result;
    }

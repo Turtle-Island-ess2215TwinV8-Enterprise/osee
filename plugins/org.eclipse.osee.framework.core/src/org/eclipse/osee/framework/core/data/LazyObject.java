@@ -14,6 +14,7 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 public abstract class LazyObject<T> {
    private volatile T val;
+   private volatile boolean loaded;
 
    T result = val;
 
@@ -22,6 +23,7 @@ public abstract class LazyObject<T> {
          synchronized (this) {
             result = val;
             if (result == null) {
+               loaded = true;
                val = result = instance();
             }
          }
@@ -33,8 +35,13 @@ public abstract class LazyObject<T> {
       val = t;
    }
 
+   public boolean isLoaded() {
+      return loaded;
+   }
+
    protected void invalidate() {
       synchronized (this) {
+         loaded = false;
          val = result = null;
       }
    }

@@ -12,6 +12,7 @@ package org.eclipse.osee.orcs.core.internal.attribute;
 
 import static org.mockito.Mockito.when;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.orcs.core.internal.util.DataMatcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class AttributeValueFilterTest {
       Assert.assertFalse(filter(false).accept(attribute2));
    }
 
-   private <T> AttributeFilter filter(T value) {
+   private <T> DataMatcher<Attribute<?>> filter(T value) {
       return new AttributeValueFilter<T>(value);
    }
 

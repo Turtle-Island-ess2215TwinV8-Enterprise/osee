@@ -8,27 +8,28 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.artifact;
+package org.eclipse.osee.orcs.core.internal.util;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.model.Branch;
-import org.eclipse.osee.framework.core.model.cache.BranchCache;
-import org.eclipse.osee.orcs.core.ds.ArtifactData;
+import org.eclipse.osee.framework.core.model.AbstractOseeType;
+import org.eclipse.osee.framework.core.model.cache.AbstractOseeCache;
+import org.eclipse.osee.orcs.core.ds.OrcsData;
 
 /**
  * @author Roberto E. Escobar
  */
-public class BranchProvider extends OrcsLazyObject<Branch, ArtifactData> implements ValueProvider<Branch, ArtifactData> {
+public class LazyTypeProvider<T extends AbstractOseeType<Long>, D extends OrcsData> extends OrcsLazyObject<T, D> {
 
-   private final BranchCache branchCache;
+   private final AbstractOseeCache<Long, T> cache;
 
-   public BranchProvider(BranchCache branchCache, ArtifactData data) {
+   public LazyTypeProvider(AbstractOseeCache<Long, T> cache, D data) {
       super(data);
-      this.branchCache = branchCache;
+      this.cache = cache;
    }
 
    @Override
-   protected Branch instance() throws OseeCoreException {
-      return branchCache.getById(getOrcsData().getVersion().getBranchId());
+   protected T instance() throws OseeCoreException {
+      return cache.getByGuid(getOrcsData().getTypeUuid());
    }
+
 }

@@ -18,7 +18,7 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
  * @author Roberto E. Escobar
  * @author Andrew M. Finkbeiner
  */
-public interface AttributeWriteable<T> extends Writeable, AttributeReadable<T> {
+public interface AttributeWriteable<T> extends Writeable, AttributeReadable<T>, Modifiable {
 
    void setValue(T value) throws OseeCoreException;
 
@@ -26,6 +26,7 @@ public interface AttributeWriteable<T> extends Writeable, AttributeReadable<T> {
 
    boolean setValueFromInputStream(InputStream value) throws OseeCoreException;
 
+   @Override
    boolean isDirty() throws OseeCoreException;
 
    void resetToDefaultValue() throws OseeCoreException;

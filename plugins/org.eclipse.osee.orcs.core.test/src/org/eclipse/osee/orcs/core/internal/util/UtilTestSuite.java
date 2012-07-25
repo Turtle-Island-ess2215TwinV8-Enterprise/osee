@@ -8,14 +8,16 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.artifact;
+package org.eclipse.osee.orcs.core.internal.util;
 
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.ds.HasOrcsData;
-import org.eclipse.osee.orcs.core.ds.OrcsData;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-public interface ValueProvider<T, D extends OrcsData> extends HasOrcsData<D> {
-
-   T get() throws OseeCoreException;
-
+/**
+ * @author Roberto E. Escobar
+ */
+@RunWith(Suite.class)
+@Suite.SuiteClasses({DeletedMatcherTest.class, DirtyMatcherTest.class, DataMatcherTest.class})
+public class UtilTestSuite {
+   // Test Suite
 }

@@ -21,11 +21,13 @@ import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
+import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeFactory;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeManagerImpl;
 import org.eclipse.osee.orcs.core.internal.relation.HasRelationContainer;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
+import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
 import org.eclipse.osee.orcs.data.ArtifactWriteable;
 
 public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWriteable, HasRelationContainer, ArtifactVisitable {
@@ -33,10 +35,10 @@ public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWritea
    private final RelationContainer relationContainer;
    private EditState objectEditState;
    private ArtifactData artifactData;
-   private final ValueProvider<Branch, ArtifactData> branchProvider;
+   private final ValueProvider<Branch, OrcsData> branchProvider;
    private final ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider;
 
-   public ArtifactImpl(ArtifactData artifactData, AttributeFactory attributeFactory, RelationContainer relationContainer, ValueProvider<Branch, ArtifactData> branchProvider, ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider) {
+   public ArtifactImpl(ArtifactData artifactData, AttributeFactory attributeFactory, RelationContainer relationContainer, ValueProvider<Branch, OrcsData> branchProvider, ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider) {
       super(attributeFactory);
       this.artifactData = artifactData;
       this.artifactTypeProvider = artifactTypeProvider;

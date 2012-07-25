@@ -25,7 +25,7 @@ import org.eclipse.osee.orcs.annotations.WriteAttributes;
 public interface AttributesWriteable extends Writeable, AttributesReadable {
 
    @WriteAttributes
-   <T> List<AttributeWriteable<T>> getWriteableAttributes() throws OseeCoreException;
+   List<AttributeWriteable<Object>> getWriteableAttributes() throws OseeCoreException;
 
    @WriteAttributes
    <T> List<AttributeWriteable<T>> getWriteableAttributes(IAttributeType attributeType) throws OseeCoreException;

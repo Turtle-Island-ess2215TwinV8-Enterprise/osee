@@ -8,23 +8,32 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.attribute;
+package org.eclipse.osee.orcs.core.internal.util;
 
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.internal.util.DataMatcher;
+import org.eclipse.osee.framework.core.data.LazyObject;
+import org.eclipse.osee.orcs.core.ds.OrcsData;
 
 /**
  * @author Roberto E. Escobar
  */
-public class AttributeFromStringFilter extends DataMatcher<Attribute<?>> {
-   private final String toMatch;
+public abstract class OrcsLazyObject<T, D extends OrcsData> extends LazyObject<T> implements ValueProvider<T, D> {
 
-   public AttributeFromStringFilter(String value) {
-      toMatch = value;
+   private D data;
+
+   public OrcsLazyObject(D data) {
+      super();
+      this.data = data;
    }
 
    @Override
-   public boolean accept(Attribute<?> attribute) throws OseeCoreException {
-      return toMatch.equals(String.valueOf(attribute.getValue()));
+   public D getOrcsData() {
+      return data;
    }
+
+   @Override
+   public void setOrcsData(D data) {
+      invalidate();
+      this.data = data;
+   }
+
 }

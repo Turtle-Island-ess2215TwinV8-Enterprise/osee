@@ -8,33 +8,17 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.artifact;
+package org.eclipse.osee.orcs.core.internal.util;
 
-import org.eclipse.osee.framework.core.data.LazyObject;
+import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.orcs.core.ds.HasOrcsData;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 
 /**
  * @author Roberto E. Escobar
  */
-public abstract class OrcsLazyObject<T, D extends OrcsData> extends LazyObject<T> implements HasOrcsData<D> {
+public interface ValueProvider<T, D extends OrcsData> extends HasOrcsData<D> {
 
-   private D data;
-
-   public OrcsLazyObject(D data) {
-      super();
-      this.data = data;
-   }
-
-   @Override
-   public D getOrcsData() {
-      return data;
-   }
-
-   @Override
-   public void setOrcsData(D data) {
-      invalidate();
-      this.data = data;
-   }
+   T get() throws OseeCoreException;
 
 }

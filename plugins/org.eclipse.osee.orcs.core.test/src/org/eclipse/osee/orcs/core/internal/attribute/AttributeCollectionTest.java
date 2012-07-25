@@ -50,9 +50,9 @@ public class AttributeCollectionTest {
       MockitoAnnotations.initMocks(this);
       attributeCollection = new AttributeCollection(exceptionFactory);
 
-      attributeCollection.addAttribute(CoreAttributeTypes.Country, dirtyAttr);
-      attributeCollection.addAttribute(CoreAttributeTypes.Active, cleanAttr);
-      attributeCollection.addAttribute(CoreAttributeTypes.Annotation, deletedAttr);
+      attributeCollection.add(CoreAttributeTypes.Country, dirtyAttr);
+      attributeCollection.add(CoreAttributeTypes.Active, cleanAttr);
+      attributeCollection.add(CoreAttributeTypes.Annotation, deletedAttr);
 
       when(dirtyAttr.isDirty()).thenReturn(true);
       when(deletedAttr.isDeleted()).thenReturn(true);
@@ -60,24 +60,24 @@ public class AttributeCollectionTest {
 
    @Test
    public void testGetAttributesDirty() throws OseeCoreException {
-      assertEquals(1, attributeCollection.getAttributeListDirties().size());
-      assertEquals(dirtyAttr, attributeCollection.getAttributeListDirties().iterator().next());
+      assertEquals(1, attributeCollection.getDirties().size());
+      assertEquals(dirtyAttr, attributeCollection.getDirties().iterator().next());
    }
 
    @Test
    public void testHasAttributesDirty() {
-      boolean actual1 = attributeCollection.hasAttributesDirty();
+      boolean actual1 = attributeCollection.hasDirty();
       assertTrue(actual1);
 
-      attributeCollection.removeAttribute(CoreAttributeTypes.Country, dirtyAttr);
+      attributeCollection.remove(CoreAttributeTypes.Country, dirtyAttr);
 
-      boolean actual2 = attributeCollection.hasAttributesDirty();
+      boolean actual2 = attributeCollection.hasDirty();
       assertFalse(actual2);
    }
 
    @Test
    public void testGetAllAttributes() {
-      List<Attribute<?>> attributes = attributeCollection.getAllAttributes();
+      Collection<Attribute<?>> attributes = attributeCollection.getAll();
       assertEquals(3, attributes.size());
 
       assertTrue(attributes.contains(dirtyAttr));
@@ -118,14 +118,14 @@ public class AttributeCollectionTest {
 
    @Test
    public void testGetListDeletionFlag() throws OseeCoreException {
-      List<Attribute<Object>> list1 = attributeCollection.getAttributeList(DeletionFlag.INCLUDE_DELETED);
+      List<Attribute<?>> list1 = attributeCollection.getList(DeletionFlag.INCLUDE_DELETED);
 
       assertEquals(3, list1.size());
       assertTrue(list1.contains(dirtyAttr));
       assertTrue(list1.contains(cleanAttr));
       assertTrue(list1.contains(deletedAttr));
 
-      List<Attribute<Object>> list2 = attributeCollection.getAttributeList(DeletionFlag.EXCLUDE_DELETED);
+      List<Attribute<?>> list2 = attributeCollection.getList(DeletionFlag.EXCLUDE_DELETED);
       assertEquals(2, list2.size());
 
       assertTrue(list2.contains(dirtyAttr));
@@ -135,14 +135,14 @@ public class AttributeCollectionTest {
 
    @Test
    public void testGetSetDeletionFlag() throws OseeCoreException {
-      ResultSet<Attribute<Object>> set1 = attributeCollection.getAttributeSet(DeletionFlag.INCLUDE_DELETED);
+      ResultSet<Attribute<?>> set1 = attributeCollection.getResultSet(DeletionFlag.INCLUDE_DELETED);
 
       assertEquals(3, set1.getList().size());
       assertTrue(set1.getList().contains(dirtyAttr));
       assertTrue(set1.getList().contains(cleanAttr));
       assertTrue(set1.getList().contains(deletedAttr));
 
-      ResultSet<Attribute<Object>> set2 = attributeCollection.getAttributeSet(DeletionFlag.EXCLUDE_DELETED);
+      ResultSet<Attribute<?>> set2 = attributeCollection.getResultSet(DeletionFlag.EXCLUDE_DELETED);
       assertEquals(2, set2.getList().size());
 
       assertTrue(set2.getList().contains(dirtyAttr));
@@ -153,25 +153,25 @@ public class AttributeCollectionTest {
    @Test
    public void testGetListTypeAndDelete() throws OseeCoreException {
       List<Attribute<Object>> list1 =
-         attributeCollection.getAttributeList(CoreAttributeTypes.Annotation, DeletionFlag.INCLUDE_DELETED);
+         attributeCollection.getList(CoreAttributeTypes.Annotation, DeletionFlag.INCLUDE_DELETED);
       assertEquals(1, list1.size());
       assertTrue(list1.contains(deletedAttr));
 
       List<Attribute<Object>> list2 =
-         attributeCollection.getAttributeList(CoreAttributeTypes.Annotation, DeletionFlag.EXCLUDE_DELETED);
+         attributeCollection.getList(CoreAttributeTypes.Annotation, DeletionFlag.EXCLUDE_DELETED);
       assertEquals(0, list2.size());
    }
 
    @Test
    public void testGetSetTypeAndDelete() throws OseeCoreException {
       ResultSet<Attribute<Object>> set1 =
-         attributeCollection.getAttributeSet(CoreAttributeTypes.Annotation, DeletionFlag.INCLUDE_DELETED);
+         attributeCollection.getResultSet(CoreAttributeTypes.Annotation, DeletionFlag.INCLUDE_DELETED);
 
       assertEquals(1, set1.getList().size());
       assertTrue(set1.getList().contains(deletedAttr));
 
       ResultSet<Attribute<Object>> set2 =
-         attributeCollection.getAttributeSet(CoreAttributeTypes.Annotation, DeletionFlag.EXCLUDE_DELETED);
+         attributeCollection.getResultSet(CoreAttributeTypes.Annotation, DeletionFlag.EXCLUDE_DELETED);
       assertEquals(0, set2.getList().size());
    }
 

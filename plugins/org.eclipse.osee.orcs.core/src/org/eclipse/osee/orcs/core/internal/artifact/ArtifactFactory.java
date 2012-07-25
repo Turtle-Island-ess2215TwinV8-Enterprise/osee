@@ -18,16 +18,22 @@ import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
+import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactDataFactory;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
 import org.eclipse.osee.orcs.core.internal.relation.RelationFactory;
+import org.eclipse.osee.orcs.core.internal.util.BranchProvider;
+import org.eclipse.osee.orcs.core.internal.util.LazyTypeProvider;
+import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
 import org.eclipse.osee.orcs.data.AttributeReadable;
 
@@ -56,8 +62,11 @@ public class ArtifactFactory {
       //TODO implement an artifact class resolver for specific artifact types
       RelationContainer relationContainer = relationFactory.createRelationContainer(artifactData.getLocalId());
 
-      return new ArtifactImpl(artifactData, attributeFactory, relationContainer, new BranchProvider(branchCache,
-         artifactData), new ArtifactTypeProvider(artifactTypeCache, artifactData));
+      ValueProvider<Branch, OrcsData> branchProvider = new BranchProvider(branchCache, artifactData);
+      ValueProvider<ArtifactType, ArtifactData> typeProvider =
+         new LazyTypeProvider<ArtifactType, ArtifactData>(artifactTypeCache, artifactData);
+
+      return new ArtifactImpl(artifactData, attributeFactory, relationContainer, branchProvider, typeProvider);
    }
 
    public ArtifactImpl createArtifact(IOseeBranch branch, IArtifactType artifactType, String guid) throws OseeCoreException {

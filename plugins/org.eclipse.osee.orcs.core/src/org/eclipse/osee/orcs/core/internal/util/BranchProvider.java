@@ -8,23 +8,27 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.attribute;
+package org.eclipse.osee.orcs.core.internal.util;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.internal.util.DataMatcher;
+import org.eclipse.osee.framework.core.model.Branch;
+import org.eclipse.osee.framework.core.model.cache.BranchCache;
+import org.eclipse.osee.orcs.core.ds.OrcsData;
 
 /**
  * @author Roberto E. Escobar
  */
-public class AttributeFromStringFilter extends DataMatcher<Attribute<?>> {
-   private final String toMatch;
+public class BranchProvider extends OrcsLazyObject<Branch, OrcsData> {
 
-   public AttributeFromStringFilter(String value) {
-      toMatch = value;
+   private final BranchCache branchCache;
+
+   public BranchProvider(BranchCache branchCache, OrcsData data) {
+      super(data);
+      this.branchCache = branchCache;
    }
 
    @Override
-   public boolean accept(Attribute<?> attribute) throws OseeCoreException {
-      return toMatch.equals(String.valueOf(attribute.getValue()));
+   protected Branch instance() throws OseeCoreException {
+      return branchCache.getById(getOrcsData().getVersion().getBranchId());
    }
 }
