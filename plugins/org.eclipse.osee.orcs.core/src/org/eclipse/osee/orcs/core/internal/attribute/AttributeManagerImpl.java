@@ -24,6 +24,7 @@ import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.data.ResultSet;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.enums.DeletionFlag;
+import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.exception.AttributeDoesNotExist;
 import org.eclipse.osee.framework.core.exception.MultipleAttributesExist;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -286,6 +287,15 @@ public abstract class AttributeManagerImpl extends AbstractIdentity<String> impl
    }
 
    @Override
+   public void unDeleteAttributesByArtifact() throws OseeCoreException {
+      for (Attribute<?> attribute : getAttributesIncludeDeleted()) {
+         if (attribute.getModificationType() == ModificationType.ARTIFACT_DELETED) {
+            attribute.unDelete();
+         }
+      }
+   }
+
+   @Override
    public void deleteSoleAttribute(IAttributeType attributeType) throws OseeCoreException {
       Attribute<?> attribute = getSoleAttribute(attributeType);
       if (attribute != null) {
@@ -479,7 +489,6 @@ public abstract class AttributeManagerImpl extends AbstractIdentity<String> impl
    //////////////////////////////////////////////////////////////
 
    private void onLoaded() throws OseeCoreException {
-      //      computeLastDateModified();
       meetMinimumAttributes();
    }
 

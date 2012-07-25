@@ -10,23 +10,16 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.data;
 
-import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 /**
  * @author Roberto E. Escobar
- * @author Andrew M. Finkbeiner
  */
-public interface ArtifactWriteable extends ArtifactReadable, AttributesWriteable, Modifiable, CanDelete {
+public interface CanDelete extends HasDeleteState {
 
-   void setArtifactType(IArtifactType artifactType) throws OseeCoreException;
+   boolean isDeleteAllowed();
 
-   @Override
-   boolean isDirty() throws OseeCoreException;
-
-   void setName(String name) throws OseeCoreException;
-
-   @Override
    void delete() throws OseeCoreException;
 
+   void unDelete() throws OseeCoreException;
 }

@@ -41,6 +41,9 @@ public class AttributeCollection extends AbstractTypeCollection<AttributeType, A
    }
 
    //////////////////////////////////////////////////////////////
+   public <T> List<Attribute<T>> getList(IAttributeType attributeType, DeletionFlag includeDeleted) throws OseeCoreException {
+      return getListByFilter(attributeType, getDeletedFilter(includeDeleted));
+   }
 
    public <T> ResultSet<Attribute<T>> getResultSet(IAttributeType attributeType, DeletionFlag includeDeleted) throws OseeCoreException {
       List<Attribute<T>> result = getList(attributeType, includeDeleted);
@@ -57,10 +60,6 @@ public class AttributeCollection extends AbstractTypeCollection<AttributeType, A
       DataMatcher<Attribute<?>> filter = getDeletedFilter(includeDeleted);
       filter = filter.and(new AttributeValueFilter<T>(value));
       return getSetByFilter(attributeType, filter);
-   }
-
-   public <T> List<Attribute<T>> getList(IAttributeType attributeType, DeletionFlag includeDeleted) throws OseeCoreException {
-      return getListByFilter(attributeType, getDeletedFilter(includeDeleted));
    }
 
    //////////////////////////////////////////////////////////////

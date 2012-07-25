@@ -8,21 +8,17 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.artifact;
+package org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces;
 
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
-import org.eclipse.osee.orcs.core.internal.relation.experimental.Relation;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.RelationCollection;
+import org.eclipse.osee.orcs.data.CanDelete;
+import org.eclipse.osee.orcs.data.HasLocalId;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface ArtifactVisitor {
+public interface HasRelations extends CanDelete, HasLocalId {
 
-   void visit(ArtifactImpl artifact) throws OseeCoreException;
-
-   void visit(Attribute<?> attribute) throws OseeCoreException;
-
-   void visit(Relation link) throws OseeCoreException;
+   RelationCollection getRelations();
 
 }

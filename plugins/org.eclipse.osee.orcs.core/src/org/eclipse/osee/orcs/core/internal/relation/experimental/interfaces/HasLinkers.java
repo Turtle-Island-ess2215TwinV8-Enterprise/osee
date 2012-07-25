@@ -8,25 +8,16 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.data;
+package org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces;
 
-import org.eclipse.osee.framework.core.data.IArtifactType;
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.enums.RelationSide;
 
 /**
  * @author Roberto E. Escobar
- * @author Andrew M. Finkbeiner
  */
-public interface ArtifactWriteable extends ArtifactReadable, AttributesWriteable, Modifiable, CanDelete {
+public interface HasLinkers<T> {
 
-   void setArtifactType(IArtifactType artifactType) throws OseeCoreException;
+   Iterable<? extends Linker<T>> getLinkers();
 
-   @Override
-   boolean isDirty() throws OseeCoreException;
-
-   void setName(String name) throws OseeCoreException;
-
-   @Override
-   void delete() throws OseeCoreException;
-
+   Linker<T> getLinkerOnSide(RelationSide relationSide);
 }

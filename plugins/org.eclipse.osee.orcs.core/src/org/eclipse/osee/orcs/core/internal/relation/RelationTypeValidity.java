@@ -8,21 +8,21 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.artifact;
+package org.eclipse.osee.orcs.core.internal.relation;
 
+import java.util.List;
+import org.eclipse.osee.framework.core.data.IRelationTypeSide;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
-import org.eclipse.osee.orcs.core.internal.relation.experimental.Relation;
+import org.eclipse.osee.framework.core.model.type.ArtifactType;
+import org.eclipse.osee.framework.core.model.type.RelationType;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface ArtifactVisitor {
+public interface RelationTypeValidity {
 
-   void visit(ArtifactImpl artifact) throws OseeCoreException;
+   public abstract int getMaximumRelationAllowed(ArtifactType artifactType, IRelationTypeSide relationTypeSide) throws OseeCoreException;
 
-   void visit(Attribute<?> attribute) throws OseeCoreException;
-
-   void visit(Relation link) throws OseeCoreException;
+   public abstract List<RelationType> getValidRelationTypes(ArtifactType artifactType) throws OseeCoreException;
 
 }

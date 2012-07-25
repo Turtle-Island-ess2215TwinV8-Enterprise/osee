@@ -32,11 +32,12 @@ import org.eclipse.osee.orcs.data.ArtifactWriteable;
 
 public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWriteable, HasRelationContainer, ArtifactVisitable {
 
-   private final RelationContainer relationContainer;
-   private EditState objectEditState;
-   private ArtifactData artifactData;
    private final ValueProvider<Branch, OrcsData> branchProvider;
    private final ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider;
+   private final RelationContainer relationContainer;
+
+   private EditState objectEditState;
+   private ArtifactData artifactData;
 
    public ArtifactImpl(ArtifactData artifactData, AttributeFactory attributeFactory, RelationContainer relationContainer, ValueProvider<Branch, OrcsData> branchProvider, ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider) {
       super(attributeFactory);
@@ -86,7 +87,11 @@ public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWritea
 
    @Override
    public int getTransactionId() {
-      return getOrcsData().getVersion().getTransactionId();
+      int maxTransactionId = getOrcsData().getVersion().getTransactionId();
+      for (Attribute<?> attribute : getAllAttributes()) {
+         maxTransactionId = Math.max(maxTransactionId, attribute.getOrcsData().getVersion().getTransactionId());
+      }
+      return maxTransactionId;
    }
 
    @Override
@@ -108,10 +113,8 @@ public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWritea
    public void setArtifactType(IArtifactType artifactType) throws OseeCoreException {
       if (!getArtifactType().equals(artifactType)) {
          getOrcsData().setTypeUuid(artifactType.getGuid());
-
          objectEditState = EditState.ARTIFACT_TYPE_MODIFIED;
          if (getOrcsData().getVersion().isInStorage()) {
-            //            lastValidModType = modType;
             getOrcsData().setModType(ModificationType.MODIFIED);
          }
       }
@@ -124,7 +127,7 @@ public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWritea
 
    @Override
    public boolean isDirty() {
-      return areAttributesDirty() || hasDirtyRelations() || hasDirtyArtifactType() || isReplaceWithVersion();
+      return areAttributesDirty() || hasDirtyArtifactType() || isReplaceWithVersion();
    }
 
    private boolean isReplaceWithVersion() {
@@ -159,66 +162,28 @@ public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWritea
       }
    }
 
-   public boolean hasDirtyRelations() {
-      //TX_TODO: Implement this
-      return false;
-   }
-
    @Override
    public void accept(ArtifactVisitor visitor) throws OseeCoreException {
       visitor.visit(this);
       for (Attribute<?> attribute : getAllAttributes()) {
          visitor.visit(attribute);
       }
-      // TX_TODO loop through relations
-
    }
 
    @Override
    public void delete() throws OseeCoreException {
       getOrcsData().setModType(ModificationType.DELETED);
       deleteAttributesByArtifact();
-      //TX_TODO Delete artifact and relation stuff
-      //      public static void deleteArtifact(SkynetTransaction transaction, boolean overrideDeleteCheck, final Artifact... artifacts) throws OseeCoreException {
-      //         deleteArtifactCollection(transaction, overrideDeleteCheck, Arrays.asList(artifacts));
-      //      }
-      //
-      //      public static void deleteArtifactCollection(SkynetTransaction transaction, boolean overrideDeleteCheck, final Collection<Artifact> artifacts) throws OseeCoreException {
-      //         if (artifacts.isEmpty()) {
-      //            return;
-      //         }
-      //
-      //         if (!overrideDeleteCheck) {
-      //            performDeleteChecks(artifacts);
-      //         }
-      //
-      //         bulkLoadRelatives(artifacts);
-      //
-      //         boolean reorderRelations = true;
-      //         for (Artifact artifact : artifacts) {
-      //            deleteTrace(artifact, transaction, reorderRelations);
-      //         }
-      //      }
-      //      private static void deleteTrace(Artifact artifact, SkynetTransaction transaction, boolean reorderRelations) throws OseeCoreException {
-      //         if (!artifact.isDeleted()) {
-      //            // This must be done first since the the actual deletion of an
-      //            // artifact clears out the link manager
-      //            for (Artifact childArtifact : artifact.getChildren()) {
-      //               deleteTrace(childArtifact, transaction, false);
-      //            }
-      //            try {
-      //               // calling deCache here creates a race condition when the handleRelationModifiedEvent listeners fire - RS
-      //               //          ArtifactCache.deCache(artifact);
-      //               artifact.internalSetDeleted();
-      //               RelationManager.deleteRelationsAll(artifact, reorderRelations, transaction);
-      //               if (transaction != null) {
-      //                  artifact.persist(transaction);
-      //               }
-      //            } catch (OseeCoreException ex) {
-      //               artifact.resetToPreviousModType();
-      //               throw ex;
-      //            }
-      //         }
-      //      }
+   }
+
+   @Override
+   public boolean isDeleteAllowed() {
+      return !isDeleted();
+   }
+
+   @Override
+   public void unDelete() throws OseeCoreException {
+      getOrcsData().setModType(getOrcsData().getPreviousModType());
+      unDeleteAttributesByArtifact();
    }
 }

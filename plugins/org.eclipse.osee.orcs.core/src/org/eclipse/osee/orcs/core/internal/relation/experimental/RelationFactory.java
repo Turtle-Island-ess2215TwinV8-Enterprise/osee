@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.core.internal.relation.experimental;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.enums.RelationSide;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
@@ -17,9 +20,10 @@ import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
 import org.eclipse.osee.framework.core.model.type.RelationType;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
-import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
-import org.eclipse.osee.orcs.core.internal.relation.RelationContainerImpl;
-import org.eclipse.osee.orcs.core.internal.relation.experimental.ArtifactLazyObject.RelatedLoader;
+import org.eclipse.osee.orcs.core.internal.ArtifactLoaderFactory;
+import org.eclipse.osee.orcs.core.internal.SessionContext;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.Graph;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.LinkResolver;
 import org.eclipse.osee.orcs.core.internal.util.BranchProvider;
 import org.eclipse.osee.orcs.core.internal.util.LazyTypeProvider;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
@@ -38,26 +42,34 @@ public class RelationFactory {
       this.relationTypeCache = relationTypeCache;
    }
 
-   public RelationContainer createRelationContainer(int artId) {
-      return new RelationContainerImpl(artId, relationTypeCache);
-   }
-
-   public RelationLinkCollection createCollection() {
-      return new RelationLinkCollection();
-   }
-
-   public RelationLink createRelationLink(RelationData data, RelatedLoader loader) {
+   public Relation createRelationLink(RelationData data, LinkResolver<IOseeBranch, ArtifactReadable> loader) {
       ValueProvider<Branch, OrcsData> branch = new BranchProvider(branchCache, data);
 
       //@formatter:off
       ValueProvider<RelationType, RelationData> type = new LazyTypeProvider<RelationType, RelationData>(relationTypeCache, data);
-      ValueProvider<ArtifactReadable, RelationData> aArtifact = new ArtifactLazyObject(RelationSide.SIDE_A, branch, data, loader);
-      ValueProvider<ArtifactReadable, RelationData> bArtifact = new ArtifactLazyObject(RelationSide.SIDE_B, branch, data, loader);
+      
+      List<ArtifactLazyObject> linkers = new ArrayList<ArtifactLazyObject>(RelationSide.values().length);
+      initLinker(linkers, new ArtifactLazyObject(RelationSide.SIDE_A, branch, data, loader));
+      initLinker(linkers, new ArtifactLazyObject(RelationSide.SIDE_B, branch, data, loader));
       //@formatter:on
 
-      RelationLink link = new RelationLink(data, branch, type, aArtifact, bArtifact);
+      Relation link = new Relation(data, branch, type, linkers);
       link.setNotDirty();
       return link;
+   }
+
+   private void initLinker(List<ArtifactLazyObject> linkers, ArtifactLazyObject data) {
+      linkers.add(data.getRelationSide().ordinal(), data);
+   }
+
+   public RelationCollection createCollection() {
+      return new RelationCollection();
+   }
+
+   public Graph createGraph(SessionContext sessionContext, ArtifactLoaderFactory loadFactory) {
+      LinkResolver<IOseeBranch, ArtifactReadable> loader =
+         new LinkResolverImpl(sessionContext, loadFactory, branchCache);
+      return new GraphImpl(loader);
    }
 
 }

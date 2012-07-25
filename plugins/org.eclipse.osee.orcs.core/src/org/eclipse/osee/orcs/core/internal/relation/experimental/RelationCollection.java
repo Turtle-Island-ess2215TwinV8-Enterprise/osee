@@ -26,41 +26,49 @@ import org.eclipse.osee.orcs.core.internal.util.DirtyMatcher.DirtyFlag;
 /**
  * @author Roberto E. Escobar
  */
-public class RelationLinkCollection extends AbstractTypeCollection<RelationType, RelationLink, IRelationTypeSide, RelationLink> {
+public class RelationCollection extends AbstractTypeCollection<RelationType, Relation, IRelationTypeSide, Relation> {
 
    //@formatter:off
-   private static final DataMatcher<RelationLink> DIRTY_MATCHER = new DirtyMatcher<RelationLink>(DirtyFlag.DIRTY);
-   private static final DataMatcher<RelationLink> INCLUDE_DELETED = new DeletedMatcher<RelationLink>(DeletionFlag.INCLUDE_DELETED);
-   private static final DataMatcher<RelationLink> EXCLUDE_DELETED = new DeletedMatcher<RelationLink>(DeletionFlag.EXCLUDE_DELETED);
+   private static final DataMatcher<Relation> DIRTY_MATCHER = new DirtyMatcher<Relation>(DirtyFlag.DIRTY);
+   private static final DataMatcher<Relation> INCLUDE_DELETED = new DeletedMatcher<Relation>(DeletionFlag.INCLUDE_DELETED);
+   private static final DataMatcher<Relation> EXCLUDE_DELETED = new DeletedMatcher<Relation>(DeletionFlag.EXCLUDE_DELETED);
    //@formatter:on
 
+   //////////////////////////////////////////////////////////////
+
+   public List<Relation> getList(IRelationTypeSide type, DeletionFlag includeDeleted) throws OseeCoreException {
+      return getListByFilter(type, getDeletedFilter(includeDeleted));
+   }
+
+   //////////////////////////////////////////////////////////////
+
    @Override
-   protected DataMatcher<RelationLink> getDeletedFilter(DeletionFlag includeDeleted) {
+   protected DataMatcher<Relation> getDeletedFilter(DeletionFlag includeDeleted) {
       return DeletionFlag.INCLUDE_DELETED == includeDeleted ? INCLUDE_DELETED : EXCLUDE_DELETED;
    }
 
    @Override
-   protected DataMatcher<RelationLink> getDirtyMatcher() {
+   protected DataMatcher<Relation> getDirtyMatcher() {
       return DIRTY_MATCHER;
    }
 
    @Override
-   protected RelationType getType(RelationLink data) throws OseeCoreException {
+   protected RelationType getType(Relation data) throws OseeCoreException {
       return data.getRelationType();
    }
 
    @Override
-   protected ResultSet<RelationLink> createResultSet(List<RelationLink> values) {
-      return new ResultSetList<RelationLink>(values);
+   protected ResultSet<Relation> createResultSet(List<Relation> values) {
+      return new ResultSetList<Relation>(values);
    }
 
    @Override
-   protected <T extends RelationLink> ResultSet<T> createResultSet(IRelationTypeSide attributeType, List<T> values) {
+   protected <T extends Relation> ResultSet<T> createResultSet(IRelationTypeSide attributeType, List<T> values) {
       return new ResultSetList<T>(values);
    }
 
    @Override
-   protected RelationLink asMatcherData(RelationLink data) {
+   protected Relation asMatcherData(Relation data) {
       return data;
    }
 }

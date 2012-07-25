@@ -18,7 +18,7 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
  * @author Roberto E. Escobar
  * @author Andrew M. Finkbeiner
  */
-public interface AttributeWriteable<T> extends Writeable, AttributeReadable<T>, Modifiable {
+public interface AttributeWriteable<T> extends Writeable, AttributeReadable<T>, Modifiable, CanDelete {
 
    void setValue(T value) throws OseeCoreException;
 
@@ -31,7 +31,9 @@ public interface AttributeWriteable<T> extends Writeable, AttributeReadable<T>, 
 
    void resetToDefaultValue() throws OseeCoreException;
 
-   boolean canDelete() throws OseeCoreException;
+   @Override
+   boolean isDeleteAllowed();
 
+   @Override
    void delete() throws OseeCoreException;
 }

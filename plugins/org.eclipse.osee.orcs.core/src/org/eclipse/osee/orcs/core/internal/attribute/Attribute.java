@@ -234,8 +234,9 @@ public abstract class Attribute<T> implements HasOrcsData<AttributeData>, Compar
       return getAttributeType().equals(otherAttributeType);
    }
 
-   public void resetModType() {
-      getOrcsData().setModType(ModificationType.MODIFIED);
+   @Override
+   public void unDelete() {
+      getOrcsData().setModType(getOrcsData().getPreviousModType());
    }
 
    /**
@@ -265,9 +266,9 @@ public abstract class Attribute<T> implements HasOrcsData<AttributeData>, Compar
    }
 
    @Override
-   public boolean canDelete() {
+   public boolean isDeleteAllowed() {
       try {
-         return getContainer().getAttributeCount(getAttributeType()) > getAttributeType().getMinOccurrences();
+         return !isDeleted() && getContainer().getAttributeCount(getAttributeType()) > getAttributeType().getMinOccurrences();
       } catch (OseeCoreException ex) {
          return false;
       }

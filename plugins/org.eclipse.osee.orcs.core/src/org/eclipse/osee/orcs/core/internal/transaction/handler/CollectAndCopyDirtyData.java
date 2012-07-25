@@ -18,9 +18,11 @@ import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTxDataImpl;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
+import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.Relation;
 
 /**
  * Takes a snapshot of all the dirty internal OrcsData
@@ -53,6 +55,14 @@ public class CollectAndCopyDirtyData implements ArtifactVisitor {
       if (attribute.isDirty()) {
          AttributeData copy = dataFactory.clone(attribute.getOrcsData());
          txData.getAttributeData().add(copy);
+      }
+   }
+
+   @Override
+   public void visit(Relation link) throws OseeCoreException {
+      if (link.isDirty()) {
+         RelationData copy = dataFactory.clone(link.getOrcsData());
+         txData.getRelationData().add(copy);
       }
    }
 }

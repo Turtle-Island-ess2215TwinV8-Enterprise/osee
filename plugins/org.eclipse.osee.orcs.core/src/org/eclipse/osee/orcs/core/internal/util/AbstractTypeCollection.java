@@ -16,11 +16,20 @@ import java.util.List;
 import org.eclipse.osee.framework.core.data.ResultSet;
 import org.eclipse.osee.framework.core.enums.DeletionFlag;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import com.google.common.collect.Multimap;
 
 /**
  * @author Roberto E. Escobar
  */
 public abstract class AbstractTypeCollection<TYPE, MATCH_DATA, KEY, DATA> extends SearchableCollection<MATCH_DATA, KEY, DATA> {
+
+   protected AbstractTypeCollection(Multimap<KEY, DATA> map) {
+      super(map);
+   }
+
+   protected AbstractTypeCollection() {
+      super();
+   }
 
    protected abstract DataMatcher<MATCH_DATA> getDeletedFilter(DeletionFlag includeDeleted);
 

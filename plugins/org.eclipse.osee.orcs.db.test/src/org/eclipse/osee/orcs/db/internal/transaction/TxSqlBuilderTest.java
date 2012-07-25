@@ -122,7 +122,14 @@ public class TxSqlBuilderTest {
       versionData.setBranchId(EXPECTED_BRANCH_ID);
       versionData.setTransactionId(LOADED_TX_ID);
 
-      builder = Mockito.spy(new TxSqlBuilderImpl(dbService, idFactory, identityService));
+      builder = new TxSqlBuilderImpl(dbService, idFactory, identityService) {
+
+         @Override
+         protected ArtifactJoinQuery createJoin() {
+            return join;
+         }
+
+      };
       txData = new ArrayList<ArtifactTransactionData>();
       txData.add(data);
 
@@ -158,9 +165,6 @@ public class TxSqlBuilderTest {
 
       when(identityService.getLocalId(TYPE_UUID)).thenReturn(TYPE_ID);
       when(idFactory.getNextGammaId()).thenReturn(NEXT_GAMMA_ID);
-
-      when(builder.createJoin()).thenReturn(join);
-
    }
 
    @Test
@@ -251,8 +255,8 @@ public class TxSqlBuilderTest {
       reset(artData);
 
       // test existing artifact with no changes
-      artData.setLoadedModType(ModificationType.DELETED);
-      artData.setLoadedTypeUuid(0);
+      artData.setBaseModType(ModificationType.DELETED);
+      artData.setBaseTypeUuid(0);
       artData.setTypeUuid(0);
       builder.visit(artData);
 

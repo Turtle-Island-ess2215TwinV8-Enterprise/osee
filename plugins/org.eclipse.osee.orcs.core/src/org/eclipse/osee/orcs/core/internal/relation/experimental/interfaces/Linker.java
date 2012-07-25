@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Boeing.
+ * Copyright (c) 2012 Boeing.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,24 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.data;
+package org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces;
 
-import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 /**
  * @author Roberto E. Escobar
- * @author Andrew M. Finkbeiner
  */
-public interface ArtifactWriteable extends ArtifactReadable, AttributesWriteable, Modifiable, CanDelete {
+public interface Linker<T> {
 
-   void setArtifactType(IArtifactType artifactType) throws OseeCoreException;
+   int getLocalId();
 
-   @Override
-   boolean isDirty() throws OseeCoreException;
+   void set(T data);
 
-   void setName(String name) throws OseeCoreException;
+   T get() throws OseeCoreException;
 
-   @Override
-   void delete() throws OseeCoreException;
+   boolean isLoaded();
 
+   void setLoaded(boolean value);
+
+   void clear();
 }

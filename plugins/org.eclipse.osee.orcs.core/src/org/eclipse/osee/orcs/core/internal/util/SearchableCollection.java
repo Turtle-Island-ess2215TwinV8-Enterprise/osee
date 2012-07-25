@@ -26,7 +26,16 @@ import com.google.common.collect.Multimaps;
  */
 public abstract class SearchableCollection<MATCH_DATA, KEY, DATA> {
 
-   private final Multimap<KEY, DATA> map = Multimaps.synchronizedMultimap(LinkedHashMultimap.<KEY, DATA> create());
+   private final Multimap<KEY, DATA> map;
+
+   protected SearchableCollection(Multimap<KEY, DATA> map) {
+      super();
+      this.map = map;
+   }
+
+   protected SearchableCollection() {
+      this(Multimaps.synchronizedMultimap(LinkedHashMultimap.<KEY, DATA> create()));
+   }
 
    protected abstract ResultSet<DATA> createResultSet(List<DATA> values);
 

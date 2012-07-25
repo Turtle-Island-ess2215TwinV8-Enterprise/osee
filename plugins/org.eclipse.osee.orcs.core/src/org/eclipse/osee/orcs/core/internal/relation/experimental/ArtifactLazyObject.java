@@ -16,6 +16,8 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.LinkResolver;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.Linker;
 import org.eclipse.osee.orcs.core.internal.util.OrcsLazyObject;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
@@ -23,24 +25,25 @@ import org.eclipse.osee.orcs.data.ArtifactReadable;
 /**
  * @author Roberto E. Escobar
  */
-public class ArtifactLazyObject extends OrcsLazyObject<ArtifactReadable, RelationData> {
+public class ArtifactLazyObject extends OrcsLazyObject<ArtifactReadable, RelationData> implements Linker<ArtifactReadable> {
 
-   public static interface RelatedLoader {
-      ArtifactReadable getRelated(IOseeBranch branch, int artId) throws OseeCoreException;
-   }
-
-   private final RelatedLoader loader;
+   private final LinkResolver<IOseeBranch, ArtifactReadable> resolver;
    private final ValueProvider<Branch, OrcsData> branch;
    private final RelationSide relationSide;
 
-   public ArtifactLazyObject(RelationSide relationSide, ValueProvider<Branch, OrcsData> branch, RelationData data, RelatedLoader loader) {
+   public ArtifactLazyObject(RelationSide relationSide, ValueProvider<Branch, OrcsData> branch, RelationData data, LinkResolver<IOseeBranch, ArtifactReadable> resolver) {
       super(data);
       this.relationSide = relationSide;
       this.branch = branch;
-      this.loader = loader;
+      this.resolver = resolver;
    }
 
-   private int getLocalId() {
+   protected RelationSide getRelationSide() {
+      return relationSide;
+   }
+
+   @Override
+   public int getLocalId() {
       RelationData data = getOrcsData();
       int localId = -1;
       if (RelationSide.SIDE_A == relationSide) {
@@ -53,6 +56,11 @@ public class ArtifactLazyObject extends OrcsLazyObject<ArtifactReadable, Relatio
 
    @Override
    protected ArtifactReadable instance() throws OseeCoreException {
-      return loader.getRelated(branch.get(), getLocalId());
+      return resolver.resolve(branch.get(), this);
+   }
+
+   @Override
+   public void clear() {
+      invalidate();
    }
 }

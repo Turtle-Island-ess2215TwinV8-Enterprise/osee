@@ -23,7 +23,7 @@ public abstract class LazyObject<T> {
          synchronized (this) {
             result = val;
             if (result == null) {
-               loaded = true;
+               setLoaded(true);
                val = result = instance();
             }
          }
@@ -39,11 +39,13 @@ public abstract class LazyObject<T> {
       return loaded;
    }
 
-   protected void invalidate() {
-      synchronized (this) {
-         loaded = false;
-         val = result = null;
-      }
+   public synchronized void setLoaded(boolean loaded) {
+      this.loaded = loaded;
+   }
+
+   protected synchronized void invalidate() {
+      setLoaded(false);
+      val = result = null;
    }
 
    protected abstract T instance() throws OseeCoreException;

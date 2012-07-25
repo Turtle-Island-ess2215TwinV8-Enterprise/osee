@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.core.internal.relation.experimental;
 
+import java.util.List;
 import org.eclipse.osee.framework.core.data.IRelationType;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.enums.RelationSide;
@@ -19,22 +20,21 @@ import org.eclipse.osee.framework.core.model.type.RelationType;
 import org.eclipse.osee.orcs.core.ds.HasOrcsData;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.HasLinkers;
+import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.Linker;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
 import org.eclipse.osee.orcs.data.HasDeleteState;
 import org.eclipse.osee.orcs.data.Modifiable;
 
 /**
- * @author Jeff C. Phillips
- * @author Ryan D. Brooks
+ * @author Roberto E. Escobar
  */
-public class RelationLink implements HasOrcsData<RelationData>, HasDeleteState, Modifiable {
+public class Relation implements HasOrcsData<RelationData>, HasDeleteState, Modifiable, HasLinkers<ArtifactReadable> {
 
    private final ValueProvider<Branch, OrcsData> branchProvider;
    private final ValueProvider<RelationType, RelationData> relTypeProvider;
-
-   private final ValueProvider<ArtifactReadable, RelationData> aArtifactProvider;
-   private final ValueProvider<ArtifactReadable, RelationData> bArtifactProvider;
+   private final List<ArtifactLazyObject> linkers;
 
    private RelationData relationData;
    private boolean isDirty;
@@ -43,13 +43,12 @@ public class RelationLink implements HasOrcsData<RelationData>, HasDeleteState, 
 
    //   private static final boolean SET_NOT_DIRTY = false;
 
-   public RelationLink(RelationData relationData, ValueProvider<Branch, OrcsData> branchProvider, ValueProvider<RelationType, RelationData> relTypeProvider, ValueProvider<ArtifactReadable, RelationData> aArtifactProvider, ValueProvider<ArtifactReadable, RelationData> bArtifactProvider) {
+   public Relation(RelationData relationData, ValueProvider<Branch, OrcsData> branchProvider, ValueProvider<RelationType, RelationData> relTypeProvider, List<ArtifactLazyObject> linkers) {
       super();
       this.relationData = relationData;
       this.branchProvider = branchProvider;
       this.relTypeProvider = relTypeProvider;
-      this.aArtifactProvider = aArtifactProvider;
-      this.bArtifactProvider = bArtifactProvider;
+      this.linkers = linkers;
    }
 
    @Override
@@ -62,8 +61,9 @@ public class RelationLink implements HasOrcsData<RelationData>, HasDeleteState, 
       this.relationData = data;
       branchProvider.setOrcsData(data);
       relTypeProvider.setOrcsData(data);
-      aArtifactProvider.setOrcsData(data);
-      bArtifactProvider.setOrcsData(data);
+      for (HasOrcsData<RelationData> item : getLinkers()) {
+         item.setOrcsData(data);
+      }
    }
 
    public RelationType getRelationType() throws OseeCoreException {
@@ -136,6 +136,16 @@ public class RelationLink implements HasOrcsData<RelationData>, HasDeleteState, 
    }
 
    ////////////////////////////////////////////// ARTIFACT STUFF ///////////////
+   @Override
+   public Iterable<ArtifactLazyObject> getLinkers() {
+      return linkers;
+   }
+
+   @Override
+   public Linker<ArtifactReadable> getLinkerOnSide(RelationSide relationSide) {
+      return linkers.get(relationSide.ordinal());
+   }
+
    public ArtifactReadable getArtifactA() throws OseeCoreException {
       return getArtifact(RelationSide.SIDE_A);
    }
@@ -145,12 +155,6 @@ public class RelationLink implements HasOrcsData<RelationData>, HasDeleteState, 
    }
 
    public ArtifactReadable getArtifact(RelationSide relationSide) throws OseeCoreException {
-      ValueProvider<ArtifactReadable, RelationData> provider = null;
-      if (RelationSide.SIDE_A == relationSide) {
-         provider = aArtifactProvider;
-      } else {
-         provider = bArtifactProvider;
-      }
-      return provider.get();
+      return getLinkerOnSide(relationSide).get();
    }
 }
