@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IRelationTypeSide;
 import org.eclipse.osee.framework.core.data.Readable;
+import org.eclipse.osee.framework.core.data.ResultSet;
 import org.eclipse.osee.framework.core.enums.RelationSide;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.type.RelationType;
@@ -28,9 +29,9 @@ public interface GraphReadable extends Readable {
    ///////
    ArtifactReadable getParent(ArtifactReadable art) throws OseeCoreException;
 
-   RelationsReadable getChildren(ArtifactReadable art) throws OseeCoreException;
+   ResultSet<ArtifactReadable> getChildren(ArtifactReadable art) throws OseeCoreException;
 
-   RelationsReadable getRelatedArtifacts(IRelationTypeSide relationTypeSide, ArtifactReadable art) throws OseeCoreException;
+   ResultSet<ArtifactReadable> getRelatedArtifacts(IRelationTypeSide relationTypeSide, ArtifactReadable art) throws OseeCoreException;
 
    RelationType getFullRelationType(IRelationTypeSide relationTypeSide) throws OseeCoreException;
 
