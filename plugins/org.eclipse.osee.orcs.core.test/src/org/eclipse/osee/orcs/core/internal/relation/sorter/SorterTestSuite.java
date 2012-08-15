@@ -8,17 +8,16 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.relation;
+package org.eclipse.osee.orcs.core.internal.relation.sorter;
 
-import org.eclipse.osee.orcs.core.internal.relation.sorter.SorterTestSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({SorterTest.class, SorterProviderTest.class})
 /**
  * @author Roberto E. Escobar
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({SorterTestSuite.class, RelationLoadingTest.class})
-public class RelationTestSuite {
+public class SorterTestSuite {
    // Test Suite
 }
