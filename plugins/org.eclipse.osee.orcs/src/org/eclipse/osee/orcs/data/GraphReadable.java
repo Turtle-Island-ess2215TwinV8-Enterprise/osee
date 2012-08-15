@@ -16,7 +16,6 @@ import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IRelationTypeSide;
 import org.eclipse.osee.framework.core.data.Readable;
 import org.eclipse.osee.framework.core.data.ResultSet;
-import org.eclipse.osee.framework.core.enums.RelationSide;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.type.RelationType;
 
@@ -33,8 +32,8 @@ public interface GraphReadable extends Readable {
 
    ResultSet<ArtifactReadable> getRelatedArtifacts(IRelationTypeSide relationTypeSide, ArtifactReadable art) throws OseeCoreException;
 
-   RelationType getFullRelationType(IRelationTypeSide relationTypeSide) throws OseeCoreException;
+   int getMaximumRelationAllowed(IArtifactType artifactType, IRelationTypeSide relationTypeSide) throws OseeCoreException;
 
-   int getRelationSideMax(RelationType relationType, IArtifactType artifactType, RelationSide relationSide) throws OseeCoreException;
+   RelationType getFullRelationType(IRelationTypeSide relationTypeSide) throws OseeCoreException;
 
 }

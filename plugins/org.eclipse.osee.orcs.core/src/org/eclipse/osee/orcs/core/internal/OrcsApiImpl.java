@@ -36,6 +36,8 @@ import org.eclipse.osee.orcs.core.internal.indexer.IndexerModule;
 import org.eclipse.osee.orcs.core.internal.proxy.ArtifactProxyFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationGraphImpl;
+import org.eclipse.osee.orcs.core.internal.relation.RelationTypeValidity;
+import org.eclipse.osee.orcs.core.internal.relation.RelationTypeValidityImpl;
 import org.eclipse.osee.orcs.core.internal.search.QueryModule;
 import org.eclipse.osee.orcs.core.internal.session.SessionContextImpl;
 import org.eclipse.osee.orcs.core.internal.transaction.TransactionFactoryImpl;
@@ -64,6 +66,7 @@ public class OrcsApiImpl implements OrcsApi {
    private QueryModule queryModule;
    private IndexerModule indexerModule;
    private TxDataHandlerFactoryImpl txUpdateFactory;
+   private RelationTypeValidity validity;
 
    public void setLogger(Log logger) {
       this.logger = logger;
@@ -90,6 +93,8 @@ public class OrcsApiImpl implements OrcsApi {
    }
 
    public void start() {
+      validity = new RelationTypeValidityImpl(cacheService.getRelationTypeCache());
+
       RelationFactory relationFactory = new RelationFactory(cacheService.getRelationTypeCache());
 
       AttributeFactory attributeFactory =
@@ -145,7 +150,7 @@ public class OrcsApiImpl implements OrcsApi {
    public GraphReadable getGraph(ApplicationContext context) {
       SessionContext sessionContext = getSessionContext(context);
       return new RelationGraphImpl(sessionContext, loaderFactory, cacheService.getArtifactTypeCache(),
-         cacheService.getRelationTypeCache());
+         cacheService.getRelationTypeCache(), validity);
    }
 
    @Override

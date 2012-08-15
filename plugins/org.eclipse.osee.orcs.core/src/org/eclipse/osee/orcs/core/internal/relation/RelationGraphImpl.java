@@ -21,7 +21,6 @@ import org.eclipse.osee.framework.core.data.ResultSet;
 import org.eclipse.osee.framework.core.data.ResultSetList;
 import org.eclipse.osee.framework.core.enums.CoreRelationTypes;
 import org.eclipse.osee.framework.core.enums.LoadLevel;
-import org.eclipse.osee.framework.core.enums.RelationSide;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
 import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
@@ -42,13 +41,15 @@ public class RelationGraphImpl implements GraphReadable {
    private final ArtifactLoaderFactory loader;
    private final ArtifactTypeCache artifactTypeCache;
    private final RelationTypeCache relationTypeCache;
+   private final RelationTypeValidity validity;
 
-   public RelationGraphImpl(SessionContext sessionContext, ArtifactLoaderFactory loader, ArtifactTypeCache artifactTypeCache, RelationTypeCache relationTypeCache) {
+   public RelationGraphImpl(SessionContext sessionContext, ArtifactLoaderFactory loader, ArtifactTypeCache artifactTypeCache, RelationTypeCache relationTypeCache, RelationTypeValidity validity) {
       super();
       this.sessionContext = sessionContext;
       this.loader = loader;
       this.artifactTypeCache = artifactTypeCache;
       this.relationTypeCache = relationTypeCache;
+      this.validity = validity;
    }
 
    private RelationContainer getRelationContainer(ArtifactReadable readable) {
@@ -104,29 +105,14 @@ public class RelationGraphImpl implements GraphReadable {
 
    @Override
    public List<RelationType> getValidRelationTypes(ArtifactReadable art) throws OseeCoreException {
-      IArtifactType artifactType = art.getArtifactType();
-      Collection<RelationType> relationTypes = relationTypeCache.getAll();
-      List<RelationType> validRelationTypes = new ArrayList<RelationType>();
-      for (RelationType relationType : relationTypes) {
-         int sideAMax = getRelationSideMax(relationType, artifactType, RelationSide.SIDE_A);
-         int sideBMax = getRelationSideMax(relationType, artifactType, RelationSide.SIDE_B);
-         boolean onSideA = sideBMax > 0;
-         boolean onSideB = sideAMax > 0;
-         if (onSideA || onSideB) {
-            validRelationTypes.add(relationType);
-         }
-      }
-      return validRelationTypes;
+      ArtifactType artifactType = artifactTypeCache.get(art.getArtifactType());
+      return validity.getValidRelationTypes(artifactType);
    }
 
    @Override
-   public int getRelationSideMax(RelationType relationType, IArtifactType artifactType, RelationSide relationSide) throws OseeCoreException {
-      int toReturn = 0;
+   public int getMaximumRelationAllowed(IArtifactType artifactType, IRelationTypeSide relationTypeSide) throws OseeCoreException {
       ArtifactType type = artifactTypeCache.get(artifactType);
-      if (relationType.isArtifactTypeAllowed(relationSide, type)) {
-         toReturn = relationType.getMultiplicity().getLimit(relationSide);
-      }
-      return toReturn;
+      return validity.getMaximumRelationAllowed(type, relationTypeSide);
    }
 
    @Override

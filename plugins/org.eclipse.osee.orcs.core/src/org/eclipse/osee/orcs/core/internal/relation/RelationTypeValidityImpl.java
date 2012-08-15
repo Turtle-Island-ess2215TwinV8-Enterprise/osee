@@ -19,6 +19,7 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
 import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.core.model.type.RelationType;
+import org.eclipse.osee.framework.core.util.Conditions;
 
 /**
  * @author Roberto E. Escobar
@@ -34,6 +35,8 @@ public class RelationTypeValidityImpl implements RelationTypeValidity {
 
    @Override
    public int getMaximumRelationAllowed(ArtifactType artifactType, IRelationTypeSide relationTypeSide) throws OseeCoreException {
+      Conditions.checkNotNull(artifactType, "artifactType");
+      Conditions.checkNotNull(relationTypeSide, "relationTypeSide");
       int toReturn = 0;
       RelationType relationType = relationTypeCache.get(relationTypeSide);
       RelationSide relationSide = relationTypeSide.getSide();
@@ -45,6 +48,7 @@ public class RelationTypeValidityImpl implements RelationTypeValidity {
 
    @Override
    public List<RelationType> getValidRelationTypes(ArtifactType artifactType) throws OseeCoreException {
+      Conditions.checkNotNull(artifactType, "artifactType");
       Collection<RelationType> relationTypes = relationTypeCache.getAll();
       List<RelationType> validRelationTypes = new ArrayList<RelationType>();
       for (RelationType relationType : relationTypes) {
