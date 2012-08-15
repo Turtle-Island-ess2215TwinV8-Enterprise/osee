@@ -86,7 +86,7 @@ public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWritea
    }
 
    @Override
-   public int getTransactionId() {
+   public int getTransaction() {
       int maxTransactionId = getOrcsData().getVersion().getTransactionId();
       for (Attribute<?> attribute : getAllAttributes()) {
          maxTransactionId = Math.max(maxTransactionId, attribute.getOrcsData().getVersion().getTransactionId());

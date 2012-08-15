@@ -65,7 +65,7 @@ public class HtmlWriter {
       Map<String, Object> data = new LinkedHashMap<String, Object>();
       data.put("Name", artifact.getName());
       data.put("Uuid", artifact.getGuid());
-      data.put("Tx Id", artifact.getTransactionId());
+      data.put("Tx Id", artifact.getTransaction());
       IOseeBranch branch = artifact.getBranch();
 
       URI uri;

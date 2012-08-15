@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Boeing.
+ * Copyright (c) 2010 Boeing.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,13 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.data;
 
-import org.eclipse.osee.framework.core.data.IArtifactType;
-import org.eclipse.osee.framework.core.data.Identifiable;
+import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 /**
  * @author Roberto E. Escobar
- * @author Andrew M. Finkbeiner
  */
-public interface ArtifactReadable extends Identifiable, HasLocalId, HasBranch, HasTransaction, AttributesReadable, HasDeleteState {
+public interface HasBranch {
 
-   String getHumanReadableId();
-
-   @Override
-   boolean isDeleted();
-
-   IArtifactType getArtifactType() throws OseeCoreException;
-
-   boolean isOfType(IArtifactType... otherTypes) throws OseeCoreException;
-
+   IOseeBranch getBranch() throws OseeCoreException;
 }
