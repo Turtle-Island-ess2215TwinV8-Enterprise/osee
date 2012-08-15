@@ -22,18 +22,19 @@ import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.Branch;
-import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
-import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactDataFactory;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
 import org.eclipse.osee.orcs.core.internal.relation.RelationFactory;
+import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
+import org.eclipse.osee.orcs.core.internal.util.ValueProviderFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -65,8 +66,9 @@ public class ArtifactFactoryTest {
    @Mock private ArtifactDataFactory dataFactory;
    @Mock private AttributeFactory attributeFactory;
    @Mock private RelationFactory relationFactory;
-   @Mock private ArtifactTypeCache artifactTypeCache;
-   @Mock private BranchCache branchCache;
+   @Mock private ValueProviderFactory providerFactory;
+   @Mock private ValueProvider<ArtifactType, ArtifactData> typeProvider;
+   @Mock private ValueProvider<Branch, OrcsData> branchProvider;
    
    @Mock private Attribute<Object> attribute;
    @Mock private AttributeData attributeData;
@@ -83,8 +85,7 @@ public class ArtifactFactoryTest {
    public void init() throws OseeCoreException {
       MockitoAnnotations.initMocks(this);
 
-      artifactFactory =
-         new ArtifactFactory(dataFactory, attributeFactory, relationFactory, artifactTypeCache, branchCache);
+      artifactFactory = new ArtifactFactory(dataFactory, attributeFactory, relationFactory, providerFactory);
 
       guid = GUID.create();
 
@@ -109,8 +110,14 @@ public class ArtifactFactoryTest {
       when(otherArtifactData.getVersion()).thenReturn(artifactVersion);
 
       when(relationFactory.createRelationContainer(45)).thenReturn(relationContainer);
-      when(artifactTypeCache.getByGuid(65L)).thenReturn(artifactType);
-      when(branchCache.getById(23)).thenReturn(branch);
+
+      when(providerFactory.createTypeProvider(artifactData)).thenReturn(typeProvider);
+      when(providerFactory.createTypeProvider(otherArtifactData)).thenReturn(typeProvider);
+      when(providerFactory.createBranchProvider(artifactData)).thenReturn(branchProvider);
+      when(providerFactory.createBranchProvider(otherArtifactData)).thenReturn(branchProvider);
+
+      when(branchProvider.get()).thenReturn(branch);
+      when(typeProvider.get()).thenReturn(artifactType);
    }
 
    @Test
@@ -127,8 +134,6 @@ public class ArtifactFactoryTest {
    @Test
    public void testCreateArtifactFromArtifactData() throws OseeCoreException {
       when(relationFactory.createRelationContainer(45)).thenReturn(relationContainer);
-      when(artifactTypeCache.getByGuid(65L)).thenReturn(artifactType);
-      when(branchCache.getById(23)).thenReturn(branch);
 
       ArtifactImpl artifact = artifactFactory.createArtifact(artifactData);
 

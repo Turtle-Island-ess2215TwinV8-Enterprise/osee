@@ -19,8 +19,6 @@ import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.Branch;
-import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
-import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
@@ -31,9 +29,8 @@ import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
 import org.eclipse.osee.orcs.core.internal.relation.RelationFactory;
-import org.eclipse.osee.orcs.core.internal.util.BranchProvider;
-import org.eclipse.osee.orcs.core.internal.util.LazyTypeProvider;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
+import org.eclipse.osee.orcs.core.internal.util.ValueProviderFactory;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
 import org.eclipse.osee.orcs.data.AttributeReadable;
 
@@ -44,17 +41,15 @@ public class ArtifactFactory {
 
    private final AttributeFactory attributeFactory;
    private final RelationFactory relationFactory;
-   private final ArtifactTypeCache artifactTypeCache;
-   private final BranchCache branchCache;
    private final ArtifactDataFactory factory;
+   private final ValueProviderFactory providerFactory;
 
-   public ArtifactFactory(ArtifactDataFactory factory, AttributeFactory attributeFactory, RelationFactory relationFactory, ArtifactTypeCache artifactTypeCache, BranchCache branchCache) {
+   public ArtifactFactory(ArtifactDataFactory factory, AttributeFactory attributeFactory, RelationFactory relationFactory, ValueProviderFactory providerFactory) {
       super();
       this.factory = factory;
       this.attributeFactory = attributeFactory;
       this.relationFactory = relationFactory;
-      this.artifactTypeCache = artifactTypeCache;
-      this.branchCache = branchCache;
+      this.providerFactory = providerFactory;
    }
 
    @SuppressWarnings("unused")
@@ -62,9 +57,8 @@ public class ArtifactFactory {
       //TODO implement an artifact class resolver for specific artifact types
       RelationContainer relationContainer = relationFactory.createRelationContainer(artifactData.getLocalId());
 
-      ValueProvider<Branch, OrcsData> branchProvider = new BranchProvider(branchCache, artifactData);
-      ValueProvider<ArtifactType, ArtifactData> typeProvider =
-         new LazyTypeProvider<ArtifactType, ArtifactData>(artifactTypeCache, artifactData);
+      ValueProvider<Branch, OrcsData> branchProvider = providerFactory.createBranchProvider(artifactData);
+      ValueProvider<ArtifactType, ArtifactData> typeProvider = providerFactory.createTypeProvider(artifactData);
 
       return new ArtifactImpl(artifactData, attributeFactory, relationContainer, branchProvider, typeProvider);
    }

@@ -42,6 +42,7 @@ import org.eclipse.osee.orcs.core.internal.search.QueryModule;
 import org.eclipse.osee.orcs.core.internal.session.SessionContextImpl;
 import org.eclipse.osee.orcs.core.internal.transaction.TransactionFactoryImpl;
 import org.eclipse.osee.orcs.core.internal.transaction.handler.TxDataHandlerFactoryImpl;
+import org.eclipse.osee.orcs.core.internal.util.ValueProviderFactory;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
 import org.eclipse.osee.orcs.data.GraphReadable;
 import org.eclipse.osee.orcs.search.QueryFactory;
@@ -95,14 +96,17 @@ public class OrcsApiImpl implements OrcsApi {
    public void start() {
       validity = new RelationTypeValidityImpl(cacheService.getRelationTypeCache());
 
+      ValueProviderFactory providerFactory =
+         new ValueProviderFactory(cacheService.getBranchCache(), cacheService.getArtifactTypeCache(),
+            cacheService.getRelationTypeCache());
+
       RelationFactory relationFactory = new RelationFactory(cacheService.getRelationTypeCache());
 
       AttributeFactory attributeFactory =
          new AttributeFactory(resolver, cacheService.getAttributeTypeCache(), dataStore.getDataFactory());
 
       ArtifactFactory artifactFactory =
-         new ArtifactFactory(dataStore.getDataFactory(), attributeFactory, relationFactory,
-            cacheService.getArtifactTypeCache(), cacheService.getBranchCache());
+         new ArtifactFactory(dataStore.getDataFactory(), attributeFactory, relationFactory, providerFactory);
 
       proxyFactory = new ArtifactProxyFactory(artifactFactory);
 

@@ -16,7 +16,6 @@ import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.enums.RelationSide;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
-import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
 import org.eclipse.osee.framework.core.model.type.RelationType;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
@@ -24,9 +23,8 @@ import org.eclipse.osee.orcs.core.internal.ArtifactLoaderFactory;
 import org.eclipse.osee.orcs.core.internal.SessionContext;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.Graph;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.LinkResolver;
-import org.eclipse.osee.orcs.core.internal.util.BranchProvider;
-import org.eclipse.osee.orcs.core.internal.util.LazyTypeProvider;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
+import org.eclipse.osee.orcs.core.internal.util.ValueProviderFactory;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
 
 /**
@@ -34,24 +32,21 @@ import org.eclipse.osee.orcs.data.ArtifactReadable;
  */
 public class RelationFactory {
 
-   private final RelationTypeCache relationTypeCache;
    private final BranchCache branchCache;
+   private final ValueProviderFactory providerFactory;
 
-   public RelationFactory(BranchCache branchCache, RelationTypeCache relationTypeCache) {
+   public RelationFactory(ValueProviderFactory providerFactory, BranchCache branchCache) {
+      this.providerFactory = providerFactory;
       this.branchCache = branchCache;
-      this.relationTypeCache = relationTypeCache;
    }
 
    public Relation createRelationLink(RelationData data, LinkResolver<IOseeBranch, ArtifactReadable> loader) {
-      ValueProvider<Branch, OrcsData> branch = new BranchProvider(branchCache, data);
+      ValueProvider<Branch, OrcsData> branch = providerFactory.createBranchProvider(data);
+      ValueProvider<RelationType, RelationData> type = providerFactory.createTypeProvider(data);
 
-      //@formatter:off
-      ValueProvider<RelationType, RelationData> type = new LazyTypeProvider<RelationType, RelationData>(relationTypeCache, data);
-      
       List<ArtifactLazyObject> linkers = new ArrayList<ArtifactLazyObject>(RelationSide.values().length);
       initLinker(linkers, new ArtifactLazyObject(RelationSide.SIDE_A, branch, data, loader));
       initLinker(linkers, new ArtifactLazyObject(RelationSide.SIDE_B, branch, data, loader));
-      //@formatter:on
 
       Relation link = new Relation(data, branch, type, linkers);
       link.setNotDirty();
