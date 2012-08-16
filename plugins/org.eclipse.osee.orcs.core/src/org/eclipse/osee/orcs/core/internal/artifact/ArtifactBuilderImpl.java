@@ -60,7 +60,7 @@ public abstract class ArtifactBuilderImpl implements ArtifactBuilder, ArtifactCo
 
    @Override
    public void onArtifact(ArtifactReadable readable) {
-      ArtifactImpl artifactImpl = proxyFactory.getProxiedObject(readable);
+      Artifact artifactImpl = proxyFactory.getProxiedObject(readable);
       ArtifactReadable proxyReadable = proxyFactory.createReadable(artifactImpl);
       artifacts.add(proxyReadable);
 

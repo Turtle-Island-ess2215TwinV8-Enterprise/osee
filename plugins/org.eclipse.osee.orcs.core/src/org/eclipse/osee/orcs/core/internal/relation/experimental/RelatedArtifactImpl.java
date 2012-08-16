@@ -21,7 +21,7 @@ import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.core.model.type.RelationType;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
-import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
+import org.eclipse.osee.orcs.core.internal.artifact.Artifact;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationTypeValidity;
@@ -33,7 +33,7 @@ import org.eclipse.osee.orcs.data.ArtifactReadable;
 /**
  * @author Roberto E. Escobar
  */
-public class RelatedArtifactImpl extends ArtifactImpl implements HasRelations {
+public class RelatedArtifactImpl extends Artifact implements HasRelations {
 
    private RelationTypeValidity validity;
    private RelationCollection collection;

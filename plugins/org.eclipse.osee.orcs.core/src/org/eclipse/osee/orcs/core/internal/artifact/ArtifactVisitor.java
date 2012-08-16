@@ -19,7 +19,7 @@ import org.eclipse.osee.orcs.core.internal.relation.experimental.Relation;
  */
 public interface ArtifactVisitor {
 
-   void visit(ArtifactImpl artifact) throws OseeCoreException;
+   void visit(Artifact artifact) throws OseeCoreException;
 
    void visit(Attribute<?> attribute) throws OseeCoreException;
 

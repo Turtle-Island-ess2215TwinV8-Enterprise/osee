@@ -19,7 +19,7 @@ import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
 import org.eclipse.osee.orcs.core.ds.OrcsVisitor;
 import org.eclipse.osee.orcs.core.ds.TransactionResult;
-import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
+import org.eclipse.osee.orcs.core.internal.artifact.Artifact;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.proxy.ArtifactProxyFactory;
 import org.eclipse.osee.orcs.core.internal.proxy.ProxyWriteable;
@@ -103,7 +103,7 @@ public class TxDataManagerImpl implements TxDataManager {
       ArtifactVisitor visitor = handler.createOnDirtyHandler(data);
       for (ArtifactWriteable writeable : writeableArtifacts.values()) {
          if (writeable.isDirty()) {
-            ArtifactImpl impl = proxyFactory.getProxiedObject(writeable);
+            Artifact impl = proxyFactory.getProxiedObject(writeable);
             impl.accept(visitor);
          }
       }

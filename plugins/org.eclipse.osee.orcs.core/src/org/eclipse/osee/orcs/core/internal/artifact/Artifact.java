@@ -30,7 +30,7 @@ import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
 import org.eclipse.osee.orcs.data.ArtifactWriteable;
 
-public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWriteable, HasRelationContainer, ArtifactVisitable {
+public class Artifact extends AttributeManagerImpl implements ArtifactWriteable, HasRelationContainer, ArtifactVisitable {
 
    private final ValueProvider<Branch, OrcsData> branchProvider;
    private final ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider;
@@ -39,7 +39,7 @@ public class ArtifactImpl extends AttributeManagerImpl implements ArtifactWritea
    private EditState objectEditState;
    private ArtifactData artifactData;
 
-   public ArtifactImpl(ArtifactData artifactData, AttributeFactory attributeFactory, RelationContainer relationContainer, ValueProvider<Branch, OrcsData> branchProvider, ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider) {
+   public Artifact(ArtifactData artifactData, AttributeFactory attributeFactory, RelationContainer relationContainer, ValueProvider<Branch, OrcsData> branchProvider, ValueProvider<ArtifactType, ArtifactData> artifactTypeProvider) {
       super(attributeFactory);
       this.artifactData = artifactData;
       this.artifactTypeProvider = artifactTypeProvider;

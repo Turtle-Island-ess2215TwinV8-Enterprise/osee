@@ -34,7 +34,7 @@ import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.VersionData;
-import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
+import org.eclipse.osee.orcs.core.internal.artifact.Artifact;
 import org.eclipse.osee.orcs.core.internal.artifact.AttributeManager;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
@@ -55,7 +55,7 @@ public class ArtifactImplTest {
    public ExpectedException thrown = ExpectedException.none();
 
    // @formatter:off
-   @Mock private ArtifactImpl artifactImpl;
+   @Mock private Artifact artifactImpl;
    @Mock private ArtifactData artifactData;
    @Mock private AttributeFactory attributeFactory;
    @Mock private RelationContainer relationContainer;
@@ -83,7 +83,7 @@ public class ArtifactImplTest {
    public void init() throws OseeCoreException {
       MockitoAnnotations.initMocks(this);
       artifactImpl =
-         new ArtifactImpl(artifactData, attributeFactory, relationContainer, branchProvider, artifactTypeProvider);
+         new Artifact(artifactData, attributeFactory, relationContainer, branchProvider, artifactTypeProvider);
       when(artifactTypeProvider.get()).thenReturn(artifactType);
       when(artifactType.isValidAttributeType(any(IAttributeType.class), any(Branch.class))).thenReturn(true);
       when(attributeFactory.getAttribeType(any(IAttributeType.class))).thenReturn(attributeType);

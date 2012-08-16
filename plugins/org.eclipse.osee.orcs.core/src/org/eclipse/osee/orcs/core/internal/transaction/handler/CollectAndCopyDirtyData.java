@@ -19,7 +19,7 @@ import org.eclipse.osee.orcs.core.ds.ArtifactTxDataImpl;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
 import org.eclipse.osee.orcs.core.ds.RelationData;
-import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
+import org.eclipse.osee.orcs.core.internal.artifact.Artifact;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.Relation;
@@ -42,7 +42,7 @@ public class CollectAndCopyDirtyData implements ArtifactVisitor {
 
    @SuppressWarnings("unused")
    @Override
-   public void visit(ArtifactImpl artifact) throws OseeCoreException {
+   public void visit(Artifact artifact) throws OseeCoreException {
       if (artifact.isDirty()) {
          ArtifactData copy = dataFactory.clone(artifact.getOrcsData());
          txData = new ArtifactTxDataImpl(copy, new ArrayList<AttributeData>());
