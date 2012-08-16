@@ -35,7 +35,6 @@ import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.core.internal.artifact.Artifact;
-import org.eclipse.osee.orcs.core.internal.artifact.AttributeManager;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
 import org.eclipse.osee.orcs.data.AttributeReadable;

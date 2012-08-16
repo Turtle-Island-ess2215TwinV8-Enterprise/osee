@@ -19,6 +19,7 @@ import org.eclipse.osee.orcs.core.ds.RelationDataHandler;
 import org.eclipse.osee.orcs.core.internal.ArtifactBuilderFactory;
 import org.eclipse.osee.orcs.core.internal.SessionContext;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeFactory;
+import org.eclipse.osee.orcs.core.internal.attribute.AttributeManager;
 import org.eclipse.osee.orcs.core.internal.attribute.AttributeRowMapper;
 import org.eclipse.osee.orcs.core.internal.proxy.ArtifactProxyFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;

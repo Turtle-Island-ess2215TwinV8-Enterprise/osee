@@ -18,6 +18,7 @@ import org.eclipse.osee.orcs.core.ds.ArtifactBuilder;
 import org.eclipse.osee.orcs.core.ds.ArtifactDataHandler;
 import org.eclipse.osee.orcs.core.ds.AttributeDataHandler;
 import org.eclipse.osee.orcs.core.ds.RelationDataHandler;
+import org.eclipse.osee.orcs.core.internal.attribute.AttributeManager;
 import org.eclipse.osee.orcs.core.internal.proxy.ArtifactProxyFactory;
 import org.eclipse.osee.orcs.core.internal.relation.RelationContainer;
 import org.eclipse.osee.orcs.data.ArtifactReadable;

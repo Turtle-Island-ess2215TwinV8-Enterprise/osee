@@ -17,7 +17,6 @@ import java.util.Map;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
-import org.eclipse.osee.orcs.core.internal.artifact.AttributeManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -15,7 +15,6 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributeDataHandler;
-import org.eclipse.osee.orcs.core.internal.artifact.AttributeManager;
 
 /**
  * @author Roberto E. Escobar
