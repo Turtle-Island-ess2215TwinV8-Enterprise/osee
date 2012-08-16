@@ -16,7 +16,7 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.database.IOseeDatabaseService;
 import org.eclipse.osee.framework.database.core.ArtifactJoinQuery;
 import org.eclipse.osee.framework.database.core.JoinUtility;
-import org.eclipse.osee.orcs.core.ds.ArtifactBuilder;
+import org.eclipse.osee.orcs.core.ds.LoadDataHandler;
 import org.eclipse.osee.orcs.core.ds.LoadOptions;
 import org.eclipse.osee.orcs.db.internal.loader.LoadSqlContext;
 import org.eclipse.osee.orcs.db.internal.loader.SqlArtifactLoader;
@@ -39,7 +39,7 @@ public class LoadExecutor extends AbstractLoadExecutor {
    }
 
    @Override
-   public void load(HasCancellation cancellation, ArtifactBuilder builder, CriteriaOrcsLoad criteria, LoadOptions options) throws OseeCoreException {
+   public void load(HasCancellation cancellation, LoadDataHandler builder, CriteriaOrcsLoad criteria, LoadOptions options) throws OseeCoreException {
       checkCancelled(cancellation);
 
       ArtifactJoinQuery join = JoinUtility.createArtifactJoinQuery(getDatabaseService());

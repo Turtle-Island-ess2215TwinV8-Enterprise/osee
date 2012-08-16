@@ -8,13 +8,13 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.ds;
+package org.eclipse.osee.orcs.core.internal.loader;
 
 /**
- * @author Roberto E. Escobar
+ * @author Andrew M. Finkbeiner
  */
-public interface ArtifactDataHandlerFactory {
+public interface CsvRowHandler {
 
-   ArtifactDataHandler createArtifactDataHandler();
+   void onRow(String... row);
 
 }

@@ -8,13 +8,16 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.ds;
+package org.eclipse.osee.orcs.core.internal.loader;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface AttributeDataHandlerFactory {
-
-   AttributeDataHandler createAttributeDataHandler();
-
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ArtifactBuilderImplTest.class, ArtifactLoaderFactoryImplTest.class})
+public class LoaderTestSuite {
+   // Test Suite
 }

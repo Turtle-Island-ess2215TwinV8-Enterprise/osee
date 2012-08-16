@@ -18,7 +18,7 @@ import org.junit.runners.Suite;
  * @author Roberto E. Escobar
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({SorterTestSuite.class, RelationLoadingTest.class, RelationTypeValidityImplTest.class})
+@Suite.SuiteClasses({SorterTestSuite.class, RelationTypeValidityImplTest.class})
 public class RelationTestSuite {
    // Test Suite
 }

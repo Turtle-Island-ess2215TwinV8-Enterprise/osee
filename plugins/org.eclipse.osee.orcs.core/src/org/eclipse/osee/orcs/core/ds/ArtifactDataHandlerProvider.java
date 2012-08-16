@@ -8,23 +8,13 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.attribute;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+package org.eclipse.osee.orcs.core.ds;
 
 /**
  * @author Roberto E. Escobar
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-   AttributeClassResolverTest.class,
-   AttributeCollectionTest.class,
-   AttributeFactoryTest.class,
-   AttributeFromStringFilterTest.class,
-   AttributeResultSetTest.class,
-   AttributeValueFilterTest.class,
-   ArtifactImplTest.class})
-public class AttributeTestSuite {
-   // Test Suite
+public interface ArtifactDataHandlerProvider {
+
+   ArtifactDataHandler getArtifactDataHandler();
+
 }
