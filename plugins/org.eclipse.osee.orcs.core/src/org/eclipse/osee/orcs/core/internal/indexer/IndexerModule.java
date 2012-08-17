@@ -13,12 +13,12 @@ package org.eclipse.osee.orcs.core.internal.indexer;
 import java.util.concurrent.Future;
 import org.eclipse.osee.executor.admin.ExecutorAdmin;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.SystemPreferences;
 import org.eclipse.osee.orcs.core.ds.DataStoreConstants;
 import org.eclipse.osee.orcs.core.ds.IndexerData;
 import org.eclipse.osee.orcs.core.ds.QueryEngineIndexer;
 import org.eclipse.osee.orcs.core.internal.HasStatistics;
-import org.eclipse.osee.orcs.core.internal.SessionContext;
 import org.eclipse.osee.orcs.core.internal.indexer.statistics.IndexerStatisticsCollectorImpl;
 import org.eclipse.osee.orcs.core.internal.indexer.statistics.IndexerStatisticsImpl;
 import org.eclipse.osee.orcs.search.IndexerCollector;
@@ -47,15 +47,10 @@ public class IndexerModule implements HasStatistics<IndexerStatistics> {
       this.collector = new IndexerStatisticsCollectorImpl(statistics);
    }
 
-   private String getSystemContext() {
-      // TODO: Create a system context and use it here 
-      return "system";
-   }
-
-   public void start() {
+   public void start(OrcsSession systemSession) {
       try {
          if (preferences.isBoolean(DataStoreConstants.DATASTORE_INDEX_ON_START_UP)) {
-            task = executorAdmin.schedule(queryIndexer.indexAllFromQueue(getSystemContext(), collector));
+            task = executorAdmin.schedule(queryIndexer.indexAllFromQueue(systemSession, collector));
          } else {
             logger.info("Indexer was not executed on Server Startup.");
          }
@@ -72,9 +67,9 @@ public class IndexerModule implements HasStatistics<IndexerStatistics> {
    }
 
    @Override
-   public IndexerStatistics getStatistics(SessionContext sessionContext) {
+   public IndexerStatistics getStatistics(OrcsSession session) {
       try {
-         IndexerData indexerData = queryIndexer.getIndexerData(sessionContext.getSessionId()).call();
+         IndexerData indexerData = queryIndexer.getIndexerData(session).call();
          statistics.setIndexerData(indexerData);
       } catch (Exception ex) {
          logger.warn(ex, "Error fetching indexer data - stats are unreliable");
@@ -83,11 +78,11 @@ public class IndexerModule implements HasStatistics<IndexerStatistics> {
    }
 
    @Override
-   public void clearStatistics(SessionContext sessionContext) {
+   public void clearStatistics(OrcsSession session) {
       statistics.clear();
    }
 
-   public QueryIndexer createQueryIndexer(SessionContext sessionContext) {
-      return new QueryIndexerImpl(logger, sessionContext, executorAdmin, queryIndexer, collector);
+   public QueryIndexer createQueryIndexer(OrcsSession session) {
+      return new QueryIndexerImpl(logger, session, executorAdmin, queryIndexer, collector);
    }
 }

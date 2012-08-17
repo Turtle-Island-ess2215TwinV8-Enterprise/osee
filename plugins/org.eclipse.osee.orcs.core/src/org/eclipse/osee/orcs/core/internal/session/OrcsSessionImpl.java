@@ -8,13 +8,26 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.loader;
+package org.eclipse.osee.orcs.core.internal.session;
+
+import org.eclipse.osee.framework.core.data.AbstractIdentity;
+import org.eclipse.osee.orcs.OrcsSession;
 
 /**
- * @author Andrew M. Finkbeiner
+ * @author Roberto E. Escobar
  */
-public interface CsvRowHandler {
+public class OrcsSessionImpl extends AbstractIdentity<String> implements OrcsSession {
 
-   void onRow(String... row);
+   private final String sessionId;
+
+   public OrcsSessionImpl(String sessionId) {
+      super();
+      this.sessionId = sessionId;
+   }
+
+   @Override
+   public String getGuid() {
+      return sessionId;
+   }
 
 }

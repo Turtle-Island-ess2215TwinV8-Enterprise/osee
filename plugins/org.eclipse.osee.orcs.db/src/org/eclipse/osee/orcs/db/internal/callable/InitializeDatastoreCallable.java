@@ -30,6 +30,7 @@ import org.eclipse.osee.framework.database.IOseeDatabaseService;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.SystemPreferences;
 import org.eclipse.osee.orcs.core.ds.BranchDataStore;
 import org.eclipse.osee.orcs.core.ds.DataStoreConstants;
@@ -51,14 +52,16 @@ public class InitializeDatastoreCallable extends DatabaseCallable<DataStoreInfo>
    private final SchemaOptions options;
    private final IdentityService identityService;
    private final BranchDataStore branchStore;
+   private final OrcsSession session;
 
-   public InitializeDatastoreCallable(Log logger, IOseeDatabaseService dbService, IdentityService identityService, BranchDataStore branchStore, SystemPreferences preferences, SchemaResourceProvider schemaProvider, SchemaOptions options) {
+   public InitializeDatastoreCallable(OrcsSession session, Log logger, IOseeDatabaseService dbService, IdentityService identityService, BranchDataStore branchStore, SystemPreferences preferences, SchemaResourceProvider schemaProvider, SchemaOptions options) {
       super(logger, dbService);
       this.identityService = identityService;
       this.branchStore = branchStore;
       this.preferences = preferences;
       this.schemaProvider = schemaProvider;
       this.options = options;
+      this.session = session;
    }
 
    @Override
@@ -86,7 +89,7 @@ public class InitializeDatastoreCallable extends DatabaseCallable<DataStoreInfo>
       CreateBranchData systemRootData = getSystemRootData();
 
       // TODO tie in the session information
-      Callable<Branch> createSystemRoot = branchStore.createBranch("sessionId", systemRootData);
+      Callable<Branch> createSystemRoot = branchStore.createBranch(session, systemRootData);
       Branch systemRoot = callAndCheckForCancel(createSystemRoot);
 
       Conditions.checkNotNull(systemRoot, "System Root Branch");

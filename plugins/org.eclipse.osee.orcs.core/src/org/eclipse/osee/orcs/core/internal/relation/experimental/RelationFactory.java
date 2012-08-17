@@ -17,10 +17,10 @@ import org.eclipse.osee.framework.core.enums.RelationSide;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.type.RelationType;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.internal.ArtifactLoaderFactory;
-import org.eclipse.osee.orcs.core.internal.SessionContext;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.Graph;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.LinkResolver;
 import org.eclipse.osee.orcs.core.internal.util.ValueProvider;
@@ -61,9 +61,9 @@ public class RelationFactory {
       return new RelationCollection();
    }
 
-   public Graph createGraph(SessionContext sessionContext, ArtifactLoaderFactory loadFactory) {
+   public Graph createGraph(OrcsSession session, ArtifactLoaderFactory loadFactory) {
       LinkResolver<IOseeBranch, ArtifactReadable> loader =
-         new LinkResolverImpl(sessionContext, loadFactory, branchCache);
+         new LinkResolverImpl(session, loadFactory, branchCache);
       return new GraphImpl(loader);
    }
 

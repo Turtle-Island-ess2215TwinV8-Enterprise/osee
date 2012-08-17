@@ -17,6 +17,7 @@ import org.eclipse.osee.framework.core.model.ReadableBranch;
 import org.eclipse.osee.framework.core.model.cache.AttributeTypeCache;
 import org.eclipse.osee.framework.database.IOseeDatabaseService;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.IndexerData;
 import org.eclipse.osee.orcs.core.ds.QueryEngineIndexer;
 import org.eclipse.osee.orcs.db.internal.search.indexer.callable.DeleteTagSetDatabaseTxCallable;
@@ -45,33 +46,33 @@ public class QueryEngineIndexerImpl implements QueryEngineIndexer {
    }
 
    @Override
-   public CancellableCallable<Integer> deleteIndexByQueryId(String sessionId, int queueId) {
+   public CancellableCallable<Integer> deleteIndexByQueryId(OrcsSession session, int queueId) {
       return new DeleteTagSetDatabaseTxCallable(logger, dbService, queueId);
    }
 
    @Override
-   public CancellableCallable<Integer> purgeAllIndexes(String sessionId) {
+   public CancellableCallable<Integer> purgeAllIndexes(OrcsSession session) {
       return new PurgeAllTagsDatabaseCallable(logger, dbService);
    }
 
    @Override
-   public CancellableCallable<IndexerData> getIndexerData(String sessionId) {
+   public CancellableCallable<IndexerData> getIndexerData(OrcsSession session) {
       return new IndexerDatabaseStatisticsCallable(logger, dbService);
    }
 
    @Override
-   public CancellableCallable<?> indexBranches(String sessionId, IndexerCollector collector, Set<ReadableBranch> branches, boolean indexOnlyMissing) {
+   public CancellableCallable<?> indexBranches(OrcsSession session, IndexerCollector collector, Set<ReadableBranch> branches, boolean indexOnlyMissing) {
       return new IndexBranchesDatabaseCallable(logger, dbService, consumer, attributeTypeCache, collector, branches,
          indexOnlyMissing);
    }
 
    @Override
-   public CancellableCallable<Integer> indexAllFromQueue(String sessionId, IndexerCollector collector) {
+   public CancellableCallable<Integer> indexAllFromQueue(OrcsSession session, IndexerCollector collector) {
       return new IndexAllInQueueCallable(logger, dbService, consumer, collector);
    }
 
    @Override
-   public CancellableCallable<?> indexXmlStream(String sessionId, IndexerCollector collector, InputStream inputStream) {
+   public CancellableCallable<?> indexXmlStream(OrcsSession session, IndexerCollector collector, InputStream inputStream) {
       return new XmlStreamIndexerDatabaseCallable(logger, dbService, consumer, collector,
          IndexerConstants.INDEXER_CACHE_ALL_ITEMS, IndexerConstants.INDEXER_CACHE_LIMIT, inputStream);
    }

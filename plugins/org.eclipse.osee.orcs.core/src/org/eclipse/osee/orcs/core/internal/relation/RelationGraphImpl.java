@@ -26,8 +26,8 @@ import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
 import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
 import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.core.model.type.RelationType;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.internal.ArtifactLoaderFactory;
-import org.eclipse.osee.orcs.core.internal.SessionContext;
 import org.eclipse.osee.orcs.core.internal.proxy.HasProxiedObject;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
 import org.eclipse.osee.orcs.data.GraphReadable;
@@ -37,15 +37,15 @@ import org.eclipse.osee.orcs.data.GraphReadable;
  */
 public class RelationGraphImpl implements GraphReadable {
 
-   private final SessionContext sessionContext;
+   private final OrcsSession session;
    private final ArtifactLoaderFactory loader;
    private final ArtifactTypeCache artifactTypeCache;
    private final RelationTypeCache relationTypeCache;
    private final RelationTypeValidity validity;
 
-   public RelationGraphImpl(SessionContext sessionContext, ArtifactLoaderFactory loader, ArtifactTypeCache artifactTypeCache, RelationTypeCache relationTypeCache, RelationTypeValidity validity) {
+   public RelationGraphImpl(OrcsSession session, ArtifactLoaderFactory loader, ArtifactTypeCache artifactTypeCache, RelationTypeCache relationTypeCache, RelationTypeValidity validity) {
       super();
-      this.sessionContext = sessionContext;
+      this.session = session;
       this.loader = loader;
       this.artifactTypeCache = artifactTypeCache;
       this.relationTypeCache = relationTypeCache;
@@ -66,7 +66,7 @@ public class RelationGraphImpl implements GraphReadable {
    }
 
    private List<ArtifactReadable> loadRelated(IOseeBranch branch, Collection<Integer> artifactIds) throws OseeCoreException {
-      return loader.fromBranchAndArtifactIds(sessionContext, branch, artifactIds).setLoadLevel(LoadLevel.FULL).load();
+      return loader.fromBranchAndArtifactIds(session, branch, artifactIds).setLoadLevel(LoadLevel.FULL).load();
    }
 
    private void loadRelatedArtifactIds(ArtifactReadable art, IRelationTypeSide relationTypeSide, Collection<Integer> results) {

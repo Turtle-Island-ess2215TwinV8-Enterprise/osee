@@ -27,6 +27,7 @@ import org.eclipse.osee.framework.core.model.change.ChangeItem;
 import org.eclipse.osee.framework.jdk.core.type.PropertyStore;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.OrcsBranch;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.BranchDataStore;
 import org.eclipse.osee.orcs.core.internal.branch.ArchiveUnarchiveBranchCallable;
 import org.eclipse.osee.orcs.core.internal.branch.BranchDataFactory;
@@ -48,15 +49,15 @@ public class OrcsBranchImpl implements OrcsBranch {
 
    private final Log logger;
 
-   private final SessionContext sessionContext;
+   private final OrcsSession session;
    private final BranchDataStore branchStore;
    private final BranchCache branchCache;
    private final TransactionCache txCache;
    private final BranchDataFactory branchDataFactory;
 
-   public OrcsBranchImpl(Log logger, SessionContext sessionContext, BranchDataStore branchStore, BranchCache branchCache, TransactionCache txCache, LazyObject<ArtifactReadable> systemUser) {
+   public OrcsBranchImpl(Log logger, OrcsSession session, BranchDataStore branchStore, BranchCache branchCache, TransactionCache txCache, LazyObject<ArtifactReadable> systemUser) {
       this.logger = logger;
-      this.sessionContext = sessionContext;
+      this.session = session;
       this.branchStore = branchStore;
       this.branchCache = branchCache;
       this.txCache = txCache;
@@ -65,47 +66,47 @@ public class OrcsBranchImpl implements OrcsBranch {
 
    @Override
    public Callable<ReadableBranch> createBranch(CreateBranchData branchData) {
-      return new CreateBranchCallable(logger, sessionContext, branchStore, branchData);
+      return new CreateBranchCallable(logger, session, branchStore, branchData);
    }
 
    @Override
    public Callable<ReadableBranch> archiveUnarchiveBranch(IOseeBranch branch, ArchiveOperation archiveOp) {
-      return new ArchiveUnarchiveBranchCallable(logger, sessionContext, branchStore, branchCache, branch, archiveOp);
+      return new ArchiveUnarchiveBranchCallable(logger, session, branchStore, branchCache, branch, archiveOp);
    }
 
    @Override
    public Callable<ReadableBranch> deleteBranch(IOseeBranch branch) {
-      return new DeleteBranchCallable(logger, sessionContext, branchStore, branchCache, branch);
+      return new DeleteBranchCallable(logger, session, branchStore, branchCache, branch);
    }
 
    @Override
    public Callable<List<ReadableBranch>> purgeBranch(IOseeBranch branch, boolean recurse) {
-      return new PurgeBranchCallable(logger, sessionContext, branchStore, branchCache, branch, recurse);
+      return new PurgeBranchCallable(logger, session, branchStore, branchCache, branch, recurse);
    }
 
    @Override
    public Callable<TransactionRecord> commitBranch(ArtifactReadable committer, IOseeBranch source, IOseeBranch destination) {
-      return new CommitBranchCallable(logger, sessionContext, branchStore, branchCache, committer, source, destination);
+      return new CommitBranchCallable(logger, session, branchStore, branchCache, committer, source, destination);
    }
 
    @Override
    public Callable<List<ChangeItem>> compareBranch(ITransaction sourceTx, ITransaction destinationTx) {
-      return new CompareBranchCallable(logger, sessionContext, branchStore, txCache, sourceTx, destinationTx);
+      return new CompareBranchCallable(logger, session, branchStore, txCache, sourceTx, destinationTx);
    }
 
    @Override
    public Callable<List<ChangeItem>> compareBranch(IOseeBranch branch) throws OseeCoreException {
-      return branchStore.compareBranch(sessionContext.toString(), branchCache.get(branch));
+      return branchStore.compareBranch(session, branchCache.get(branch));
    }
 
    @Override
    public Callable<ReadableBranch> changeBranchState(IOseeBranch branch, BranchState newState) {
-      return new ChangeBranchStateCallable(logger, sessionContext, branchStore, branchCache, branch, newState);
+      return new ChangeBranchStateCallable(logger, session, branchStore, branchCache, branch, newState);
    }
 
    @Override
    public Callable<ReadableBranch> changeBranchType(IOseeBranch branch, BranchType branchType) {
-      return new ChangeBranchTypeCallable(logger, sessionContext, branchStore, branchCache, branch, branchType);
+      return new ChangeBranchTypeCallable(logger, session, branchStore, branchCache, branch, branchType);
    }
 
    @Override
@@ -115,17 +116,17 @@ public class OrcsBranchImpl implements OrcsBranch {
 
    @Override
    public Callable<URI> exportBranch(List<IOseeBranch> branches, PropertyStore options, String exportName) {
-      return branchStore.exportBranch(sessionContext.toString(), branches, options, exportName);
+      return branchStore.exportBranch(session, branches, options, exportName);
    }
 
    @Override
    public Callable<URI> importBranch(URI fileToImport, List<IOseeBranch> branches, PropertyStore options) {
-      return branchStore.importBranch(sessionContext.toString(), fileToImport, branches, options);
+      return branchStore.importBranch(session, fileToImport, branches, options);
    }
 
    @Override
    public Callable<URI> checkBranchExchangeIntegrity(URI fileToCheck) {
-      return branchStore.checkBranchExchangeIntegrity(sessionContext.toString(), fileToCheck);
+      return branchStore.checkBranchExchangeIntegrity(session, fileToCheck);
    }
 
    @Override

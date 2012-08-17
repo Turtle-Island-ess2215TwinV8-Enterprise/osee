@@ -22,13 +22,14 @@ import org.eclipse.osee.framework.core.enums.LoadLevel;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactDataHandler;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributeDataHandler;
 import org.eclipse.osee.orcs.core.ds.DataLoader;
-import org.eclipse.osee.orcs.core.ds.LoadDataHandler;
 import org.eclipse.osee.orcs.core.ds.DataLoaderFactory;
+import org.eclipse.osee.orcs.core.ds.LoadDataHandler;
 import org.eclipse.osee.orcs.core.ds.OrcsDataStore;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.RelationDataHandler;
@@ -65,16 +66,18 @@ public class LoaderTest {
    @Captor ArgumentCaptor<ArtifactData> artifactCaptor;
    @Captor ArgumentCaptor<AttributeData> attributeCaptor;
    @Captor ArgumentCaptor<RelationData> relationCaptor;
+   
+   @Mock private OrcsSession session;
    // @formatter:on
 
-   private String sessionId;
    private HasCancellation cancellation;
 
    @Before
    public void setUp() {
       MockitoAnnotations.initMocks(this);
 
-      sessionId = GUID.create();
+      String sessionId = GUID.create();
+      when(session.getGuid()).thenReturn(sessionId);
 
       when(builder.getArtifactDataHandler()).thenReturn(artifactHandler);
       when(builder.getAttributeDataHandler()).thenReturn(attributeHandler);
@@ -84,7 +87,7 @@ public class LoaderTest {
    @org.junit.Test
    public void testLoad() throws OseeCoreException {
       DataLoaderFactory loaderFactory = dataStore.getDataLoaderFactory();
-      DataLoader loader = loaderFactory.fromBranchAndArtifactIds(sessionId, CoreBranches.COMMON, 6, 7, 8);
+      DataLoader loader = loaderFactory.fromBranchAndArtifactIds(session, CoreBranches.COMMON, 6, 7, 8);
       loader.setLoadLevel(LoadLevel.FULL);
 
       loader.load(cancellation, builder);
@@ -135,7 +138,7 @@ public class LoaderTest {
    @org.junit.Test
    public void testLoadByTypes() throws OseeCoreException {
       DataLoaderFactory loaderFactory = dataStore.getDataLoaderFactory();
-      DataLoader loader = loaderFactory.fromBranchAndArtifactIds(sessionId, CoreBranches.COMMON, 6, 7, 8);
+      DataLoader loader = loaderFactory.fromBranchAndArtifactIds(session, CoreBranches.COMMON, 6, 7, 8);
       loader.setLoadLevel(LoadLevel.FULL);
 
       loader.loadAttributeType(Name);
@@ -183,7 +186,7 @@ public class LoaderTest {
    @org.junit.Test
    public void testLoadByIds() throws OseeCoreException {
       DataLoaderFactory loaderFactory = dataStore.getDataLoaderFactory();
-      DataLoader loader = loaderFactory.fromBranchAndArtifactIds(sessionId, CoreBranches.COMMON, 6, 7, 8);
+      DataLoader loader = loaderFactory.fromBranchAndArtifactIds(session, CoreBranches.COMMON, 6, 7, 8);
       loader.setLoadLevel(LoadLevel.FULL);
 
       loader.loadAttributeLocalId(14, 17);

@@ -15,7 +15,7 @@ import org.eclipse.osee.executor.admin.CancellableCallable;
 import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.logger.Log;
-import org.eclipse.osee.orcs.core.internal.SessionContext;
+import org.eclipse.osee.orcs.OrcsSession;
 
 /**
  * @author Roberto E. Escobar
@@ -23,21 +23,21 @@ import org.eclipse.osee.orcs.core.internal.SessionContext;
 public abstract class AbstractAdminCallable<T> extends CancellableCallable<T> {
 
    private final Log logger;
-   private final SessionContext sessionContext;
+   private final OrcsSession session;
    private Callable<?> innerWorker;
 
-   public AbstractAdminCallable(Log logger, SessionContext sessionContext) {
+   public AbstractAdminCallable(Log logger, OrcsSession session) {
       super();
       this.logger = logger;
-      this.sessionContext = sessionContext;
+      this.session = session;
    }
 
    protected Log getLogger() {
       return logger;
    }
 
-   protected SessionContext getSessionContext() {
-      return sessionContext;
+   protected OrcsSession getSession() {
+      return session;
    }
 
    @Override
@@ -48,7 +48,7 @@ public abstract class AbstractAdminCallable<T> extends CancellableCallable<T> {
       }
       T result;
       try {
-         Conditions.checkNotNull(sessionContext, "sessionContext");
+         Conditions.checkNotNull(session, "session");
          //         Conditions.checkNotNull(branchStore, "branchDataStore");
          result = innerCall();
       } finally {

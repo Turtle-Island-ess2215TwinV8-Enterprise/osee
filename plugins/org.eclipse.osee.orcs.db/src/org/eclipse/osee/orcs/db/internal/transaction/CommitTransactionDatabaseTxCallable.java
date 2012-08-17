@@ -28,6 +28,7 @@ import org.eclipse.osee.framework.database.IOseeDatabaseService;
 import org.eclipse.osee.framework.database.core.OseeConnection;
 import org.eclipse.osee.framework.jdk.core.util.time.GlobalTime;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
 import org.eclipse.osee.orcs.core.ds.TransactionData;
 import org.eclipse.osee.orcs.core.ds.TransactionResult;
@@ -47,10 +48,10 @@ public final class CommitTransactionDatabaseTxCallable extends DatabaseTxCallabl
    private final TransactionData transactionData;
 
    private final CheckProvider checksProvider;
-   private final String sessionId;
+   private final OrcsSession session;
    private final TransactionWriter writer;
 
-   public CommitTransactionDatabaseTxCallable(Log logger, IOseeDatabaseService dbService, BranchCache branchCache, TransactionCache transactionCache, TransactionRecordFactory factory, CheckProvider checksProvider, TransactionWriter writer, String sessionId, TransactionData transactionData) {
+   public CommitTransactionDatabaseTxCallable(Log logger, IOseeDatabaseService dbService, BranchCache branchCache, TransactionCache transactionCache, TransactionRecordFactory factory, CheckProvider checksProvider, TransactionWriter writer, OrcsSession session, TransactionData transactionData) {
       super(logger, dbService, String.format("Committing Transaction: [%s] for branch [%s]",
          transactionData.getComment(), transactionData.getBranch()));
       this.branchCache = branchCache;
@@ -59,7 +60,7 @@ public final class CommitTransactionDatabaseTxCallable extends DatabaseTxCallabl
       this.checksProvider = checksProvider;
 
       this.writer = writer;
-      this.sessionId = sessionId;
+      this.session = session;
       this.transactionData = transactionData;
    }
 
@@ -84,7 +85,7 @@ public final class CommitTransactionDatabaseTxCallable extends DatabaseTxCallabl
 
       Collection<TransactionCheck> checks = checksProvider.getTransactionChecks();
       for (TransactionCheck check : checks) {
-         check.verify(this, sessionId, transactionData);
+         check.verify(this, session, transactionData);
       }
 
       TransactionRecord txRecord = createTransactionRecord(branch, author, comment, getNextTransactionId());

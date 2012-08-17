@@ -17,8 +17,8 @@ import org.eclipse.osee.executor.admin.CancellableCallable;
 import org.eclipse.osee.executor.admin.ExecutorAdmin;
 import org.eclipse.osee.framework.core.model.ReadableBranch;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.QueryEngineIndexer;
-import org.eclipse.osee.orcs.core.internal.SessionContext;
 import org.eclipse.osee.orcs.core.internal.indexer.collector.IndexerCollectorNotifier;
 import org.eclipse.osee.orcs.search.IndexerCollector;
 import org.eclipse.osee.orcs.search.QueryIndexer;
@@ -29,14 +29,14 @@ import org.eclipse.osee.orcs.search.QueryIndexer;
 public class QueryIndexerImpl implements QueryIndexer {
 
    private final Log logger;
-   private final SessionContext sessionContext;
+   private final OrcsSession session;
    private final ExecutorAdmin executorAdmin;
    private final IndexerCollector systemCollector;
    private final QueryEngineIndexer engineIndexer;
 
-   public QueryIndexerImpl(Log logger, SessionContext sessionContext, ExecutorAdmin executorAdmin, QueryEngineIndexer engineIndexer, IndexerCollector systemCollector) {
+   public QueryIndexerImpl(Log logger, OrcsSession session, ExecutorAdmin executorAdmin, QueryEngineIndexer engineIndexer, IndexerCollector systemCollector) {
       this.logger = logger;
-      this.sessionContext = sessionContext;
+      this.session = session;
       this.executorAdmin = executorAdmin;
       this.systemCollector = systemCollector;
       this.engineIndexer = engineIndexer;
@@ -58,7 +58,7 @@ public class QueryIndexerImpl implements QueryIndexer {
 
    @Override
    public CancellableCallable<Integer> indexAllFromQueue(IndexerCollector collector) {
-      return engineIndexer.indexAllFromQueue(sessionContext.getSessionId(), merge(collector));
+      return engineIndexer.indexAllFromQueue(session, merge(collector));
    }
 
    @Override
@@ -68,7 +68,7 @@ public class QueryIndexerImpl implements QueryIndexer {
 
    @Override
    public CancellableCallable<?> indexBranches(IndexerCollector collector, Set<ReadableBranch> branches, boolean indexOnlyMissing) {
-      return engineIndexer.indexBranches(sessionContext.getSessionId(), merge(collector), branches, indexOnlyMissing);
+      return engineIndexer.indexBranches(session, merge(collector), branches, indexOnlyMissing);
    }
 
    @Override
@@ -78,7 +78,7 @@ public class QueryIndexerImpl implements QueryIndexer {
 
    @Override
    public CancellableCallable<?> indexXmlStream(IndexerCollector collector, InputStream inputStream) {
-      return engineIndexer.indexXmlStream(sessionContext.getSessionId(), merge(collector), inputStream);
+      return engineIndexer.indexXmlStream(session, merge(collector), inputStream);
    }
 
    @Override
@@ -89,12 +89,12 @@ public class QueryIndexerImpl implements QueryIndexer {
 
    @Override
    public CancellableCallable<Integer> deleteIndexByQueryId(int queueId) {
-      return engineIndexer.deleteIndexByQueryId(sessionContext.getSessionId(), queueId);
+      return engineIndexer.deleteIndexByQueryId(session, queueId);
    }
 
    @Override
    public CancellableCallable<Integer> purgeAllIndexes() {
-      return engineIndexer.purgeAllIndexes(sessionContext.getSessionId());
+      return engineIndexer.purgeAllIndexes(session);
    }
 
 }

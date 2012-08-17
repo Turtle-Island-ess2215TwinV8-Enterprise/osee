@@ -26,6 +26,7 @@ import org.eclipse.osee.orcs.OrcsAdmin;
 import org.eclipse.osee.orcs.OrcsApi;
 import org.eclipse.osee.orcs.OrcsBranch;
 import org.eclipse.osee.orcs.OrcsPerformance;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.SystemPreferences;
 import org.eclipse.osee.orcs.core.ds.OrcsDataStore;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactFactory;
@@ -40,7 +41,7 @@ import org.eclipse.osee.orcs.core.internal.relation.RelationGraphImpl;
 import org.eclipse.osee.orcs.core.internal.relation.RelationTypeValidity;
 import org.eclipse.osee.orcs.core.internal.relation.RelationTypeValidityImpl;
 import org.eclipse.osee.orcs.core.internal.search.QueryModule;
-import org.eclipse.osee.orcs.core.internal.session.SessionContextImpl;
+import org.eclipse.osee.orcs.core.internal.session.OrcsSessionImpl;
 import org.eclipse.osee.orcs.core.internal.transaction.TransactionFactoryImpl;
 import org.eclipse.osee.orcs.core.internal.transaction.handler.TxDataHandlerFactoryImpl;
 import org.eclipse.osee.orcs.core.internal.util.ValueProviderFactory;
@@ -69,6 +70,7 @@ public class OrcsApiImpl implements OrcsApi {
    private IndexerModule indexerModule;
    private TxDataHandlerFactoryImpl txUpdateFactory;
    private RelationTypeValidity validity;
+   private OrcsSession systemSession;
 
    public void setLogger(Log logger) {
       this.logger = logger;
@@ -95,6 +97,7 @@ public class OrcsApiImpl implements OrcsApi {
    }
 
    public void start() {
+      systemSession = createSession();
       validity = new RelationTypeValidityImpl(cacheService.getRelationTypeCache());
 
       ValueProviderFactory providerFactory =
@@ -122,7 +125,8 @@ public class OrcsApiImpl implements OrcsApi {
          new QueryModule(logger, dataStore.getQueryEngine(), loaderFactory, cacheService.getAttributeTypeCache());
 
       indexerModule = new IndexerModule(logger, preferences, executorAdmin, dataStore.getQueryEngineIndexer());
-      indexerModule.start();
+
+      indexerModule.start(getSystemSession());
    }
 
    public void stop() {
@@ -133,12 +137,13 @@ public class OrcsApiImpl implements OrcsApi {
       loaderFactory = null;
       txUpdateFactory = null;
       proxyFactory = null;
+      systemSession = null;
    }
 
    @Override
    public QueryFactory getQueryFactory(ApplicationContext context) {
-      SessionContext sessionContext = getSessionContext(context);
-      return queryModule.createQueryFactory(sessionContext);
+      OrcsSession session = getSession(context);
+      return queryModule.createQueryFactory(session);
    }
 
    @Override
@@ -153,14 +158,14 @@ public class OrcsApiImpl implements OrcsApi {
 
    @Override
    public GraphReadable getGraph(ApplicationContext context) {
-      SessionContext sessionContext = getSessionContext(context);
-      return new RelationGraphImpl(sessionContext, loaderFactory, cacheService.getArtifactTypeCache(),
+      OrcsSession session = getSession(context);
+      return new RelationGraphImpl(session, loaderFactory, cacheService.getArtifactTypeCache(),
          cacheService.getRelationTypeCache(), validity);
    }
 
    @Override
    public OrcsBranch getBranchOps(final ApplicationContext context) {
-      SessionContext sessionContext = getSessionContext(context);
+      OrcsSession session = getSession(context);
       LazyObject<ArtifactReadable> systemUser = new LazyObject<ArtifactReadable>() {
 
          @Override
@@ -168,36 +173,39 @@ public class OrcsApiImpl implements OrcsApi {
             return getQueryFactory(context).fromBranch(CoreBranches.COMMON).andIds(SystemUser.OseeSystem).getResults().getExactlyOne();
          }
       };
-      return new OrcsBranchImpl(logger, sessionContext, dataStore.getBranchDataStore(), cacheService.getBranchCache(),
+      return new OrcsBranchImpl(logger, session, dataStore.getBranchDataStore(), cacheService.getBranchCache(),
          cacheService.getTransactionCache(), systemUser);
    }
 
    @Override
    public TransactionFactory getTransactionFactory(ApplicationContext context) {
-      SessionContext sessionContext = getSessionContext(context);
-      return new TransactionFactoryImpl(logger, sessionContext, dataStore.getBranchDataStore(), proxyFactory,
-         txUpdateFactory);
+      OrcsSession session = getSession(context);
+      return new TransactionFactoryImpl(logger, session, dataStore.getBranchDataStore(), proxyFactory, txUpdateFactory);
    }
 
    @Override
    public OrcsAdmin getAdminOps(ApplicationContext context) {
-      SessionContext sessionContext = getSessionContext(context);
-      return new OrcsAdminImpl(logger, sessionContext, dataStore.getDataStoreAdmin());
+      OrcsSession session = getSession(context);
+      return new OrcsAdminImpl(logger, session, dataStore.getDataStoreAdmin());
    }
 
    @Override
    public OrcsPerformance getOrcsPerformance(ApplicationContext context) {
-      SessionContext sessionContext = getSessionContext(context);
-      return new OrcsPerformanceImpl(logger, sessionContext, queryModule, indexerModule);
+      OrcsSession session = getSession(context);
+      return new OrcsPerformanceImpl(logger, session, queryModule, indexerModule);
    }
 
    @Override
    public QueryIndexer getQueryIndexer(ApplicationContext context) {
-      SessionContext sessionContext = getSessionContext(context);
-      return indexerModule.createQueryIndexer(sessionContext);
+      OrcsSession session = getSession(context);
+      return indexerModule.createQueryIndexer(session);
    }
 
-   private SessionContext getSessionContext(ApplicationContext context) {
+   private OrcsSession getSystemSession() {
+      return systemSession;
+   }
+
+   private OrcsSession getSession(ApplicationContext context) {
       // TODO get sessions from a session context cache - improve this
       String sessionId = null;
       if (context != null) {
@@ -206,7 +214,12 @@ public class OrcsApiImpl implements OrcsApi {
       if (!Strings.isValid(sessionId)) {
          sessionId = GUID.create();
       }
-      return new SessionContextImpl(sessionId);
+      
+      return new OrcsSessionImpl(sessionId);
    }
 
+   private OrcsSession createSession() {
+      String sessionId = GUID.create();
+      return new OrcsSessionImpl(sessionId);
+   }
 }

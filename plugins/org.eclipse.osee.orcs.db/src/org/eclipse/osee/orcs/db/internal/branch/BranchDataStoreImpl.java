@@ -30,6 +30,7 @@ import org.eclipse.osee.framework.database.IOseeDatabaseService;
 import org.eclipse.osee.framework.jdk.core.type.PropertyStore;
 import org.eclipse.osee.framework.resource.management.IResourceManager;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.SystemPreferences;
 import org.eclipse.osee.orcs.core.ds.BranchDataStore;
 import org.eclipse.osee.orcs.core.ds.DataLoaderFactory;
@@ -94,53 +95,53 @@ public class BranchDataStoreImpl implements BranchDataStore {
    }
 
    @Override
-   public Callable<Branch> createBranch(String sessionId, CreateBranchData branchData) {
+   public Callable<Branch> createBranch(OrcsSession session, CreateBranchData branchData) {
       return new CreateBranchDatabaseTxCallable(logger, dbService, cachingService.getBranchCache(),
          cachingService.getTransactionCache(), modelFactory.getBranchFactory(), modelFactory.getTransactionFactory(),
          branchData);
    }
 
    @Override
-   public Callable<Branch> createBranchCopyTx(String sessionId, CreateBranchData branchData) {
+   public Callable<Branch> createBranchCopyTx(OrcsSession session, CreateBranchData branchData) {
       return new BranchCopyTxCallable(logger, dbService, cachingService.getBranchCache(),
          cachingService.getTransactionCache(), modelFactory.getBranchFactory(), modelFactory.getTransactionFactory(),
          branchData);
    }
 
    @Override
-   public Callable<TransactionRecord> commitBranch(String sessionId, ArtifactReadable committer, Branch source, Branch destination) {
+   public Callable<TransactionRecord> commitBranch(OrcsSession session, ArtifactReadable committer, Branch source, Branch destination) {
       return new CommitBranchDatabaseCallable(logger, dbService, cachingService.getBranchCache(),
          cachingService.getTransactionCache(), modelFactory.getTransactionFactory(), committer, source, destination,
          missingChangeItemFactory, sessionId);
    }
 
    @Override
-   public Callable<Branch> purgeBranch(String sessionId, Branch branch) {
+   public Callable<Branch> purgeBranch(OrcsSession session, Branch branch) {
       return new PurgeBranchDatabaseCallable(logger, dbService, cachingService.getBranchCache(), branch);
    }
 
    @Override
-   public Callable<List<ChangeItem>> compareBranch(String sessionId, TransactionRecord sourceTx, TransactionRecord destinationTx) {
+   public Callable<List<ChangeItem>> compareBranch(OrcsSession session, TransactionRecord sourceTx, TransactionRecord destinationTx) {
       return new CompareDatabaseCallable(logger, dbService, cachingService.getBranchCache(),
          cachingService.getTransactionCache(), sourceTx, destinationTx, missingChangeItemFactory, sessionId);
    }
 
    @Override
-   public Callable<List<ChangeItem>> compareBranch(String sessionId, Branch branch) throws OseeCoreException {
+   public Callable<List<ChangeItem>> compareBranch(OrcsSession session, Branch branch) throws OseeCoreException {
       TransactionCache txCache = cachingService.getTransactionCache();
       return new CompareDatabaseCallable(logger, dbService, cachingService.getBranchCache(), txCache,
          branch.getBaseTransaction(), txCache.getHeadTransaction(branch), missingChangeItemFactory, sessionId);
    }
 
    @Override
-   public Callable<URI> exportBranch(String sessionId, List<IOseeBranch> branches, PropertyStore options, String exportName) {
+   public Callable<URI> exportBranch(OrcsSession session, List<IOseeBranch> branches, PropertyStore options, String exportName) {
       ExportItemFactory factory =
          new ExportItemFactory(logger, dbService, cachingService, typeModelService, resourceManager);
       return new ExportBranchDatabaseCallable(factory, preferences, executorAdmin, branches, options, exportName);
    }
 
    @Override
-   public Callable<URI> importBranch(String sessionId, URI fileToImport, List<IOseeBranch> branches, PropertyStore options) {
+   public Callable<URI> importBranch(OrcsSession session, URI fileToImport, List<IOseeBranch> branches, PropertyStore options) {
       ImportBranchDatabaseCallable callable =
          new ImportBranchDatabaseCallable(logger, dbService, preferences, cachingService, typeModelService,
             resourceManager, identityService, fileToImport, branches, options);
@@ -148,16 +149,16 @@ public class BranchDataStoreImpl implements BranchDataStore {
    }
 
    @Override
-   public Callable<URI> checkBranchExchangeIntegrity(String sessionId, URI fileToCheck) {
+   public Callable<URI> checkBranchExchangeIntegrity(OrcsSession session, URI fileToCheck) {
       return new CheckBranchExchangeIntegrityCallable(logger, dbService, preferences, resourceManager, fileToCheck);
    }
 
    @Override
-   public Callable<TransactionResult> commitTransaction(String sessionId, TransactionData data) {
+   public Callable<TransactionResult> commitTransaction(OrcsSession session, TransactionData data) {
       TxSqlBuilderImpl builder = new TxSqlBuilderImpl(dbService, idFactory, identityService);
       TransactionWriter writer = new TransactionWriter(logger, dbService, builder);
       return new CommitTransactionDatabaseTxCallable(logger, dbService, cachingService.getBranchCache(),
-         cachingService.getTransactionCache(), modelFactory.getTransactionFactory(), checkProvider, writer, sessionId,
+         cachingService.getTransactionCache(), modelFactory.getTransactionFactory(), checkProvider, writer, session,
          data);
    }
 

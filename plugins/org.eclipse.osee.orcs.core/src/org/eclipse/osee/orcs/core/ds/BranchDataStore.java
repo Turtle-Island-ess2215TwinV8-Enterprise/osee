@@ -19,6 +19,7 @@ import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.TransactionRecord;
 import org.eclipse.osee.framework.core.model.change.ChangeItem;
 import org.eclipse.osee.framework.jdk.core.type.PropertyStore;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.data.ArtifactReadable;
 import org.eclipse.osee.orcs.data.CreateBranchData;
 
@@ -27,25 +28,25 @@ import org.eclipse.osee.orcs.data.CreateBranchData;
  */
 public interface BranchDataStore {
 
-   Callable<Branch> createBranch(String sessionId, CreateBranchData branchData);
+   Callable<Branch> createBranch(OrcsSession session, CreateBranchData branchData);
 
-   Callable<Branch> createBranchCopyTx(String sessionId, CreateBranchData branchData);
+   Callable<Branch> createBranchCopyTx(OrcsSession session, CreateBranchData branchData);
 
-   Callable<Branch> purgeBranch(String sessionId, Branch branch);
+   Callable<Branch> purgeBranch(OrcsSession session, Branch branch);
 
-   Callable<TransactionRecord> commitBranch(String sessionId, ArtifactReadable committer, Branch source, Branch destination);
+   Callable<TransactionRecord> commitBranch(OrcsSession session, ArtifactReadable committer, Branch source, Branch destination);
 
-   Callable<List<ChangeItem>> compareBranch(String sessionId, TransactionRecord sourceTx, TransactionRecord destinationTx);
+   Callable<List<ChangeItem>> compareBranch(OrcsSession session, TransactionRecord sourceTx, TransactionRecord destinationTx);
 
-   Callable<List<ChangeItem>> compareBranch(String sessionId, Branch branch) throws OseeCoreException;
+   Callable<List<ChangeItem>> compareBranch(OrcsSession session, Branch branch) throws OseeCoreException;
 
-   Callable<URI> exportBranch(String sessionId, List<IOseeBranch> branches, PropertyStore options, String exportName);
+   Callable<URI> exportBranch(OrcsSession session, List<IOseeBranch> branches, PropertyStore options, String exportName);
 
-   Callable<URI> importBranch(String sessionId, URI fileToImport, List<IOseeBranch> branches, PropertyStore options);
+   Callable<URI> importBranch(OrcsSession session, URI fileToImport, List<IOseeBranch> branches, PropertyStore options);
 
-   Callable<URI> checkBranchExchangeIntegrity(String sessionId, URI fileToCheck);
+   Callable<URI> checkBranchExchangeIntegrity(OrcsSession session, URI fileToCheck);
 
-   Callable<TransactionResult> commitTransaction(String sessionId, TransactionData transaction);
+   Callable<TransactionResult> commitTransaction(OrcsSession session, TransactionData transaction);
 
    // Temp
    Callable<String> createUnsubscribeTx(ArtifactReadable userArtifact, ArtifactReadable groupArtifact);

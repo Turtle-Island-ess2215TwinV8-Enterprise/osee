@@ -19,9 +19,9 @@ import org.eclipse.osee.framework.core.enums.LoadLevel;
 import org.eclipse.osee.framework.core.enums.RelationSide;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.internal.ArtifactLoader;
 import org.eclipse.osee.orcs.core.internal.ArtifactLoaderFactory;
-import org.eclipse.osee.orcs.core.internal.SessionContext;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.HasLinkers;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.LinkResolver;
 import org.eclipse.osee.orcs.core.internal.relation.experimental.interfaces.Linker;
@@ -36,22 +36,23 @@ public class LinkResolverImpl implements LinkResolver<IOseeBranch, ArtifactReada
 
    private final BranchCache branchCache;
    private final ArtifactLoaderFactory loadFactory;
-   private final SessionContext sessionContext;
+   private final OrcsSession session;
 
-   public LinkResolverImpl(SessionContext sessionContext, ArtifactLoaderFactory loadFactory, BranchCache branchCache) {
+   public LinkResolverImpl(OrcsSession session, ArtifactLoaderFactory loadFactory, BranchCache branchCache) {
       super();
-      this.sessionContext = sessionContext;
+      this.session = session;
       this.loadFactory = loadFactory;
       this.branchCache = branchCache;
    }
 
    private ArtifactReadable getFromCache(IOseeBranch branch, int artId) throws OseeCoreException {
       int branchId = branchCache.getLocalId(branch);
-      return sessionContext.getActive(artId, branchId);
+      //      return session.getActive(artId, branchId);
+      return null;
    }
 
    private List<ArtifactReadable> loadArtifacts(IOseeBranch branch, Collection<Integer> artifactIds) throws OseeCoreException {
-      ArtifactLoader loader = loadFactory.fromBranchAndArtifactIds(sessionContext, branch, artifactIds);
+      ArtifactLoader loader = loadFactory.fromBranchAndArtifactIds(session, branch, artifactIds);
       loader.setLoadLevel(LoadLevel.FULL);
       return loader.load();
    }
@@ -61,7 +62,7 @@ public class LinkResolverImpl implements LinkResolver<IOseeBranch, ArtifactReada
       int artId = linker.getLocalId();
       ArtifactReadable data = getFromCache(source, artId);
       if (data == null) {
-         ArtifactLoader loader = loadFactory.fromBranchAndArtifactIds(sessionContext, source, artId);
+         ArtifactLoader loader = loadFactory.fromBranchAndArtifactIds(session, source, artId);
          loader.setLoadLevel(LoadLevel.FULL);
          data = loader.getResults().getExactlyOne();
       }
