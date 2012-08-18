@@ -125,6 +125,7 @@ public class TxDataManagerImplTest {
 
       txManager.addWrite(expected);
       when(expected.isDirty()).thenReturn(false);
+      when(proxyFactory.getProxiedObject(expected)).thenReturn(impl);
 
       txManager.getChanges();
       verify(proxyFactory, times(0)).getProxiedObject(expected);
