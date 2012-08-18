@@ -21,8 +21,8 @@ import org.eclipse.osee.framework.core.model.type.RelationType;
  */
 public interface RelationTypeValidity {
 
-   public abstract int getMaximumRelationAllowed(ArtifactType artifactType, IRelationTypeSide relationTypeSide) throws OseeCoreException;
+   int getMaximumRelationAllowed(ArtifactType artifactType, IRelationTypeSide relationTypeSide) throws OseeCoreException;
 
-   public abstract List<RelationType> getValidRelationTypes(ArtifactType artifactType) throws OseeCoreException;
+   List<RelationType> getValidRelationTypes(ArtifactType artifactType) throws OseeCoreException;
 
 }

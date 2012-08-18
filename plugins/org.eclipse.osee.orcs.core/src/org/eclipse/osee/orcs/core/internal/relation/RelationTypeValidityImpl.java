@@ -50,13 +50,13 @@ public class RelationTypeValidityImpl implements RelationTypeValidity {
    public List<RelationType> getValidRelationTypes(ArtifactType artifactType) throws OseeCoreException {
       Conditions.checkNotNull(artifactType, "artifactType");
       Collection<RelationType> relationTypes = relationTypeCache.getAll();
-      List<RelationType> validRelationTypes = new ArrayList<RelationType>();
+      List<RelationType> toReturn = new ArrayList<RelationType>();
       for (RelationType relationType : relationTypes) {
          if (isTypeAllowed(artifactType, relationType)) {
-            validRelationTypes.add(relationType);
+            toReturn.add(relationType);
          }
       }
-      return validRelationTypes;
+      return toReturn;
    }
 
    private boolean isTypeAllowed(ArtifactType artifactType, RelationType relationType) throws OseeCoreException {
