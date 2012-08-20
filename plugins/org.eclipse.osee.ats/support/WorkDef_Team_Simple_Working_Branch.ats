@@ -1,0 +1,152 @@
+workDefinition "WorkDef_Team_Simple_Working_Branch" {
+	id "WorkDef_Team_Simple_Working_Branch"
+   startState "Implement" 
+
+   widgetDefinition "Work Package" {
+      attributeName "ats.Work Package"
+      xWidgetName "XTextDam"
+      option HORIZONTAL_LABEL
+   }
+
+   widgetDefinition "Problem" { 
+      attributeName "ats.Problem" 
+      xWidgetName "XTextDam"
+      option FILL_VERTICALLY
+   }
+
+   widgetDefinition "Proposed Resolution" {
+      attributeName "ats.Proposed Resolution"
+      xWidgetName "XTextDam"
+      option FILL_VERTICALLY
+   }
+
+   widgetDefinition "Change Type" {
+      attributeName "ats.Change Type"
+      xWidgetName "XComboDam(OPTIONS_FROM_ATTRIBUTE_VALIDITY)"
+      option REQUIRED_FOR_TRANSITION
+   }
+
+   widgetDefinition "Priority" {
+      attributeName "ats.Priority"
+      xWidgetName "XComboDam(OPTIONS_FROM_ATTRIBUTE_VALIDITY)"
+      option REQUIRED_FOR_TRANSITION
+   }
+
+   widgetDefinition "Need By" {
+      attributeName "ats.Need By"
+      xWidgetName "XDateDam"
+      option HORIZONTAL_LABEL
+   }
+
+   widgetDefinition "Estimated Hours" {
+      attributeName "ats.Estimated Hours"
+      xWidgetName "XFloatDam"
+      option REQUIRED_FOR_TRANSITION
+   }
+
+   widgetDefinition "Title" {
+      attributeName "Name"
+      xWidgetName "XTextDam"
+      option REQUIRED_FOR_TRANSITION
+   }
+
+   widgetDefinition "Description" {
+      attributeName "ats.Description"
+      xWidgetName "XTextDam"
+      option FILL_VERTICALLY
+      option REQUIRED_FOR_TRANSITION
+   }
+
+   widgetDefinition "Validation Required" {
+      attributeName "ats.Validation Required"
+      xWidgetName "XCheckBoxDam"
+      option HORIZONTAL_LABEL
+   }
+
+   widgetDefinition "Estimated Completion Date" {
+      attributeName "ats.Estimated Completion Date"
+      xWidgetName "XDateDam"
+      option HORIZONTAL_LABEL
+   }
+
+   widgetDefinition "Resolution" {
+      attributeName "ats.Resolution"
+      xWidgetName "XTextDam"
+      option FILL_VERTICALLY
+   }
+
+   widgetDefinition "Create Working Branch" {
+      xWidgetName "XWorkingBranch"
+      option FILL_VERTICALLY
+   }
+   widgetDefinition "Validate Requirement Changes" { 
+      xWidgetName "XValidateReqChangesButton"
+   }
+
+   widgetDefinition "Show CDB Differences Report" { 
+      xWidgetName "XShowCdbDiffReportButton"
+   }
+
+   widgetDefinition "Check Signals Via CDB" {
+      xWidgetName "XCheckSiganlsViaCDBButton"
+   }
+
+   widgetDefinition "Create Code/Test Tasks" {
+      xWidgetName "XCreateCodeTestTasksButton"
+   }
+
+   widgetDefinition "Commit Manager" {
+      xWidgetName "XCommitManager"
+   }
+
+
+   state "Implement" { 
+      type Working
+      ordinal 1
+      to "Cancelled"
+      to "Completed" AsDefault 
+      rule RequireStateHourSpentPrompt
+      layout {
+         widget "Work Package"
+         step "Requirements" {  
+         	description "Change to requirements or other related artifacts on working branch."
+         	page "Port" {
+         		description "Port changes from other branches actions"
+         		widget "Work Package"
+         	}
+         	page "Edit" {
+         		description "Edit artifacts / requirements / documents"
+			      widget "Create Working Branch"
+         	}
+         	page "Commit" { 
+         		description "Validate and commit changes to baseline branch"
+		         attributeWidget "ats.Work Package"
+		         attributeWidget "ats.Estimated Completion Date"
+		         widget "Create Working Branch"
+		         widget "Validate Requirement Changes"
+		         widget "Show CDB Differences Report"
+		         widget "Check Signals Via CDB"
+		         widget "Create Code/Test Tasks"
+		         widget "Commit Manager"
+		         widget "Resolution"
+         	}
+         }
+         widget "Estimated Completion Date"
+         widget "Resolution"
+      }
+   }
+
+   state "Completed" {
+      type Completed
+      ordinal 2
+      to "Implement" OverrideAttributeValidation
+      rule AddDecisionValidateBlockingReview
+   }
+
+   state "Cancelled" {
+      type Cancelled
+      ordinal 3
+      to "Implement" OverrideAttributeValidation
+   }
+
+}

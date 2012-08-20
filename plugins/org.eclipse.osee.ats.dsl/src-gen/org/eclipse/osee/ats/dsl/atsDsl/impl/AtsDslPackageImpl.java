@@ -33,6 +33,8 @@ import org.eclipse.osee.ats.dsl.atsDsl.PeerReviewDef;
 import org.eclipse.osee.ats.dsl.atsDsl.PeerReviewRef;
 import org.eclipse.osee.ats.dsl.atsDsl.ReviewBlockingType;
 import org.eclipse.osee.ats.dsl.atsDsl.StateDef;
+import org.eclipse.osee.ats.dsl.atsDsl.StepPageDef;
+import org.eclipse.osee.ats.dsl.atsDsl.StepsDef;
 import org.eclipse.osee.ats.dsl.atsDsl.TeamDef;
 import org.eclipse.osee.ats.dsl.atsDsl.ToState;
 import org.eclipse.osee.ats.dsl.atsDsl.UserByName;
@@ -122,6 +124,20 @@ public class AtsDslPackageImpl extends EPackageImpl implements AtsDslPackage
    * @generated
    */
   private EClass stateDefEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stepsDefEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stepPageDefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1127,6 +1143,86 @@ public class AtsDslPackageImpl extends EPackageImpl implements AtsDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getStepsDef()
+  {
+    return stepsDefEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStepsDef_Name()
+  {
+    return (EAttribute)stepsDefEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStepsDef_Description()
+  {
+    return (EAttribute)stepsDefEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStepsDef_StepPageDefs()
+  {
+    return (EReference)stepsDefEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStepPageDef()
+  {
+    return stepPageDefEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStepPageDef_Name()
+  {
+    return (EAttribute)stepPageDefEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStepPageDef_Description()
+  {
+    return (EAttribute)stepPageDefEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStepPageDef_LayoutItems()
+  {
+    return (EReference)stepPageDefEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getDecisionReviewRef()
   {
     return decisionReviewRefEClass;
@@ -1733,6 +1829,16 @@ public class AtsDslPackageImpl extends EPackageImpl implements AtsDslPackage
     createEAttribute(stateDefEClass, STATE_DEF__COLOR);
     createEReference(stateDefEClass, STATE_DEF__LAYOUT);
 
+    stepsDefEClass = createEClass(STEPS_DEF);
+    createEAttribute(stepsDefEClass, STEPS_DEF__NAME);
+    createEAttribute(stepsDefEClass, STEPS_DEF__DESCRIPTION);
+    createEReference(stepsDefEClass, STEPS_DEF__STEP_PAGE_DEFS);
+
+    stepPageDefEClass = createEClass(STEP_PAGE_DEF);
+    createEAttribute(stepPageDefEClass, STEP_PAGE_DEF__NAME);
+    createEAttribute(stepPageDefEClass, STEP_PAGE_DEF__DESCRIPTION);
+    createEReference(stepPageDefEClass, STEP_PAGE_DEF__LAYOUT_ITEMS);
+
     decisionReviewRefEClass = createEClass(DECISION_REVIEW_REF);
     createEReference(decisionReviewRefEClass, DECISION_REVIEW_REF__DECISION_REVIEW);
 
@@ -1831,6 +1937,7 @@ public class AtsDslPackageImpl extends EPackageImpl implements AtsDslPackage
     // Add supertypes to classes
     widgetRefEClass.getESuperTypes().add(this.getLayoutItem());
     attrWidgetEClass.getESuperTypes().add(this.getLayoutItem());
+    stepsDefEClass.getESuperTypes().add(this.getLayoutItem());
     userByUserIdEClass.getESuperTypes().add(this.getUserRef());
     userByNameEClass.getESuperTypes().add(this.getUserRef());
     layoutDefEClass.getESuperTypes().add(this.getLayoutType());
@@ -1928,6 +2035,16 @@ public class AtsDslPackageImpl extends EPackageImpl implements AtsDslPackage
     initEAttribute(getStateDef_RecommendedPercentComplete(), ecorePackage.getEInt(), "recommendedPercentComplete", null, 0, 1, StateDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getStateDef_Color(), ecorePackage.getEString(), "color", null, 0, 1, StateDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getStateDef_Layout(), this.getLayoutType(), null, "layout", null, 0, 1, StateDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(stepsDefEClass, StepsDef.class, "StepsDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getStepsDef_Name(), ecorePackage.getEString(), "name", null, 0, 1, StepsDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getStepsDef_Description(), ecorePackage.getEString(), "description", null, 0, 1, StepsDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getStepsDef_StepPageDefs(), this.getStepPageDef(), null, "stepPageDefs", null, 0, -1, StepsDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(stepPageDefEClass, StepPageDef.class, "StepPageDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getStepPageDef_Name(), ecorePackage.getEString(), "name", null, 0, 1, StepPageDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getStepPageDef_Description(), ecorePackage.getEString(), "description", null, 0, 1, StepPageDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getStepPageDef_LayoutItems(), this.getLayoutItem(), null, "layoutItems", null, 0, -1, StepPageDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(decisionReviewRefEClass, DecisionReviewRef.class, "DecisionReviewRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getDecisionReviewRef_DecisionReview(), this.getDecisionReviewDef(), null, "decisionReview", null, 0, 1, DecisionReviewRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -117,6 +117,24 @@ public interface AtsDslFactory extends EFactory
   StateDef createStateDef();
 
   /**
+   * Returns a new object of class '<em>Steps Def</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Steps Def</em>'.
+   * @generated
+   */
+  StepsDef createStepsDef();
+
+  /**
+   * Returns a new object of class '<em>Step Page Def</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Step Page Def</em>'.
+   * @generated
+   */
+  StepPageDef createStepPageDef();
+
+  /**
    * Returns a new object of class '<em>Decision Review Ref</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

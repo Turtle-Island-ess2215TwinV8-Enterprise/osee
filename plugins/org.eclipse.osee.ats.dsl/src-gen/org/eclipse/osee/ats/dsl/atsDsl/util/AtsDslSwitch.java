@@ -148,6 +148,21 @@ public class AtsDslSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AtsDslPackage.STEPS_DEF:
+      {
+        StepsDef stepsDef = (StepsDef)theEObject;
+        T result = caseStepsDef(stepsDef);
+        if (result == null) result = caseLayoutItem(stepsDef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AtsDslPackage.STEP_PAGE_DEF:
+      {
+        StepPageDef stepPageDef = (StepPageDef)theEObject;
+        T result = caseStepPageDef(stepPageDef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AtsDslPackage.DECISION_REVIEW_REF:
       {
         DecisionReviewRef decisionReviewRef = (DecisionReviewRef)theEObject;
@@ -418,6 +433,38 @@ public class AtsDslSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseStateDef(StateDef object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Steps Def</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Steps Def</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseStepsDef(StepsDef object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Step Page Def</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Step Page Def</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseStepPageDef(StepPageDef object)
   {
     return null;
   }

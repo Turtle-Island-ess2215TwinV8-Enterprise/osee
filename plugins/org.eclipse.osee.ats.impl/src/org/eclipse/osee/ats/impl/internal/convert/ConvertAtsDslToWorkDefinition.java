@@ -50,6 +50,8 @@ import org.eclipse.osee.ats.dsl.atsDsl.LayoutType;
 import org.eclipse.osee.ats.dsl.atsDsl.PeerReviewDef;
 import org.eclipse.osee.ats.dsl.atsDsl.PeerReviewRef;
 import org.eclipse.osee.ats.dsl.atsDsl.StateDef;
+import org.eclipse.osee.ats.dsl.atsDsl.StepPageDef;
+import org.eclipse.osee.ats.dsl.atsDsl.StepsDef;
 import org.eclipse.osee.ats.dsl.atsDsl.ToState;
 import org.eclipse.osee.ats.dsl.atsDsl.UserByName;
 import org.eclipse.osee.ats.dsl.atsDsl.UserByUserId;
@@ -61,6 +63,8 @@ import org.eclipse.osee.ats.impl.internal.model.DecisionReviewDefinition;
 import org.eclipse.osee.ats.impl.internal.model.DecisionReviewOption;
 import org.eclipse.osee.ats.impl.internal.model.PeerReviewDefinition;
 import org.eclipse.osee.ats.impl.internal.model.StateDefinition;
+import org.eclipse.osee.ats.impl.internal.model.StepPageDefinition;
+import org.eclipse.osee.ats.impl.internal.model.StepsLayoutItem;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinition;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinitionFloatMinMaxConstraint;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinitionIntMinMaxConstraint;
@@ -284,9 +288,24 @@ public class ConvertAtsDslToWorkDefinition {
                processLayoutItems(SHEET_NAME, widgetDefs, compStateItem.getLayoutItems(), composite.getLayoutItems());
             }
             stateItems.add(compStateItem);
+         } else if (layoutItem instanceof StepsDef) {
+            StepsDef stepDef = (StepsDef) layoutItem;
+            StepsLayoutItem stepsLayoutItem = new StepsLayoutItem(stepDef.getName());
+            if (!stepDef.getStepPageDefs().isEmpty()) {
+               processStepItems(SHEET_NAME, widgetDefs, stepsLayoutItem, stepDef);
+            }
+            stateItems.add(stepsLayoutItem);
          }
       }
 
+   }
+
+   private void processStepItems(String SHEET_NAME, List<IAtsWidgetDefinition> widgetDefs, StepsLayoutItem stepsLayoutItem, StepsDef stepDef) {
+      for (StepPageDef pageDef : stepDef.getStepPageDefs()) {
+         StepPageDefinition pageDefinition = new StepPageDefinition(pageDef.getName());
+
+         processLayoutItems(SHEET_NAME, widgetDefs, pageDefinition.getLayoutItems(), pageDef.getLayoutItems());
+      }
    }
 
    private IAtsPeerReviewDefinition convertDslPeerReview(PeerReviewDef dslRevDef) {

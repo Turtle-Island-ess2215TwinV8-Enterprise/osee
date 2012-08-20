@@ -115,6 +115,10 @@ public class AtsDslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getStateDefAccess().getGroup_12(), "rule__StateDef__Group_12__0");
 					put(grammarAccess.getStateDefAccess().getGroup_13(), "rule__StateDef__Group_13__0");
 					put(grammarAccess.getStateDefAccess().getGroup_14(), "rule__StateDef__Group_14__0");
+					put(grammarAccess.getStepsDefAccess().getGroup(), "rule__StepsDef__Group__0");
+					put(grammarAccess.getStepsDefAccess().getGroup_3(), "rule__StepsDef__Group_3__0");
+					put(grammarAccess.getStepPageDefAccess().getGroup(), "rule__StepPageDef__Group__0");
+					put(grammarAccess.getStepPageDefAccess().getGroup_3(), "rule__StepPageDef__Group_3__0");
 					put(grammarAccess.getDecisionReviewRefAccess().getGroup(), "rule__DecisionReviewRef__Group__0");
 					put(grammarAccess.getDecisionReviewDefAccess().getGroup(), "rule__DecisionReviewDef__Group__0");
 					put(grammarAccess.getDecisionReviewDefAccess().getGroup_7(), "rule__DecisionReviewDef__Group_7__0");
@@ -207,6 +211,12 @@ public class AtsDslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getStateDefAccess().getRecommendedPercentCompleteAssignment_13_1(), "rule__StateDef__RecommendedPercentCompleteAssignment_13_1");
 					put(grammarAccess.getStateDefAccess().getColorAssignment_14_1(), "rule__StateDef__ColorAssignment_14_1");
 					put(grammarAccess.getStateDefAccess().getLayoutAssignment_15(), "rule__StateDef__LayoutAssignment_15");
+					put(grammarAccess.getStepsDefAccess().getNameAssignment_1(), "rule__StepsDef__NameAssignment_1");
+					put(grammarAccess.getStepsDefAccess().getDescriptionAssignment_3_1(), "rule__StepsDef__DescriptionAssignment_3_1");
+					put(grammarAccess.getStepsDefAccess().getStepPageDefsAssignment_4(), "rule__StepsDef__StepPageDefsAssignment_4");
+					put(grammarAccess.getStepPageDefAccess().getNameAssignment_1(), "rule__StepPageDef__NameAssignment_1");
+					put(grammarAccess.getStepPageDefAccess().getDescriptionAssignment_3_1(), "rule__StepPageDef__DescriptionAssignment_3_1");
+					put(grammarAccess.getStepPageDefAccess().getLayoutItemsAssignment_4(), "rule__StepPageDef__LayoutItemsAssignment_4");
 					put(grammarAccess.getDecisionReviewRefAccess().getDecisionReviewAssignment_1(), "rule__DecisionReviewRef__DecisionReviewAssignment_1");
 					put(grammarAccess.getDecisionReviewDefAccess().getNameAssignment_1(), "rule__DecisionReviewDef__NameAssignment_1");
 					put(grammarAccess.getDecisionReviewDefAccess().getTitleAssignment_4(), "rule__DecisionReviewDef__TitleAssignment_4");

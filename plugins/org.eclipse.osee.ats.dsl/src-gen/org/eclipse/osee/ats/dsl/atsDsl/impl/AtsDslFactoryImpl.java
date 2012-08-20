@@ -79,6 +79,8 @@ public class AtsDslFactoryImpl extends EFactoryImpl implements AtsDslFactory
       case AtsDslPackage.WIDGET_REF: return createWidgetRef();
       case AtsDslPackage.ATTR_WIDGET: return createAttrWidget();
       case AtsDslPackage.STATE_DEF: return createStateDef();
+      case AtsDslPackage.STEPS_DEF: return createStepsDef();
+      case AtsDslPackage.STEP_PAGE_DEF: return createStepPageDef();
       case AtsDslPackage.DECISION_REVIEW_REF: return createDecisionReviewRef();
       case AtsDslPackage.DECISION_REVIEW_DEF: return createDecisionReviewDef();
       case AtsDslPackage.DECISION_REVIEW_OPT: return createDecisionReviewOpt();
@@ -249,6 +251,28 @@ public class AtsDslFactoryImpl extends EFactoryImpl implements AtsDslFactory
   {
     StateDefImpl stateDef = new StateDefImpl();
     return stateDef;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StepsDef createStepsDef()
+  {
+    StepsDefImpl stepsDef = new StepsDefImpl();
+    return stepsDef;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StepPageDef createStepPageDef()
+  {
+    StepPageDefImpl stepPageDef = new StepPageDefImpl();
+    return stepPageDef;
   }
 
   /**

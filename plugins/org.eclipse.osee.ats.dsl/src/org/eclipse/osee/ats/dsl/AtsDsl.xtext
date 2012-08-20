@@ -121,6 +121,21 @@ StateDef:
 	(layout=LayoutType)?
 	'}';
 
+StepsDef:
+	'step' name=STEPS_NAME_REFERENCE
+	'{'
+	('description' description=STRING)?
+	(stepPageDefs+=StepPageDef)+
+	'}';
+
+
+StepPageDef:
+	'page' name=STEP_PAGE_NAME_REFERENCE
+	'{'
+	('description' description=STRING)?
+	(layoutItems+=LayoutItem)+
+	'}';
+
 DecisionReviewRef:
 	'decisionReview' decisionReview=[DecisionReviewDef|DECISION_REVIEW_NAME_REFERENCE];
 
@@ -188,6 +203,12 @@ PEER_REVIEW_NAME_REFERENCE:
 STATE_NAME_REFERENCE:
 	STRING;
 
+STEPS_NAME_REFERENCE:
+	STRING;
+
+STEP_PAGE_NAME_REFERENCE:
+	STRING;
+
 WIDGET_NAME_REFERENCE:
 	STRING;
 
@@ -207,7 +228,7 @@ LayoutCopy:
 	'layoutCopyFrom' state=[StateDef|STATE_NAME_REFERENCE];
 
 LayoutItem:
-	WidgetRef | AttrWidget | Composite;
+	WidgetRef | AttrWidget | Composite | StepsDef;
 
 Composite:
 	'composite' '{'

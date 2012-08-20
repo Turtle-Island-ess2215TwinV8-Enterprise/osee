@@ -129,6 +129,16 @@ public class AtsDslAdapterFactory extends AdapterFactoryImpl
         return createStateDefAdapter();
       }
       @Override
+      public Adapter caseStepsDef(StepsDef object)
+      {
+        return createStepsDefAdapter();
+      }
+      @Override
+      public Adapter caseStepPageDef(StepPageDef object)
+      {
+        return createStepPageDefAdapter();
+      }
+      @Override
       public Adapter caseDecisionReviewRef(DecisionReviewRef object)
       {
         return createDecisionReviewRefAdapter();
@@ -371,6 +381,36 @@ public class AtsDslAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createStateDefAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsDef <em>Steps Def</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsDef
+   * @generated
+   */
+  public Adapter createStepsDefAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef <em>Step Page Def</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepPageDef
+   * @generated
+   */
+  public Adapter createStepPageDefAdapter()
   {
     return null;
   }

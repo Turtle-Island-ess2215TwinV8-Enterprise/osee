@@ -41,21 +41,23 @@ protected class ThisRootNode extends RootToken {
 			case 7: return new WidgetRef_Group(this, this, 7, inst);
 			case 8: return new AttrWidget_Group(this, this, 8, inst);
 			case 9: return new StateDef_Group(this, this, 9, inst);
-			case 10: return new DecisionReviewRef_Group(this, this, 10, inst);
-			case 11: return new DecisionReviewDef_Group(this, this, 11, inst);
-			case 12: return new DecisionReviewOpt_Group(this, this, 12, inst);
-			case 13: return new PeerReviewRef_Group(this, this, 13, inst);
-			case 14: return new PeerReviewDef_Group(this, this, 14, inst);
-			case 15: return new FollowupRef_Group(this, this, 15, inst);
-			case 16: return new UserRef_Alternatives(this, this, 16, inst);
-			case 17: return new UserByUserId_Group(this, this, 17, inst);
-			case 18: return new UserByName_Group(this, this, 18, inst);
-			case 19: return new ToState_Group(this, this, 19, inst);
-			case 20: return new LayoutType_Alternatives(this, this, 20, inst);
-			case 21: return new LayoutDef_Group(this, this, 21, inst);
-			case 22: return new LayoutCopy_Group(this, this, 22, inst);
-			case 23: return new LayoutItem_Alternatives(this, this, 23, inst);
-			case 24: return new Composite_Group(this, this, 24, inst);
+			case 10: return new StepsDef_Group(this, this, 10, inst);
+			case 11: return new StepPageDef_Group(this, this, 11, inst);
+			case 12: return new DecisionReviewRef_Group(this, this, 12, inst);
+			case 13: return new DecisionReviewDef_Group(this, this, 13, inst);
+			case 14: return new DecisionReviewOpt_Group(this, this, 14, inst);
+			case 15: return new PeerReviewRef_Group(this, this, 15, inst);
+			case 16: return new PeerReviewDef_Group(this, this, 16, inst);
+			case 17: return new FollowupRef_Group(this, this, 17, inst);
+			case 18: return new UserRef_Alternatives(this, this, 18, inst);
+			case 19: return new UserByUserId_Group(this, this, 19, inst);
+			case 20: return new UserByName_Group(this, this, 20, inst);
+			case 21: return new ToState_Group(this, this, 21, inst);
+			case 22: return new LayoutType_Alternatives(this, this, 22, inst);
+			case 23: return new LayoutDef_Group(this, this, 23, inst);
+			case 24: return new LayoutCopy_Group(this, this, 24, inst);
+			case 25: return new LayoutItem_Alternatives(this, this, 25, inst);
+			case 26: return new Composite_Group(this, this, 26, inst);
 			default: return null;
 		}	
 	}	
@@ -6274,6 +6276,538 @@ protected class StateDef_RightCurlyBracketKeyword_16 extends KeywordToken  {
 /************ end Rule StateDef ****************/
 
 
+/************ begin Rule StepsDef ****************
+ *
+ * StepsDef:
+ * 	"step" name=STEPS_NAME_REFERENCE "{" ("description" description=STRING)? stepPageDefs+=StepPageDef+ "}";
+ *
+ **/
+
+// "step" name=STEPS_NAME_REFERENCE "{" ("description" description=STRING)? stepPageDefs+=StepPageDef+ "}"
+protected class StepsDef_Group extends GroupToken {
+	
+	public StepsDef_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getGroup();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_RightCurlyBracketKeyword_5(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(getEObject().eClass() != grammarAccess.getStepsDefRule().getType().getClassifier())
+			return null;
+		return eObjectConsumer;
+	}
+
+}
+
+// "step"
+protected class StepsDef_StepKeyword_0 extends KeywordToken  {
+	
+	public StepsDef_StepKeyword_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getStepKeyword_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(this, index, index, inst);
+		}	
+	}
+
+}
+
+// name=STEPS_NAME_REFERENCE
+protected class StepsDef_NameAssignment_1 extends AssignmentToken  {
+	
+	public StepsDef_NameAssignment_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getNameAssignment_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_StepKeyword_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("name",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("name");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getStepsDefAccess().getNameSTEPS_NAME_REFERENCEParserRuleCall_1_0(), value, null)) {
+			type = AssignmentType.DATATYPE_RULE_CALL;
+			element = grammarAccess.getStepsDefAccess().getNameSTEPS_NAME_REFERENCEParserRuleCall_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// "{"
+protected class StepsDef_LeftCurlyBracketKeyword_2 extends KeywordToken  {
+	
+	public StepsDef_LeftCurlyBracketKeyword_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getLeftCurlyBracketKeyword_2();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_NameAssignment_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// ("description" description=STRING)?
+protected class StepsDef_Group_3 extends GroupToken {
+	
+	public StepsDef_Group_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getGroup_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_DescriptionAssignment_3_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "description"
+protected class StepsDef_DescriptionKeyword_3_0 extends KeywordToken  {
+	
+	public StepsDef_DescriptionKeyword_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getDescriptionKeyword_3_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// description=STRING
+protected class StepsDef_DescriptionAssignment_3_1 extends AssignmentToken  {
+	
+	public StepsDef_DescriptionAssignment_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getDescriptionAssignment_3_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_DescriptionKeyword_3_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("description",false)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("description");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getStepsDefAccess().getDescriptionSTRINGTerminalRuleCall_3_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getStepsDefAccess().getDescriptionSTRINGTerminalRuleCall_3_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+
+// stepPageDefs+=StepPageDef+
+protected class StepsDef_StepPageDefsAssignment_4 extends AssignmentToken  {
+	
+	public StepsDef_StepPageDefsAssignment_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getStepPageDefsAssignment_4();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_Group(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("stepPageDefs",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("stepPageDefs");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getStepPageDefRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getStepsDefAccess().getStepPageDefsStepPageDefParserRuleCall_4_0(); 
+				consumed = obj;
+				return param;
+			}
+		}
+		return null;
+	}
+
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			case 0: return new StepsDef_StepPageDefsAssignment_4(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new StepsDef_Group_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 2: return new StepsDef_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, next, actIndex, consumed);
+			default: return null;
+		}	
+	}	
+}
+
+// "}"
+protected class StepsDef_RightCurlyBracketKeyword_5 extends KeywordToken  {
+	
+	public StepsDef_RightCurlyBracketKeyword_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepsDefAccess().getRightCurlyBracketKeyword_5();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_StepPageDefsAssignment_4(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+
+/************ end Rule StepsDef ****************/
+
+
+/************ begin Rule StepPageDef ****************
+ *
+ * StepPageDef:
+ * 	"page" name=STEP_PAGE_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}";
+ *
+ **/
+
+// "page" name=STEP_PAGE_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}"
+protected class StepPageDef_Group extends GroupToken {
+	
+	public StepPageDef_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getGroup();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_RightCurlyBracketKeyword_5(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(getEObject().eClass() != grammarAccess.getStepPageDefRule().getType().getClassifier())
+			return null;
+		return eObjectConsumer;
+	}
+
+}
+
+// "page"
+protected class StepPageDef_PageKeyword_0 extends KeywordToken  {
+	
+	public StepPageDef_PageKeyword_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getPageKeyword_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(this, index, index, inst);
+		}	
+	}
+
+}
+
+// name=STEP_PAGE_NAME_REFERENCE
+protected class StepPageDef_NameAssignment_1 extends AssignmentToken  {
+	
+	public StepPageDef_NameAssignment_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getNameAssignment_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_PageKeyword_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("name",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("name");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getStepPageDefAccess().getNameSTEP_PAGE_NAME_REFERENCEParserRuleCall_1_0(), value, null)) {
+			type = AssignmentType.DATATYPE_RULE_CALL;
+			element = grammarAccess.getStepPageDefAccess().getNameSTEP_PAGE_NAME_REFERENCEParserRuleCall_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// "{"
+protected class StepPageDef_LeftCurlyBracketKeyword_2 extends KeywordToken  {
+	
+	public StepPageDef_LeftCurlyBracketKeyword_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getLeftCurlyBracketKeyword_2();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_NameAssignment_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// ("description" description=STRING)?
+protected class StepPageDef_Group_3 extends GroupToken {
+	
+	public StepPageDef_Group_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getGroup_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_DescriptionAssignment_3_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "description"
+protected class StepPageDef_DescriptionKeyword_3_0 extends KeywordToken  {
+	
+	public StepPageDef_DescriptionKeyword_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getDescriptionKeyword_3_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// description=STRING
+protected class StepPageDef_DescriptionAssignment_3_1 extends AssignmentToken  {
+	
+	public StepPageDef_DescriptionAssignment_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getDescriptionAssignment_3_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_DescriptionKeyword_3_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("description",false)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("description");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getStepPageDefAccess().getDescriptionSTRINGTerminalRuleCall_3_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getStepPageDefAccess().getDescriptionSTRINGTerminalRuleCall_3_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+
+// layoutItems+=LayoutItem+
+protected class StepPageDef_LayoutItemsAssignment_4 extends AssignmentToken  {
+	
+	public StepPageDef_LayoutItemsAssignment_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getLayoutItemsAssignment_4();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new LayoutItem_Alternatives(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("layoutItems",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("layoutItems");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getLayoutItemRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getStepPageDefAccess().getLayoutItemsLayoutItemParserRuleCall_4_0(); 
+				consumed = obj;
+				return param;
+			}
+		}
+		return null;
+	}
+
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			case 0: return new StepPageDef_LayoutItemsAssignment_4(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new StepPageDef_Group_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 2: return new StepPageDef_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, next, actIndex, consumed);
+			default: return null;
+		}	
+	}	
+}
+
+// "}"
+protected class StepPageDef_RightCurlyBracketKeyword_5 extends KeywordToken  {
+	
+	public StepPageDef_RightCurlyBracketKeyword_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getStepPageDefAccess().getRightCurlyBracketKeyword_5();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepPageDef_LayoutItemsAssignment_4(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+
+/************ end Rule StepPageDef ****************/
+
+
 /************ begin Rule DecisionReviewRef ****************
  *
  * DecisionReviewRef:
@@ -8396,6 +8930,8 @@ protected class UserByName_UserNameAssignment_1 extends AssignmentToken  {
 
 
 
+
+
 /************ begin Rule ToState ****************
  *
  * ToState:
@@ -8897,11 +9433,11 @@ protected class LayoutCopy_StateAssignment_1 extends AssignmentToken  {
 /************ begin Rule LayoutItem ****************
  *
  * LayoutItem:
- * 	WidgetRef | AttrWidget | Composite;
+ * 	WidgetRef | AttrWidget | Composite | StepsDef;
  *
  **/
 
-// WidgetRef | AttrWidget | Composite
+// WidgetRef | AttrWidget | Composite | StepsDef
 protected class LayoutItem_Alternatives extends AlternativesToken {
 
 	public LayoutItem_Alternatives(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -8919,6 +9455,7 @@ protected class LayoutItem_Alternatives extends AlternativesToken {
 			case 0: return new LayoutItem_WidgetRefParserRuleCall_0(lastRuleCallOrigin, this, 0, inst);
 			case 1: return new LayoutItem_AttrWidgetParserRuleCall_1(lastRuleCallOrigin, this, 1, inst);
 			case 2: return new LayoutItem_CompositeParserRuleCall_2(lastRuleCallOrigin, this, 2, inst);
+			case 3: return new LayoutItem_StepsDefParserRuleCall_3(lastRuleCallOrigin, this, 3, inst);
 			default: return null;
 		}	
 	}
@@ -8927,6 +9464,7 @@ protected class LayoutItem_Alternatives extends AlternativesToken {
 	public IEObjectConsumer tryConsume() {
 		if(getEObject().eClass() != grammarAccess.getAttrWidgetRule().getType().getClassifier() && 
 		   getEObject().eClass() != grammarAccess.getCompositeRule().getType().getClassifier() && 
+		   getEObject().eClass() != grammarAccess.getStepsDefRule().getType().getClassifier() && 
 		   getEObject().eClass() != grammarAccess.getWidgetRefRule().getType().getClassifier())
 			return null;
 		return eObjectConsumer;
@@ -9031,6 +9569,42 @@ protected class LayoutItem_CompositeParserRuleCall_2 extends RuleCallToken {
 		if(getEObject().eClass() != grammarAccess.getCompositeRule().getType().getClassifier())
 			return null;
 		if(checkForRecursion(Composite_Group.class, eObjectConsumer)) return null;
+		return eObjectConsumer;
+	}
+	
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(next, actIndex , index, inst);
+		}	
+	}	
+}
+
+// StepsDef
+protected class LayoutItem_StepsDefParserRuleCall_3 extends RuleCallToken {
+	
+	public LayoutItem_StepsDefParserRuleCall_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getLayoutItemAccess().getStepsDefParserRuleCall_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new StepsDef_Group(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(getEObject().eClass() != grammarAccess.getStepsDefRule().getType().getClassifier())
+			return null;
+		if(checkForRecursion(StepsDef_Group.class, eObjectConsumer)) return null;
 		return eObjectConsumer;
 	}
 	

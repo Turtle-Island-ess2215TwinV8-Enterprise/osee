@@ -130,6 +130,8 @@ public final class AtsWorkDefinitionSheetProviders {
          "support/WorkDef_Review_PeerToPeer.ats")));
       sheets.add(new WorkDefinitionSheet("WorkDef_Team_Simple", getSupportFile(Activator.PLUGIN_ID,
          "support/WorkDef_Team_Simple.ats")));
+      sheets.add(new WorkDefinitionSheet("WorkDef_Team_Simple_Working_Branch", getSupportFile(Activator.PLUGIN_ID,
+         "support/WorkDef_Team_Simple_Working_Branch.ats")));
       sheets.add(new WorkDefinitionSheet("WorkDef_Goal",
          getSupportFile(Activator.PLUGIN_ID, "support/WorkDef_Goal.ats")));
       for (IAtsWorkDefinitionSheetProvider provider : getProviders()) {

@@ -90,7 +90,7 @@ public class TaskInfoXWidget extends XLabelValueBase {
                   labelWidget);
             }
          } else {
-            if (Widgets.isAccessible(managedForm.getForm())) {
+            if (managedForm != null && Widgets.isAccessible(managedForm.getForm())) {
                managedForm.getMessageManager().removeMessage("validation.error", labelWidget);
             }
          }
