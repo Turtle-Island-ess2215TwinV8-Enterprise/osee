@@ -11,6 +11,7 @@
 package org.eclipse.osee.framework.ui.skynet.widgets.util;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.ui.skynet.widgets.XOption;
 import org.eclipse.osee.framework.ui.skynet.widgets.XOptionHandler;
@@ -42,6 +43,11 @@ public class XWidgetRendererItem implements Cloneable {
    private final XOptionHandler xOptionHandler = new XOptionHandler();
    private Artifact artifact;
    private Object object;
+   private String beginTabFolder = null;
+   private boolean endTabFolder;
+   private String beginTabItem = null;
+   private boolean endTabItem;
+   private String tabItemDescription = null;
 
    public XWidgetRendererItem(SwtXWidgetRenderer dynamicXWidgetLayout, XOption... xOption) {
       this.dynamicXWidgetLayout = dynamicXWidgetLayout;
@@ -239,6 +245,54 @@ public class XWidgetRendererItem implements Cloneable {
 
    public Object getObject() {
       return object;
+   }
+
+   public String getBeginTabFolder() {
+      return beginTabFolder;
+   }
+
+   public void setBeginTabFolder(String beginTabFolder) {
+      this.beginTabFolder = beginTabFolder;
+   }
+
+   public boolean isEndTabFolder() {
+      return endTabFolder;
+   }
+
+   public void setEndTabFolder(boolean endTabFolder) {
+      this.endTabFolder = endTabFolder;
+   }
+
+   public String getBeginTabItem() {
+      return beginTabItem;
+   }
+
+   public void setBeginTabItem(String beginTabItem) {
+      this.beginTabItem = beginTabItem;
+   }
+
+   public boolean isEndTabItem() {
+      return endTabItem;
+   }
+
+   public void setEndTabItem(boolean endTabItem) {
+      this.endTabItem = endTabItem;
+   }
+
+   public boolean isBeginTabFolder() {
+      return Strings.isValid(beginTabFolder);
+   }
+
+   public boolean isBeginTabItem() {
+      return Strings.isValid(beginTabItem);
+   }
+
+   public String getTabItemDescription() {
+      return tabItemDescription;
+   }
+
+   public void setTabItemDescription(String tabItemDescription) {
+      this.tabItemDescription = tabItemDescription;
    }
 
 }

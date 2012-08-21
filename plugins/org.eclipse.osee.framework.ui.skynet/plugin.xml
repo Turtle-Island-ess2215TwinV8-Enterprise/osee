@@ -175,6 +175,15 @@
           </Operation>
        </extension>
        <extension
+             id="XTabExampleBlam"
+             point="org.eclipse.osee.framework.ui.skynet.BlamOperation">
+          <Operation
+                className="org.eclipse.osee.framework.ui.skynet.widgets.XTabExampleBlam">
+          </Operation>
+       </extension>
+       
+       
+       <extension
              id="ShowNextTypeRemoteIds"
              point="org.eclipse.osee.framework.ui.skynet.BlamOperation">
           <Operation

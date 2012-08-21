@@ -30,6 +30,7 @@ import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.workdef.IAtsCompositeLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
+import org.eclipse.osee.ats.api.workdef.IAtsStepPageDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsStepsLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
@@ -354,7 +355,44 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
          } else if (stateItem instanceof IAtsCompositeLayoutItem) {
             processComposite((IAtsCompositeLayoutItem) stateItem, sma);
          } else if (stateItem instanceof IAtsStepsLayoutItem) {
-            //            processSteps((IAtsStepsLayoutItem) stateItem, sma);
+            processSteps((IAtsStepsLayoutItem) stateItem, sma);
+         }
+      }
+   }
+
+   private void processSteps(IAtsStepsLayoutItem stepLayoutItem, AbstractWorkflowArtifact sma) {
+      boolean firstPage = true;
+      List<IAtsStepPageDefinition> stepDef = stepLayoutItem.getStepPageDefinitions();
+      for (int y = 0; y < stepDef.size(); y++) {
+         boolean lastPage = y == stepDef.size() - 1;
+         IAtsStepPageDefinition page = stepDef.get(y);
+         boolean firstLayoutItem = true;
+         List<IAtsLayoutItem> layoutItems = page.getLayoutItems();
+         for (int x = 0; x < layoutItems.size(); x++) {
+            boolean lastLayoutItem = x == layoutItems.size() - 1;
+            IAtsLayoutItem layoutItem = layoutItems.get(x);
+            if (layoutItem instanceof IAtsWidgetDefinition) {
+               XWidgetRendererItem data = processWidgetDefinition((IAtsWidgetDefinition) layoutItem, sma);
+               if (firstLayoutItem) {
+                  data.setBeginTabItem(page.getName());
+                  firstLayoutItem = false;
+                  if (Strings.isValid(page.getDescription())) {
+                     data.setTabItemDescription(page.getDescription());
+                  }
+               }
+               if (lastLayoutItem) {
+                  data.setEndTabItem(true);
+               }
+               if (firstPage) {
+                  data.setBeginTabFolder(stepLayoutItem.getName());
+                  firstPage = false;
+               }
+               if (lastPage) {
+                  data.setEndTabFolder(true);
+               }
+            } else if (layoutItem instanceof IAtsCompositeLayoutItem) {
+               processComposite((IAtsCompositeLayoutItem) layoutItem, sma);
+            }
          }
       }
    }

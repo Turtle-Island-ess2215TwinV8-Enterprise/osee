@@ -290,11 +290,13 @@ public class ConvertAtsDslToWorkDefinition {
             stateItems.add(compStateItem);
          } else if (layoutItem instanceof StepsDef) {
             StepsDef stepDef = (StepsDef) layoutItem;
-            StepsLayoutItem stepsLayoutItem = new StepsLayoutItem(stepDef.getName());
+            StepsLayoutItem stepsLayoutItem = new StepsLayoutItem(Strings.unquote(stepDef.getName()));
             if (!stepDef.getStepPageDefs().isEmpty()) {
                processStepItems(SHEET_NAME, widgetDefs, stepsLayoutItem, stepDef);
             }
             stateItems.add(stepsLayoutItem);
+         } else {
+            System.out.println("unknown layout item " + layoutItem);
          }
       }
 
@@ -302,8 +304,11 @@ public class ConvertAtsDslToWorkDefinition {
 
    private void processStepItems(String SHEET_NAME, List<IAtsWidgetDefinition> widgetDefs, StepsLayoutItem stepsLayoutItem, StepsDef stepDef) {
       for (StepPageDef pageDef : stepDef.getStepPageDefs()) {
-         StepPageDefinition pageDefinition = new StepPageDefinition(pageDef.getName());
-
+         StepPageDefinition pageDefinition = new StepPageDefinition(Strings.unquote(pageDef.getName()));
+         if (Strings.isValid(pageDef.getDescription())) {
+            pageDefinition.setDescription(pageDef.getDescription());
+         }
+         stepsLayoutItem.getStepPageDefinitions().add(pageDefinition);
          processLayoutItems(SHEET_NAME, widgetDefs, pageDefinition.getLayoutItems(), pageDef.getLayoutItems());
       }
    }

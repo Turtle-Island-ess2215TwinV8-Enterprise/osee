@@ -22,6 +22,7 @@ import org.eclipse.osee.ats.api.workdef.IAtsStepPageDefinition;
 public class StepPageDefinition extends AbstractWorkDefItem implements IAtsStepPageDefinition {
 
    private final List<IAtsLayoutItem> layoutItems = new ArrayList<IAtsLayoutItem>(5);
+   private String description = null;
 
    public StepPageDefinition(String name) {
       super(name);
@@ -76,6 +77,16 @@ public class StepPageDefinition extends AbstractWorkDefItem implements IAtsStepP
          return false;
       }
       return true;
+   }
+
+   @Override
+   public String getDescription() {
+      return description;
+   }
+
+   @Override
+   public void setDescription(String description) {
+      this.description = description;
    }
 
 }

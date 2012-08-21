@@ -107,8 +107,8 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
       to "Completed" AsDefault 
       rule RequireStateHourSpentPrompt
       layout {
-         widget "Work Package"
-         step "Requirements" {  
+         widget "Work Package" 
+         step "Requirements Development" {
          	description "Change to requirements or other related artifacts on working branch."
          	page "Port" {
          		description "Port changes from other branches actions"
@@ -117,22 +117,21 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
          	page "Edit" {
          		description "Edit artifacts / requirements / documents"
 			      widget "Create Working Branch"
+		         widget "Validate Requirement Changes"
+		         widget "Show CDB Differences Report"
+		         widget "Check Signals Via CDB"
          	}
          	page "Commit" { 
          		description "Validate and commit changes to baseline branch"
-		         attributeWidget "ats.Work Package"
-		         attributeWidget "ats.Estimated Completion Date"
 		         widget "Create Working Branch"
 		         widget "Validate Requirement Changes"
 		         widget "Show CDB Differences Report"
 		         widget "Check Signals Via CDB"
 		         widget "Create Code/Test Tasks"
 		         widget "Commit Manager"
-		         widget "Resolution"
          	}
          }
          widget "Estimated Completion Date"
-         widget "Resolution"
       }
    }
 

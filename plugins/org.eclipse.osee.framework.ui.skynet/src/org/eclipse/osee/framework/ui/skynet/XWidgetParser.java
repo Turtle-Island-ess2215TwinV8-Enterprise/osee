@@ -145,6 +145,14 @@ public class XWidgetParser {
             dynamicXWidgetLayoutData.setEndGroupComposite(Boolean.parseBoolean(node.getNodeValue()));
          } else if (nodeName.equals("endComposite")) {
             dynamicXWidgetLayoutData.setEndComposite(Boolean.parseBoolean(node.getNodeValue()));
+         } else if (nodeName.equals("beginTabFolder")) {
+            dynamicXWidgetLayoutData.setBeginTabFolder(node.getNodeValue());
+         } else if (nodeName.equals("endTabFolder")) {
+            dynamicXWidgetLayoutData.setEndTabFolder(Boolean.parseBoolean(node.getNodeValue()));
+         } else if (nodeName.equals("beginTabItem")) {
+            dynamicXWidgetLayoutData.setBeginTabItem(node.getNodeValue());
+         } else if (nodeName.equals("endTabItem")) {
+            dynamicXWidgetLayoutData.setEndTabItem(Boolean.parseBoolean(node.getNodeValue()));
          } else if (nodeName.equals("editable")) {
             dynamicXWidgetLayoutData.getXOptionHandler().add(
                Boolean.parseBoolean(node.getNodeValue()) ? XOption.EDITABLE : XOption.NONE);

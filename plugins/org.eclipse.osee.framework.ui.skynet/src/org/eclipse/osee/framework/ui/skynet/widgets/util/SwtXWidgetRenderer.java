@@ -45,6 +45,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.w3c.dom.Document;
@@ -65,6 +67,9 @@ public class SwtXWidgetRenderer {
    private final IDynamicWidgetLayoutListener dynamicWidgetLayoutListener;
    private final IXWidgetOptionResolver optionResolver;
    private final Collection<XWidget> xWidgets = new ArrayList<XWidget>();
+   private TabFolder currentTabFolder;
+   private TabItem currentTabItem;
+   private Composite tabFolderComp;
 
    public SwtXWidgetRenderer() {
       this(null, new DefaultXWidgetOptionResolver());
@@ -126,7 +131,7 @@ public class SwtXWidgetRenderer {
    public void createBody(IManagedForm managedForm, Composite parent, Artifact artifact, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
       final FormToolkit toolkit = managedForm != null ? managedForm.getToolkit() : null;
 
-      Composite topLevelComp = createComposite(parent, toolkit);
+      final Composite topLevelComp = createComposite(parent, toolkit);
       GridLayout layout = new GridLayout(1, false);
       layout.marginWidth = 2;
       layout.marginHeight = 2;
@@ -146,7 +151,6 @@ public class SwtXWidgetRenderer {
          Composite currentComp = null;
 
          // first, check if this one is a group, if so, we set the group up and are done with this loop iteration
-
          int i = xWidgetLayoutData.getBeginGroupComposite();
          if (i > 0) {
             inGroupComposite = true;
@@ -163,6 +167,29 @@ public class SwtXWidgetRenderer {
 
          } else {
             currentComp = topLevelComp;
+         }
+
+         if (xWidgetLayoutData.isBeginTabFolder()) {
+            tabFolderComp = createCompositeForTabFolder(currentComp);
+
+            if (Strings.isValid(xWidgetLayoutData.getBeginTabFolder())) {
+               Label label = new Label(tabFolderComp, SWT.NONE);
+               label.setText(xWidgetLayoutData.getBeginTabFolder());
+            }
+            currentTabFolder = new TabFolder(tabFolderComp, SWT.LEFT | SWT.NONE);
+            currentTabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+         }
+         if (xWidgetLayoutData.isBeginTabItem()) {
+            currentTabItem = new TabItem(currentTabFolder, 0);
+            currentTabItem.setText(xWidgetLayoutData.getBeginTabItem());
+            setInitialCompositeForTabItem(currentTabItem);
+
+            if (Strings.isValid(xWidgetLayoutData.getTabItemDescription())) {
+               Label label = new Label((Composite) currentTabItem.getControl(), SWT.NONE);
+               label.setText("Description: " + xWidgetLayoutData.getTabItemDescription());
+            }
+
          }
 
          if (currentComp == null) {
@@ -219,19 +246,31 @@ public class SwtXWidgetRenderer {
             xText.setDynamicallyCreated(true);
          }
 
-         xWidget.createWidgets(managedForm, currentComp, 2);
+         if (currentTabItem != null) {
+            xWidget.createWidgets(managedForm, (Composite) currentTabItem.getControl(), 2);
+            ((Composite) currentTabItem.getControl()).layout();
+         } else {
+            xWidget.createWidgets(managedForm, currentComp, 2);
+         }
 
          if (xModListener != null) {
             xWidget.addXModifiedListener(xModListener);
          }
 
          xWidget.addXModifiedListener(refreshRequiredModListener);
-
          if (dynamicWidgetLayoutListener != null) {
             dynamicWidgetLayoutListener.widgetCreated(xWidget, toolkit, artifact, this, xModListener, isEditable);
             dynamicWidgetLayoutListener.createXWidgetLayoutData(xWidgetLayoutData, xWidget, toolkit, artifact,
                xModListener, isEditable);
          }
+
+         if (xWidgetLayoutData.isEndTabItem() && !xWidgetLayoutData.isBeginTabItem()) {
+            currentTabItem = null;
+         }
+         if (xWidgetLayoutData.isEndTabFolder()) {
+            currentTabFolder = null;
+         }
+
       }
       topLevelComp.layout();
 
@@ -248,6 +287,22 @@ public class SwtXWidgetRenderer {
             }
          }
       });
+   }
+
+   private Composite createCompositeForTabFolder(Composite parent) {
+      Composite comp = new Composite(parent, SWT.BORDER);
+      GridLayout layout = new GridLayout(1, true);
+      layout.marginWidth = 10;
+      comp.setLayout(layout);
+      comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+      return comp;
+   }
+
+   private void setInitialCompositeForTabItem(TabItem ti) {
+      Composite comp = new Composite(ti.getParent(), SWT.NONE);
+      comp.setLayout(new GridLayout(1, true));
+      comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+      ti.setControl(comp);
    }
 
    private void setupArtifactInfo(Artifact artifact, XWidgetRendererItem xWidgetLayoutData, XWidget xWidget) {

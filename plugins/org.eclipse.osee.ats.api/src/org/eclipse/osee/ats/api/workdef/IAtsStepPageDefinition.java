@@ -14,6 +14,8 @@ public interface IAtsStepPageDefinition {
     */
    public abstract String getName();
 
+   public abstract String getDescription();
+
    /**
     * Returns fully qualified name of <work definition name>.<this state name>
     */
