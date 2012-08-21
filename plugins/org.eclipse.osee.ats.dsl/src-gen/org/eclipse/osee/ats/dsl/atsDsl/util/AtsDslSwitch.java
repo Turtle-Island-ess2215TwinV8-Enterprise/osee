@@ -148,18 +148,18 @@ public class AtsDslSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AtsDslPackage.STEPS_DEF:
+      case AtsDslPackage.STEPS_LAYOUT_DEF:
       {
-        StepsDef stepsDef = (StepsDef)theEObject;
-        T result = caseStepsDef(stepsDef);
-        if (result == null) result = caseLayoutItem(stepsDef);
+        StepsLayoutDef stepsLayoutDef = (StepsLayoutDef)theEObject;
+        T result = caseStepsLayoutDef(stepsLayoutDef);
+        if (result == null) result = caseLayoutItem(stepsLayoutDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AtsDslPackage.STEP_PAGE_DEF:
+      case AtsDslPackage.STEP_DEF:
       {
-        StepPageDef stepPageDef = (StepPageDef)theEObject;
-        T result = caseStepPageDef(stepPageDef);
+        StepDef stepDef = (StepDef)theEObject;
+        T result = caseStepDef(stepDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -438,33 +438,33 @@ public class AtsDslSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Steps Def</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Steps Layout Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Steps Def</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Steps Layout Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseStepsDef(StepsDef object)
+  public T caseStepsLayoutDef(StepsLayoutDef object)
   {
     return null;
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Step Page Def</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Step Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Step Page Def</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Step Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseStepPageDef(StepPageDef object)
+  public T caseStepDef(StepDef object)
   {
     return null;
   }

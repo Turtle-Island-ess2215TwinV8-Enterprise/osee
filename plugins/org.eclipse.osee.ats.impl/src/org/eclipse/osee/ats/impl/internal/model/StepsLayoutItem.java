@@ -12,7 +12,7 @@ package org.eclipse.osee.ats.impl.internal.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.osee.ats.api.workdef.IAtsStepPageDefinition;
+import org.eclipse.osee.ats.api.workdef.IAtsStepDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsStepsLayoutItem;
 
 /**
@@ -20,14 +20,14 @@ import org.eclipse.osee.ats.api.workdef.IAtsStepsLayoutItem;
  */
 public class StepsLayoutItem extends LayoutItem implements IAtsStepsLayoutItem {
 
-   private final List<IAtsStepPageDefinition> pageDefs = new ArrayList<IAtsStepPageDefinition>(5);
+   private final List<IAtsStepDefinition> pageDefs = new ArrayList<IAtsStepDefinition>(5);
 
    public StepsLayoutItem(String name) {
       super(name);
    }
 
    @Override
-   public List<IAtsStepPageDefinition> getStepPageDefinitions() {
+   public List<IAtsStepDefinition> getStepDefinitions() {
       return pageDefs;
    }
 

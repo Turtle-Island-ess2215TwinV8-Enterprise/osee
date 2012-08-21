@@ -89,6 +89,7 @@ WorkDef:
 WidgetDef:
 	'widgetDefinition' name=WIDGET_NAME_REFERENCE
 	'{'
+	('usename' usename=STRING)?
 	('attributeName' attributeName=STRING)?
 	('description' description=STRING)?
 	('xWidgetName' xWidgetName=STRING)?
@@ -121,16 +122,16 @@ StateDef:
 	(layout=LayoutType)?
 	'}';
 
-StepsDef:
-	'step' name=STEPS_NAME_REFERENCE
+StepsLayoutDef:
+	'step layout' name=STEP_LAYOUT_NAME_REFERENCE
 	'{'
 	('description' description=STRING)?
-	(stepPageDefs+=StepPageDef)+
+	(steps+=StepDef)+
 	'}';
 
 
-StepPageDef:
-	'page' name=STEP_PAGE_NAME_REFERENCE
+StepDef:
+	'has step' name=STEP_NAME_REFERENCE
 	'{'
 	('description' description=STRING)?
 	(layoutItems+=LayoutItem)+
@@ -203,10 +204,10 @@ PEER_REVIEW_NAME_REFERENCE:
 STATE_NAME_REFERENCE:
 	STRING;
 
-STEPS_NAME_REFERENCE:
+STEP_LAYOUT_NAME_REFERENCE:
 	STRING;
 
-STEP_PAGE_NAME_REFERENCE:
+STEP_NAME_REFERENCE:
 	STRING;
 
 WIDGET_NAME_REFERENCE:
@@ -228,7 +229,7 @@ LayoutCopy:
 	'layoutCopyFrom' state=[StateDef|STATE_NAME_REFERENCE];
 
 LayoutItem:
-	WidgetRef | AttrWidget | Composite | StepsDef;
+	WidgetRef | AttrWidget | Composite | StepsLayoutDef;
 
 Composite:
 	'composite' '{'

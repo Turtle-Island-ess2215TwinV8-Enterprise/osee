@@ -7,7 +7,7 @@ package org.eclipse.osee.ats.api.workdef;
 
 import java.util.List;
 
-public interface IAtsStepPageDefinition {
+public interface IAtsStepDefinition {
 
    /**
     * Identification
@@ -15,11 +15,6 @@ public interface IAtsStepPageDefinition {
    public abstract String getName();
 
    public abstract String getDescription();
-
-   /**
-    * Returns fully qualified name of <work definition name>.<this state name>
-    */
-   public abstract String getFullName();
 
    /**
     * Layout

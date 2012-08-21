@@ -34,7 +34,6 @@ import org.eclipse.osee.ats.api.workdef.IAtsPeerReviewDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
 import org.eclipse.osee.ats.artifact.WorkflowManager;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
@@ -44,6 +43,7 @@ import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
 import org.eclipse.osee.ats.editor.stateItem.AtsStateItemManager;
 import org.eclipse.osee.ats.editor.stateItem.IAtsStateItem;
 import org.eclipse.osee.ats.internal.Activator;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.logging.OseeLog;
@@ -312,8 +312,8 @@ public class SMAEditorOutlinePage extends ContentOutlinePage {
          if (Strings.isValid(((IAtsWidgetDefinition) element).getAtrributeName())) {
             items.add("Tooltip: " + ((IAtsWidgetDefinition) element).getAtrributeName());
          }
-         if (!((IAtsWidgetDefinition) element).getOptions().getXOptions().isEmpty()) {
-            items.addAll(((IAtsWidgetDefinition) element).getOptions().getXOptions());
+         if (!((IAtsWidgetDefinition) element).getOptions().getWidgetOptions().isEmpty()) {
+            items.addAll(((IAtsWidgetDefinition) element).getOptions().getWidgetOptions());
          }
       }
 

@@ -10,17 +10,17 @@
  *******************************************************************************/
 package org.eclipse.osee.framework.ui.skynet.widgets.util;
 
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.util.WidgetOptionHandler;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
-import org.eclipse.osee.framework.ui.skynet.widgets.XOption;
-import org.eclipse.osee.framework.ui.skynet.widgets.XOptionHandler;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidget;
 
 /**
  * @author Donald G. Dunne
  */
-public class XWidgetRendererItem implements Cloneable {
+public class XWidgetRendererItem implements IXWidgetRendererItem, Cloneable {
 
    private static final FrameworkXWidgetProvider xWidgetFactory = FrameworkXWidgetProvider.getInstance();
    private static final String UNKNOWN = "Unknown";
@@ -40,7 +40,7 @@ public class XWidgetRendererItem implements Cloneable {
    private SwtXWidgetRenderer dynamicXWidgetLayout;
    private String defaultValue;
    private String keyedBranchName;
-   private final XOptionHandler xOptionHandler = new XOptionHandler();
+   private final WidgetOptionHandler xOptionHandler = new WidgetOptionHandler();
    private Artifact artifact;
    private Object object;
    private String beginTabFolder = null;
@@ -49,11 +49,13 @@ public class XWidgetRendererItem implements Cloneable {
    private boolean endTabItem;
    private String tabItemDescription = null;
 
-   public XWidgetRendererItem(SwtXWidgetRenderer dynamicXWidgetLayout, XOption... xOption) {
+   public XWidgetRendererItem(SwtXWidgetRenderer dynamicXWidgetLayout, WidgetOption... options) {
       this.dynamicXWidgetLayout = dynamicXWidgetLayout;
-      xOptionHandler.add(XOption.EDITABLE);
-      xOptionHandler.add(XOption.ALIGN_LEFT);
-      xOptionHandler.add(xOption);
+      xOptionHandler.add(WidgetOption.EDITABLE);
+      xOptionHandler.add(WidgetOption.ALIGN_LEFT);
+      for (WidgetOption option : options) {
+         xOptionHandler.add(option);
+      }
    }
 
    @Override
@@ -70,10 +72,12 @@ public class XWidgetRendererItem implements Cloneable {
       return getName();
    }
 
+   @Override
    public String getName() {
       return name.replaceFirst("^.*?\\.", "");
    }
 
+   @Override
    public String getStoreName() {
       return storeName;
    }
@@ -83,7 +87,7 @@ public class XWidgetRendererItem implements Cloneable {
    }
 
    public boolean isRequired() {
-      if (xOptionHandler.contains(XOption.REQUIRED)) {
+      if (xOptionHandler.contains(WidgetOption.REQUIRED_FOR_COMPLETION)) {
          return true;
       }
       if (dynamicXWidgetLayout != null) {
@@ -94,12 +98,13 @@ public class XWidgetRendererItem implements Cloneable {
    }
 
    public boolean isRequiredForCompletion() {
-      if (xOptionHandler.contains(XOption.REQUIRED_FOR_COMPLETION)) {
+      if (xOptionHandler.contains(WidgetOption.REQUIRED_FOR_COMPLETION)) {
          return true;
       }
       return false;
    }
 
+   @Override
    public String getXWidgetName() {
       return xWidgetName;
    }
@@ -133,32 +138,32 @@ public class XWidgetRendererItem implements Cloneable {
    }
 
    public int getBeginComposite() {
-      if (xOptionHandler.contains(XOption.BEGIN_COMPOSITE_10)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_COMPOSITE_10)) {
          return 10;
       }
-      if (xOptionHandler.contains(XOption.BEGIN_COMPOSITE_8)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_COMPOSITE_8)) {
          return 8;
       }
-      if (xOptionHandler.contains(XOption.BEGIN_COMPOSITE_6)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_COMPOSITE_6)) {
          return 6;
       }
-      if (xOptionHandler.contains(XOption.BEGIN_COMPOSITE_4)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_COMPOSITE_4)) {
          return 4;
       }
       return beginComposite;
    }
 
    public int getBeginGroupComposite() {
-      if (xOptionHandler.contains(XOption.BEGIN_GROUP_COMPOSITE_10)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_GROUP_COMPOSITE_10)) {
          return 10;
       }
-      if (xOptionHandler.contains(XOption.BEGIN_GROUP_COMPOSITE_8)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_GROUP_COMPOSITE_8)) {
          return 8;
       }
-      if (xOptionHandler.contains(XOption.BEGIN_GROUP_COMPOSITE_6)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_GROUP_COMPOSITE_6)) {
          return 6;
       }
-      if (xOptionHandler.contains(XOption.BEGIN_GROUP_COMPOSITE_4)) {
+      if (xOptionHandler.contains(WidgetOption.BEGIN_GROUP_COMPOSITE_4)) {
          return 4;
       }
       return beginGroupComposite;
@@ -188,6 +193,7 @@ public class XWidgetRendererItem implements Cloneable {
       this.endGroupComposite = endGroupComposite;
    }
 
+   @Override
    public String getToolTip() {
       return toolTip;
    }
@@ -200,6 +206,7 @@ public class XWidgetRendererItem implements Cloneable {
       return dynamicXWidgetLayout;
    }
 
+   @Override
    public String getDefaultValue() {
       return defaultValue;
    }
@@ -224,10 +231,11 @@ public class XWidgetRendererItem implements Cloneable {
       this.id = id;
    }
 
-   public XOptionHandler getXOptionHandler() {
+   public WidgetOptionHandler getXOptionHandler() {
       return xOptionHandler;
    }
 
+   @Override
    public Artifact getArtifact() {
       return artifact;
    }
@@ -243,6 +251,7 @@ public class XWidgetRendererItem implements Cloneable {
       this.object = object;
    }
 
+   @Override
    public Object getObject() {
       return object;
    }
@@ -293,6 +302,16 @@ public class XWidgetRendererItem implements Cloneable {
 
    public void setTabItemDescription(String tabItemDescription) {
       this.tabItemDescription = tabItemDescription;
+   }
+
+   @Override
+   public WidgetOptionHandler getWidgetOptionHandler() {
+      return xOptionHandler;
+   }
+
+   @Override
+   public IXWidgetOptionResolver getOptionResolver() {
+      return dynamicXWidgetLayout.getOptionResolver();
    }
 
 }

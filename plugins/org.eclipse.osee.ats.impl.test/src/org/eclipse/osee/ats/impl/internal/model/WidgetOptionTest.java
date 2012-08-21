@@ -6,7 +6,7 @@
 package org.eclipse.osee.ats.impl.internal.model;
 
 import junit.framework.Assert;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.junit.Test;
 
 /**

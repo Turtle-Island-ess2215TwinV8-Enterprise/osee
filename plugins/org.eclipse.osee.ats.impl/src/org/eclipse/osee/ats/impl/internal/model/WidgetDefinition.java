@@ -14,9 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetConstraint;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
-import org.eclipse.osee.ats.api.workdef.IAtsWidgetOptionHandler;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
-import org.eclipse.osee.ats.api.workdef.WidgetOptionHandler;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
+import org.eclipse.osee.framework.core.util.WidgetOptionHandler;
 
 /**
  * @author Donald G. Dunne
@@ -26,11 +25,12 @@ public class WidgetDefinition extends LayoutItem implements IAtsWidgetDefinition
    private String attributeName;
    private String toolTip;
    private String description;
-   private int height;
+   private int height = 9999;
    private String xWidgetName;
    private String defaultValue;
    private final WidgetOptionHandler options = new WidgetOptionHandler();
    private final List<IAtsWidgetConstraint> constraints = new ArrayList<IAtsWidgetConstraint>();
+   private String usename;
 
    public WidgetDefinition(String name) {
       super(name);
@@ -109,13 +109,22 @@ public class WidgetDefinition extends LayoutItem implements IAtsWidgetDefinition
    }
 
    @Override
-   public IAtsWidgetOptionHandler getOptions() {
+   public WidgetOptionHandler getOptions() {
       return options;
    }
 
    @Override
    public List<IAtsWidgetConstraint> getConstraints() {
       return constraints;
+   }
+
+   public void setUsename(String usename) {
+      this.usename = usename;
+   }
+
+   @Override
+   public String getUsename() {
+      return usename;
    }
 
 }

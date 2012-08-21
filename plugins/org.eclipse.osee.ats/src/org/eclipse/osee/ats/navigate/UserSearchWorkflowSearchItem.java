@@ -44,9 +44,9 @@ import org.eclipse.osee.framework.ui.skynet.widgets.XCombo;
 import org.eclipse.osee.framework.ui.skynet.widgets.XMembersCombo;
 import org.eclipse.osee.framework.ui.skynet.widgets.XModifiedListener;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidget;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.SwtXWidgetRenderer;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetRendererItem;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.IDynamicWidgetLayoutListener;
+import org.eclipse.osee.framework.ui.skynet.widgets.util.IXWidgetRendererItem;
+import org.eclipse.osee.framework.ui.skynet.widgets.util.SwtXWidgetRenderer;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -420,7 +420,7 @@ public class UserSearchWorkflowSearchItem extends WorldEditorParameterSearchItem
    }
 
    @Override
-   public void createXWidgetLayoutData(XWidgetRendererItem layoutData, XWidget widget, FormToolkit toolkit, Artifact art, XModifiedListener modListener, boolean isEditable) {
+   public void createXWidgetLayoutData(IXWidgetRendererItem layoutData, XWidget widget, FormToolkit toolkit, Artifact art, XModifiedListener modListener, boolean isEditable) {
       // do nothing
    }
 

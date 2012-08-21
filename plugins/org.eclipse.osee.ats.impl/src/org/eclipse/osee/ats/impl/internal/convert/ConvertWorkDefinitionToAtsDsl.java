@@ -25,7 +25,6 @@ import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.api.workdef.RuleDefinitionOption;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
 import org.eclipse.osee.ats.dsl.atsDsl.AtsDsl;
 import org.eclipse.osee.ats.dsl.atsDsl.AttrWidget;
 import org.eclipse.osee.ats.dsl.atsDsl.BooleanDef;
@@ -47,6 +46,7 @@ import org.eclipse.osee.ats.dsl.atsDsl.WidgetRef;
 import org.eclipse.osee.ats.dsl.atsDsl.WorkDef;
 import org.eclipse.osee.ats.dsl.atsDsl.WorkflowEventType;
 import org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslFactoryImpl;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.util.XResultData;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 
@@ -324,7 +324,7 @@ public class ConvertWorkDefinitionToAtsDsl {
          dslWidget.setName(Strings.quote(widgetDef.getName()));
          dslWidget.setDefaultValue(widgetDef.getDefaultValue());
          dslWidget.setDescription(widgetDef.getDescription());
-         for (WidgetOption option : widgetDef.getOptions().getXOptions()) {
+         for (WidgetOption option : widgetDef.getOptions().getWidgetOptions()) {
             dslWidget.getOption().add(option.name());
          }
          dslWidget.setAttributeName(widgetDef.getAtrributeName());

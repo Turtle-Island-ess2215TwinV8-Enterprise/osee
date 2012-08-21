@@ -21,6 +21,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osee.framework.core.data.IAttributeType;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeExceptions;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
@@ -34,7 +35,6 @@ import org.eclipse.osee.framework.ui.skynet.internal.Activator;
 import org.eclipse.osee.framework.ui.skynet.widgets.IArtifactWidget;
 import org.eclipse.osee.framework.ui.skynet.widgets.IAttributeWidget;
 import org.eclipse.osee.framework.ui.skynet.widgets.XModifiedListener;
-import org.eclipse.osee.framework.ui.skynet.widgets.XOption;
 import org.eclipse.osee.framework.ui.skynet.widgets.XText;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidget;
 import org.eclipse.osee.framework.ui.swt.ALayout;
@@ -123,7 +123,7 @@ public class SwtXWidgetRenderer {
       }
 
       xWidget.setRequiredEntry(xWidgetLayoutData.isRequired());
-      xWidget.setEditable(xWidgetLayoutData.getXOptionHandler().contains(XOption.EDITABLE) && isEditable);
+      xWidget.setEditable(xWidgetLayoutData.getXOptionHandler().contains(WidgetOption.EDITABLE) && isEditable);
 
       return xWidget;
    }
@@ -165,6 +165,8 @@ public class SwtXWidgetRenderer {
                continue;
             }
 
+         } else if (currentTabItem != null) {
+            currentComp = (Composite) currentTabItem.getControl();
          } else {
             currentComp = topLevelComp;
          }
@@ -200,7 +202,7 @@ public class SwtXWidgetRenderer {
          GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
          currentComp.setLayoutData(gd);
 
-         if (xWidgetLayoutData.getXOptionHandler().contains(XOption.FILL_VERTICALLY)) {
+         if (xWidgetLayoutData.getXOptionHandler().contains(WidgetOption.FILL_VERTICALLY)) {
             gd.grabExcessVerticalSpace = true;
          }
 
@@ -215,7 +217,7 @@ public class SwtXWidgetRenderer {
             if (xWidgetLayoutData.isEndComposite()) {
                inChildComposite = false;
             }
-         } else if (xWidgetLayoutData.getXOptionHandler().contains(XOption.HORIZONTAL_LABEL)) {
+         } else if (xWidgetLayoutData.getXOptionHandler().contains(WidgetOption.HORIZONTAL_LABEL)) {
             currentComp = createComposite(topLevelComp, toolkit);
             currentComp.setLayout(ALayout.getZeroMarginLayout(2, false));
             currentComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -234,10 +236,10 @@ public class SwtXWidgetRenderer {
 
          if (xWidget instanceof XText) {
             XText xText = (XText) xWidget;
-            if (xWidgetLayoutData.getXOptionHandler().contains(XOption.FILL_HORIZONTALLY)) {
+            if (xWidgetLayoutData.getXOptionHandler().contains(WidgetOption.FILL_HORIZONTALLY)) {
                xText.setFillHorizontally(true);
             }
-            if (xWidgetLayoutData.getXOptionHandler().contains(XOption.FILL_VERTICALLY)) {
+            if (xWidgetLayoutData.getXOptionHandler().contains(WidgetOption.FILL_VERTICALLY)) {
                xText.setFillVertically(true);
             }
             if (xWidgetLayoutData.isHeightSet()) {
@@ -246,12 +248,7 @@ public class SwtXWidgetRenderer {
             xText.setDynamicallyCreated(true);
          }
 
-         if (currentTabItem != null) {
-            xWidget.createWidgets(managedForm, (Composite) currentTabItem.getControl(), 2);
-            ((Composite) currentTabItem.getControl()).layout();
-         } else {
-            xWidget.createWidgets(managedForm, currentComp, 2);
-         }
+         xWidget.createWidgets(managedForm, currentComp, 2);
 
          if (xModListener != null) {
             xWidget.addXModifiedListener(xModListener);

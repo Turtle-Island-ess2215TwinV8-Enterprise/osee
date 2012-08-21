@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class DefaultXWidgetOptionResolver implements IXWidgetOptionResolver {
 
    @Override
-   public String[] getWidgetOptions(XWidgetRendererItem xWidgetData) {
+   public String[] getWidgetOptions(IXWidgetRendererItem xWidgetData) {
       Matcher m = Pattern.compile("\\((.*?)\\)$").matcher(xWidgetData.getXWidgetName());
 
       if (m.find()) {

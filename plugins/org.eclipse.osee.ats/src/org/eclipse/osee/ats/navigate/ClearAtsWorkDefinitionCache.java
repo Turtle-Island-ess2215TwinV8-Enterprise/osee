@@ -23,8 +23,12 @@ import org.eclipse.osee.framework.ui.skynet.FrameworkImage;
  */
 public class ClearAtsWorkDefinitionCache extends XNavigateItemAction {
 
+   public ClearAtsWorkDefinitionCache(String name, XNavigateItem parent) {
+      super(parent, name, FrameworkImage.GEAR);
+   }
+
    public ClearAtsWorkDefinitionCache(XNavigateItem parent) {
-      super(parent, "Clear ATS WorkDefinition Cache", FrameworkImage.GEAR);
+      this("Clear ATS WorkDefinition Cache", parent);
    }
 
    @Override

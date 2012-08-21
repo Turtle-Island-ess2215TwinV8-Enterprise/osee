@@ -8,16 +8,17 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.ats.api.workdef;
+package org.eclipse.osee.framework.core.util;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 
 /**
  * @author Donald G. Dunne
  */
-public class WidgetOptionHandler implements IAtsWidgetOptionHandler {
+public class WidgetOptionHandler {
 
    private final Set<WidgetOption> options = new HashSet<WidgetOption>();
 
@@ -35,7 +36,6 @@ public class WidgetOptionHandler implements IAtsWidgetOptionHandler {
       return items;
    }
 
-   @Override
    public void add(WidgetOption xOption) {
       if (xOption.name().startsWith("ALIGN_")) {
          options.remove(WidgetOption.ALIGN_CENTER);
@@ -78,13 +78,11 @@ public class WidgetOptionHandler implements IAtsWidgetOptionHandler {
       }
    }
 
-   @Override
    public boolean contains(WidgetOption xOption) {
       return options.contains(xOption);
    }
 
-   @Override
-   public Set<WidgetOption> getXOptions() {
+   public Set<WidgetOption> getWidgetOptions() {
       return options;
    }
 

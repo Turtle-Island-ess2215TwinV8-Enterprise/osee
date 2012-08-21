@@ -618,13 +618,22 @@ public interface AtsDslPackage extends EPackage
   int WIDGET_DEF__NAME = 0;
 
   /**
+   * The feature id for the '<em><b>Usename</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WIDGET_DEF__USENAME = 1;
+
+  /**
    * The feature id for the '<em><b>Attribute Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__ATTRIBUTE_NAME = 1;
+  int WIDGET_DEF__ATTRIBUTE_NAME = 2;
 
   /**
    * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -633,7 +642,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__DESCRIPTION = 2;
+  int WIDGET_DEF__DESCRIPTION = 3;
 
   /**
    * The feature id for the '<em><b>XWidget Name</b></em>' attribute.
@@ -642,7 +651,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__XWIDGET_NAME = 3;
+  int WIDGET_DEF__XWIDGET_NAME = 4;
 
   /**
    * The feature id for the '<em><b>Default Value</b></em>' attribute.
@@ -651,7 +660,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__DEFAULT_VALUE = 4;
+  int WIDGET_DEF__DEFAULT_VALUE = 5;
 
   /**
    * The feature id for the '<em><b>Height</b></em>' attribute.
@@ -660,7 +669,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__HEIGHT = 5;
+  int WIDGET_DEF__HEIGHT = 6;
 
   /**
    * The feature id for the '<em><b>Option</b></em>' attribute list.
@@ -669,7 +678,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__OPTION = 6;
+  int WIDGET_DEF__OPTION = 7;
 
   /**
    * The feature id for the '<em><b>Min Constraint</b></em>' attribute.
@@ -678,7 +687,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__MIN_CONSTRAINT = 7;
+  int WIDGET_DEF__MIN_CONSTRAINT = 8;
 
   /**
    * The feature id for the '<em><b>Max Constraint</b></em>' attribute.
@@ -687,7 +696,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF__MAX_CONSTRAINT = 8;
+  int WIDGET_DEF__MAX_CONSTRAINT = 9;
 
   /**
    * The number of structural features of the '<em>Widget Def</em>' class.
@@ -696,7 +705,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int WIDGET_DEF_FEATURE_COUNT = 9;
+  int WIDGET_DEF_FEATURE_COUNT = 10;
 
   /**
    * The meta object id for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.LayoutItemImpl <em>Layout Item</em>}' class.
@@ -910,14 +919,14 @@ public interface AtsDslPackage extends EPackage
   int STATE_DEF_FEATURE_COUNT = 12;
 
   /**
-   * The meta object id for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepsDefImpl <em>Steps Def</em>}' class.
+   * The meta object id for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepsLayoutDefImpl <em>Steps Layout Def</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepsDefImpl
-   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepsDef()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepsLayoutDefImpl
+   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepsLayoutDef()
    * @generated
    */
-  int STEPS_DEF = 10;
+  int STEPS_LAYOUT_DEF = 10;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -926,7 +935,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int STEPS_DEF__NAME = LAYOUT_ITEM_FEATURE_COUNT + 0;
+  int STEPS_LAYOUT_DEF__NAME = LAYOUT_ITEM_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -935,35 +944,35 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int STEPS_DEF__DESCRIPTION = LAYOUT_ITEM_FEATURE_COUNT + 1;
+  int STEPS_LAYOUT_DEF__DESCRIPTION = LAYOUT_ITEM_FEATURE_COUNT + 1;
 
   /**
-   * The feature id for the '<em><b>Step Page Defs</b></em>' containment reference list.
+   * The feature id for the '<em><b>Steps</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int STEPS_DEF__STEP_PAGE_DEFS = LAYOUT_ITEM_FEATURE_COUNT + 2;
+  int STEPS_LAYOUT_DEF__STEPS = LAYOUT_ITEM_FEATURE_COUNT + 2;
 
   /**
-   * The number of structural features of the '<em>Steps Def</em>' class.
+   * The number of structural features of the '<em>Steps Layout Def</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int STEPS_DEF_FEATURE_COUNT = LAYOUT_ITEM_FEATURE_COUNT + 3;
+  int STEPS_LAYOUT_DEF_FEATURE_COUNT = LAYOUT_ITEM_FEATURE_COUNT + 3;
 
   /**
-   * The meta object id for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepPageDefImpl <em>Step Page Def</em>}' class.
+   * The meta object id for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepDefImpl <em>Step Def</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepPageDefImpl
-   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepPageDef()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepDefImpl
+   * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepDef()
    * @generated
    */
-  int STEP_PAGE_DEF = 11;
+  int STEP_DEF = 11;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -972,7 +981,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int STEP_PAGE_DEF__NAME = 0;
+  int STEP_DEF__NAME = 0;
 
   /**
    * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -981,7 +990,7 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int STEP_PAGE_DEF__DESCRIPTION = 1;
+  int STEP_DEF__DESCRIPTION = 1;
 
   /**
    * The feature id for the '<em><b>Layout Items</b></em>' containment reference list.
@@ -990,16 +999,16 @@ public interface AtsDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int STEP_PAGE_DEF__LAYOUT_ITEMS = 2;
+  int STEP_DEF__LAYOUT_ITEMS = 2;
 
   /**
-   * The number of structural features of the '<em>Step Page Def</em>' class.
+   * The number of structural features of the '<em>Step Def</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int STEP_PAGE_DEF_FEATURE_COUNT = 3;
+  int STEP_DEF_FEATURE_COUNT = 3;
 
   /**
    * The meta object id for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.DecisionReviewRefImpl <em>Decision Review Ref</em>}' class.
@@ -2176,6 +2185,17 @@ public interface AtsDslPackage extends EPackage
   EAttribute getWidgetDef_Name();
 
   /**
+   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getUsename <em>Usename</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Usename</em>'.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getUsename()
+   * @see #getWidgetDef()
+   * @generated
+   */
+  EAttribute getWidgetDef_Usename();
+
+  /**
    * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getAttributeName <em>Attribute Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2459,90 +2479,90 @@ public interface AtsDslPackage extends EPackage
   EReference getStateDef_Layout();
 
   /**
-   * Returns the meta object for class '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsDef <em>Steps Def</em>}'.
+   * Returns the meta object for class '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef <em>Steps Layout Def</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Steps Def</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsDef
+   * @return the meta object for class '<em>Steps Layout Def</em>'.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef
    * @generated
    */
-  EClass getStepsDef();
+  EClass getStepsLayoutDef();
 
   /**
-   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsDef#getName <em>Name</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Name</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsDef#getName()
-   * @see #getStepsDef()
-   * @generated
-   */
-  EAttribute getStepsDef_Name();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsDef#getDescription <em>Description</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Description</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsDef#getDescription()
-   * @see #getStepsDef()
-   * @generated
-   */
-  EAttribute getStepsDef_Description();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsDef#getStepPageDefs <em>Step Page Defs</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Step Page Defs</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsDef#getStepPageDefs()
-   * @see #getStepsDef()
-   * @generated
-   */
-  EReference getStepsDef_StepPageDefs();
-
-  /**
-   * Returns the meta object for class '{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef <em>Step Page Def</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Step Page Def</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepPageDef
-   * @generated
-   */
-  EClass getStepPageDef();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getName <em>Name</em>}'.
+   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Name</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getName()
-   * @see #getStepPageDef()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef#getName()
+   * @see #getStepsLayoutDef()
    * @generated
    */
-  EAttribute getStepPageDef_Name();
+  EAttribute getStepsLayoutDef_Name();
 
   /**
-   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getDescription <em>Description</em>}'.
+   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef#getDescription <em>Description</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Description</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getDescription()
-   * @see #getStepPageDef()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef#getDescription()
+   * @see #getStepsLayoutDef()
    * @generated
    */
-  EAttribute getStepPageDef_Description();
+  EAttribute getStepsLayoutDef_Description();
 
   /**
-   * Returns the meta object for the containment reference list '{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getLayoutItems <em>Layout Items</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef#getSteps <em>Steps</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Steps</em>'.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef#getSteps()
+   * @see #getStepsLayoutDef()
+   * @generated
+   */
+  EReference getStepsLayoutDef_Steps();
+
+  /**
+   * Returns the meta object for class '{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef <em>Step Def</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Step Def</em>'.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepDef
+   * @generated
+   */
+  EClass getStepDef();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepDef#getName()
+   * @see #getStepDef()
+   * @generated
+   */
+  EAttribute getStepDef_Name();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getDescription <em>Description</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Description</em>'.
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepDef#getDescription()
+   * @see #getStepDef()
+   * @generated
+   */
+  EAttribute getStepDef_Description();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getLayoutItems <em>Layout Items</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference list '<em>Layout Items</em>'.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getLayoutItems()
-   * @see #getStepPageDef()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.StepDef#getLayoutItems()
+   * @see #getStepDef()
    * @generated
    */
-  EReference getStepPageDef_LayoutItems();
+  EReference getStepDef_LayoutItems();
 
   /**
    * Returns the meta object for class '{@link org.eclipse.osee.ats.dsl.atsDsl.DecisionReviewRef <em>Decision Review Ref</em>}'.
@@ -3543,6 +3563,14 @@ public interface AtsDslPackage extends EPackage
     EAttribute WIDGET_DEF__NAME = eINSTANCE.getWidgetDef_Name();
 
     /**
+     * The meta object literal for the '<em><b>Usename</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute WIDGET_DEF__USENAME = eINSTANCE.getWidgetDef_Usename();
+
+    /**
      * The meta object literal for the '<em><b>Attribute Name</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3757,14 +3785,14 @@ public interface AtsDslPackage extends EPackage
     EReference STATE_DEF__LAYOUT = eINSTANCE.getStateDef_Layout();
 
     /**
-     * The meta object literal for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepsDefImpl <em>Steps Def</em>}' class.
+     * The meta object literal for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepsLayoutDefImpl <em>Steps Layout Def</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepsDefImpl
-     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepsDef()
+     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepsLayoutDefImpl
+     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepsLayoutDef()
      * @generated
      */
-    EClass STEPS_DEF = eINSTANCE.getStepsDef();
+    EClass STEPS_LAYOUT_DEF = eINSTANCE.getStepsLayoutDef();
 
     /**
      * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -3772,7 +3800,7 @@ public interface AtsDslPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute STEPS_DEF__NAME = eINSTANCE.getStepsDef_Name();
+    EAttribute STEPS_LAYOUT_DEF__NAME = eINSTANCE.getStepsLayoutDef_Name();
 
     /**
      * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
@@ -3780,25 +3808,25 @@ public interface AtsDslPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute STEPS_DEF__DESCRIPTION = eINSTANCE.getStepsDef_Description();
+    EAttribute STEPS_LAYOUT_DEF__DESCRIPTION = eINSTANCE.getStepsLayoutDef_Description();
 
     /**
-     * The meta object literal for the '<em><b>Step Page Defs</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Steps</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STEPS_DEF__STEP_PAGE_DEFS = eINSTANCE.getStepsDef_StepPageDefs();
+    EReference STEPS_LAYOUT_DEF__STEPS = eINSTANCE.getStepsLayoutDef_Steps();
 
     /**
-     * The meta object literal for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepPageDefImpl <em>Step Page Def</em>}' class.
+     * The meta object literal for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepDefImpl <em>Step Def</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepPageDefImpl
-     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepPageDef()
+     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.StepDefImpl
+     * @see org.eclipse.osee.ats.dsl.atsDsl.impl.AtsDslPackageImpl#getStepDef()
      * @generated
      */
-    EClass STEP_PAGE_DEF = eINSTANCE.getStepPageDef();
+    EClass STEP_DEF = eINSTANCE.getStepDef();
 
     /**
      * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -3806,7 +3834,7 @@ public interface AtsDslPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute STEP_PAGE_DEF__NAME = eINSTANCE.getStepPageDef_Name();
+    EAttribute STEP_DEF__NAME = eINSTANCE.getStepDef_Name();
 
     /**
      * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
@@ -3814,7 +3842,7 @@ public interface AtsDslPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute STEP_PAGE_DEF__DESCRIPTION = eINSTANCE.getStepPageDef_Description();
+    EAttribute STEP_DEF__DESCRIPTION = eINSTANCE.getStepDef_Description();
 
     /**
      * The meta object literal for the '<em><b>Layout Items</b></em>' containment reference list feature.
@@ -3822,7 +3850,7 @@ public interface AtsDslPackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STEP_PAGE_DEF__LAYOUT_ITEMS = eINSTANCE.getStepPageDef_LayoutItems();
+    EReference STEP_DEF__LAYOUT_ITEMS = eINSTANCE.getStepDef_LayoutItems();
 
     /**
      * The meta object literal for the '{@link org.eclipse.osee.ats.dsl.atsDsl.impl.DecisionReviewRefImpl <em>Decision Review Ref</em>}' class.

@@ -30,6 +30,7 @@ import org.eclipse.osee.ats.dsl.atsDsl.WidgetDef;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.WidgetDefImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.WidgetDefImpl#getUsename <em>Usename</em>}</li>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.WidgetDefImpl#getAttributeName <em>Attribute Name</em>}</li>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.WidgetDefImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.WidgetDefImpl#getXWidgetName <em>XWidget Name</em>}</li>
@@ -64,6 +65,26 @@ public class WidgetDefImpl extends MinimalEObjectImpl.Container implements Widge
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getUsename() <em>Usename</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getUsename()
+   * @generated
+   * @ordered
+   */
+  protected static final String USENAME_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getUsename() <em>Usename</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getUsename()
+   * @generated
+   * @ordered
+   */
+  protected String usename = USENAME_EDEFAULT;
 
   /**
    * The default value of the '{@link #getAttributeName() <em>Attribute Name</em>}' attribute.
@@ -264,6 +285,29 @@ public class WidgetDefImpl extends MinimalEObjectImpl.Container implements Widge
    * <!-- end-user-doc -->
    * @generated
    */
+  public String getUsename()
+  {
+    return usename;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setUsename(String newUsename)
+  {
+    String oldUsename = usename;
+    usename = newUsename;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AtsDslPackage.WIDGET_DEF__USENAME, oldUsename, usename));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public String getAttributeName()
   {
     return attributeName;
@@ -446,6 +490,8 @@ public class WidgetDefImpl extends MinimalEObjectImpl.Container implements Widge
     {
       case AtsDslPackage.WIDGET_DEF__NAME:
         return getName();
+      case AtsDslPackage.WIDGET_DEF__USENAME:
+        return getUsename();
       case AtsDslPackage.WIDGET_DEF__ATTRIBUTE_NAME:
         return getAttributeName();
       case AtsDslPackage.WIDGET_DEF__DESCRIPTION:
@@ -479,6 +525,9 @@ public class WidgetDefImpl extends MinimalEObjectImpl.Container implements Widge
     {
       case AtsDslPackage.WIDGET_DEF__NAME:
         setName((String)newValue);
+        return;
+      case AtsDslPackage.WIDGET_DEF__USENAME:
+        setUsename((String)newValue);
         return;
       case AtsDslPackage.WIDGET_DEF__ATTRIBUTE_NAME:
         setAttributeName((String)newValue);
@@ -522,6 +571,9 @@ public class WidgetDefImpl extends MinimalEObjectImpl.Container implements Widge
       case AtsDslPackage.WIDGET_DEF__NAME:
         setName(NAME_EDEFAULT);
         return;
+      case AtsDslPackage.WIDGET_DEF__USENAME:
+        setUsename(USENAME_EDEFAULT);
+        return;
       case AtsDslPackage.WIDGET_DEF__ATTRIBUTE_NAME:
         setAttributeName(ATTRIBUTE_NAME_EDEFAULT);
         return;
@@ -562,6 +614,8 @@ public class WidgetDefImpl extends MinimalEObjectImpl.Container implements Widge
     {
       case AtsDslPackage.WIDGET_DEF__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case AtsDslPackage.WIDGET_DEF__USENAME:
+        return USENAME_EDEFAULT == null ? usename != null : !USENAME_EDEFAULT.equals(usename);
       case AtsDslPackage.WIDGET_DEF__ATTRIBUTE_NAME:
         return ATTRIBUTE_NAME_EDEFAULT == null ? attributeName != null : !ATTRIBUTE_NAME_EDEFAULT.equals(attributeName);
       case AtsDslPackage.WIDGET_DEF__DESCRIPTION:
@@ -595,6 +649,8 @@ public class WidgetDefImpl extends MinimalEObjectImpl.Container implements Widge
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", usename: ");
+    result.append(usename);
     result.append(", attributeName: ");
     result.append(attributeName);
     result.append(", description: ");

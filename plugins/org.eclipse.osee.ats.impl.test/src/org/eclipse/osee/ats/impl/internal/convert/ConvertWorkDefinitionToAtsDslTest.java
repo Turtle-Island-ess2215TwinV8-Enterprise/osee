@@ -15,7 +15,6 @@ import org.eclipse.osee.ats.api.workdef.ReviewBlockType;
 import org.eclipse.osee.ats.api.workdef.RuleDefinitionOption;
 import org.eclipse.osee.ats.api.workdef.StateEventType;
 import org.eclipse.osee.ats.api.workdef.StateType;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
 import org.eclipse.osee.ats.dsl.atsDsl.AtsDsl;
 import org.eclipse.osee.ats.dsl.atsDsl.BooleanDef;
 import org.eclipse.osee.ats.dsl.atsDsl.Composite;
@@ -37,6 +36,7 @@ import org.eclipse.osee.ats.impl.internal.model.PeerReviewDefinition;
 import org.eclipse.osee.ats.impl.internal.model.StateDefinition;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinition;
 import org.eclipse.osee.ats.impl.internal.model.WorkDefinition;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.util.XResultData;
 import org.junit.Test;
 
@@ -336,7 +336,7 @@ public class ConvertWorkDefinitionToAtsDslTest {
       ConvertWorkDefinitionToAtsDsl convert = new ConvertWorkDefinitionToAtsDsl(resultData);
 
       IAtsWidgetDefinition widgetDef = new WidgetDefinition("Change Type");
-      widgetDef.getOptions().getXOptions().add(WidgetOption.ALIGN_CENTER);
+      widgetDef.getOptions().getWidgetOptions().add(WidgetOption.ALIGN_CENTER);
       WidgetDef widgetDef4 = convert.getOrCreateWidget(widgetDef);
       Assert.assertTrue(widgetDef4.getOption().contains(WidgetOption.ALIGN_CENTER.name()));
    }

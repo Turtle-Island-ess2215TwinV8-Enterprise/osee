@@ -29,7 +29,7 @@ public class XButton extends XButtonCommon {
 
    protected Label button;
    private Composite parent;
-   private Composite bComp;
+   protected Composite bComp;
    private boolean labelAfter = true;
 
    public XButton(String displayLabel) {
@@ -58,7 +58,7 @@ public class XButton extends XButtonCommon {
 
       bComp = new Composite(parent, SWT.NONE);
       bComp.setLayout(ALayout.getZeroMarginLayout(2, false));
-      bComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+      bComp.setLayoutData(new GridData(GridData.BEGINNING));
       if (toolkit != null) {
          toolkit.adapt(bComp);
       }

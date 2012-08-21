@@ -79,8 +79,8 @@ public class AtsDslFactoryImpl extends EFactoryImpl implements AtsDslFactory
       case AtsDslPackage.WIDGET_REF: return createWidgetRef();
       case AtsDslPackage.ATTR_WIDGET: return createAttrWidget();
       case AtsDslPackage.STATE_DEF: return createStateDef();
-      case AtsDslPackage.STEPS_DEF: return createStepsDef();
-      case AtsDslPackage.STEP_PAGE_DEF: return createStepPageDef();
+      case AtsDslPackage.STEPS_LAYOUT_DEF: return createStepsLayoutDef();
+      case AtsDslPackage.STEP_DEF: return createStepDef();
       case AtsDslPackage.DECISION_REVIEW_REF: return createDecisionReviewRef();
       case AtsDslPackage.DECISION_REVIEW_DEF: return createDecisionReviewDef();
       case AtsDslPackage.DECISION_REVIEW_OPT: return createDecisionReviewOpt();
@@ -258,10 +258,10 @@ public class AtsDslFactoryImpl extends EFactoryImpl implements AtsDslFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public StepsDef createStepsDef()
+  public StepsLayoutDef createStepsLayoutDef()
   {
-    StepsDefImpl stepsDef = new StepsDefImpl();
-    return stepsDef;
+    StepsLayoutDefImpl stepsLayoutDef = new StepsLayoutDefImpl();
+    return stepsLayoutDef;
   }
 
   /**
@@ -269,10 +269,10 @@ public class AtsDslFactoryImpl extends EFactoryImpl implements AtsDslFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public StepPageDef createStepPageDef()
+  public StepDef createStepDef()
   {
-    StepPageDefImpl stepPageDef = new StepPageDefImpl();
-    return stepPageDef;
+    StepDefImpl stepDef = new StepDefImpl();
+    return stepDef;
   }
 
   /**

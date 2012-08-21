@@ -21,8 +21,10 @@ package org.eclipse.osee.ats.workdef;
  *     Boeing - initial API and implementation
  *******************************************************************************/
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -30,19 +32,19 @@ import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.workdef.IAtsCompositeLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
-import org.eclipse.osee.ats.api.workdef.IAtsStepPageDefinition;
+import org.eclipse.osee.ats.api.workdef.IAtsStepDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsStepsLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.api.workdef.IStateToken;
 import org.eclipse.osee.ats.api.workdef.StateType;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.editor.stateItem.AtsStateItemManager;
 import org.eclipse.osee.ats.editor.stateItem.IAtsStateItem;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.widgets.commit.XCommitManager;
 import org.eclipse.osee.framework.core.data.IAttributeType;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.jdk.core.type.Pair;
@@ -51,18 +53,23 @@ import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.logging.OseeLevel;
 import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
+import org.eclipse.osee.framework.skynet.core.attribute.AttributeTypeManager;
 import org.eclipse.osee.framework.ui.skynet.widgets.IArtifactWidget;
+import org.eclipse.osee.framework.ui.skynet.widgets.IAttributeWidget;
 import org.eclipse.osee.framework.ui.skynet.widgets.XModifiedListener;
-import org.eclipse.osee.framework.ui.skynet.widgets.XOption;
+import org.eclipse.osee.framework.ui.skynet.widgets.XText;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidget;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.IDynamicWidgetLayoutListener;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.IXWidgetOptionResolver;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.SwtXWidgetRenderer;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetRendererItem;
+import org.eclipse.osee.framework.ui.swt.ALayout;
+import org.eclipse.osee.framework.ui.swt.Displays;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.w3c.dom.Element;
 
 /**
  * Instantiation of a StateXWidgetPage for a given StateDefinition to provide for automatic creation and management of
@@ -70,76 +77,38 @@ import org.w3c.dom.Element;
  * 
  * @author Donald G. Dunne
  */
-public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateToken {
+public class StateXWidgetPage implements IAtsWidgetLayoutListener, IStateToken {
 
    private static final Pair<IStatus, XWidget> OK_PAIR = new Pair<IStatus, XWidget>(Status.OK_STATUS, null);
-   protected SwtXWidgetRenderer dynamicXWidgetLayout;
    protected final IAtsStateDefinition stateDefinition;
    protected final IAtsWorkDefinition workDefinition;
    private AbstractWorkflowArtifact sma;
+   private final IAtsWidgetLayoutListener atsWidgetLayoutListener;
+   private final List<IAtsWidgetDefinitionRender> widgetItems = new ArrayList<IAtsWidgetDefinitionRender>();
+   private XModifiedListener xModListener;
+   private final Collection<ArrayList<String>> orRequired = new ArrayList<ArrayList<String>>();
+   private final Collection<ArrayList<String>> xorRequired = new ArrayList<ArrayList<String>>();
+   private final List<Label> labels = new ArrayList<Label>();
 
-   private StateXWidgetPage(IAtsWorkDefinition workDefinition, IAtsStateDefinition stateDefinition, IXWidgetOptionResolver optionResolver, IDynamicWidgetLayoutListener dynamicWidgetLayoutListener) {
+   public StateXWidgetPage(IAtsWorkDefinition workDefinition, IAtsStateDefinition stateDefinition, IAtsWidgetLayoutListener atsWidgetLayoutListener) {
       this.workDefinition = workDefinition;
       this.stateDefinition = stateDefinition;
-      if (dynamicWidgetLayoutListener == null) {
-         dynamicXWidgetLayout = new SwtXWidgetRenderer(this, optionResolver);
-      } else {
-         dynamicXWidgetLayout = new SwtXWidgetRenderer(dynamicWidgetLayoutListener, optionResolver);
-      }
-   }
-
-   public StateXWidgetPage(IAtsWorkDefinition workFlowDefinition, IAtsStateDefinition stateDefinition, String xWidgetsXml, IXWidgetOptionResolver optionResolver) {
-      this(workFlowDefinition, stateDefinition, xWidgetsXml, optionResolver, null);
-   }
-
-   /**
-    * @param instructionLines input lines of WorkAttribute declarations
-    */
-   public StateXWidgetPage(IAtsWorkDefinition workDefinition, IAtsStateDefinition stateDefinition, String xWidgetsXml, IXWidgetOptionResolver optionResolver, IDynamicWidgetLayoutListener dynamicWidgetLayoutListener) {
-      this(workDefinition, stateDefinition, optionResolver, dynamicWidgetLayoutListener);
-      try {
-         if (xWidgetsXml != null) {
-            processXmlLayoutDatas(xWidgetsXml);
-         }
-      } catch (Exception ex) {
-         OseeLog.log(Activator.class, Level.SEVERE, "Error processing attributes", ex);
-      }
-   }
-
-   public StateXWidgetPage(IAtsWorkDefinition workDefinition, IAtsStateDefinition stateDefinition, List<XWidgetRendererItem> datas, IXWidgetOptionResolver optionResolver, IDynamicWidgetLayoutListener dynamicWidgetLayoutListener) {
-      this(workDefinition, stateDefinition, optionResolver, dynamicWidgetLayoutListener);
-      dynamicXWidgetLayout.setLayoutDatas(datas);
-   }
-
-   public StateXWidgetPage(List<XWidgetRendererItem> datas, IXWidgetOptionResolver optionResolver, IDynamicWidgetLayoutListener dynamicWidgetLayoutListener) {
-      this(null, null, datas, optionResolver, dynamicWidgetLayoutListener);
-   }
-
-   public StateXWidgetPage(List<XWidgetRendererItem> datas, IXWidgetOptionResolver optionResolver) {
-      this(null, null, datas, optionResolver, null);
-   }
-
-   public StateXWidgetPage(String xWidgetsXml, IXWidgetOptionResolver optionResolver) {
-      this(null, null, xWidgetsXml, optionResolver, null);
-   }
-
-   public StateXWidgetPage(IXWidgetOptionResolver optionResolver) {
-      this(null, null, (String) null, optionResolver, null);
+      this.atsWidgetLayoutListener = atsWidgetLayoutListener;
    }
 
    @Override
-   public void widgetCreated(XWidget xWidget, FormToolkit toolkit, Artifact art, SwtXWidgetRenderer dynamicXWidgetLayout, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
+   public void widgetCreated(XWidget xWidget, FormToolkit toolkit, Artifact art, StateXWidgetPage stateXWidgetPage, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
       widgetCreated(xWidget, toolkit, art, stateDefinition, xModListener, isEditable);
    }
 
    @Override
-   public void widgetCreating(XWidget xWidget, FormToolkit toolkit, Artifact art, SwtXWidgetRenderer dynamicXWidgetLayout, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
+   public void widgetCreating(XWidget xWidget, FormToolkit toolkit, Artifact art, StateXWidgetPage stateXWidgetPage, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
       widgetCreating(xWidget, toolkit, art, stateDefinition, xModListener, isEditable);
    }
 
    public void dispose() {
       try {
-         for (XWidgetRendererItem layoutData : getlayoutDatas()) {
+         for (IAtsWidgetDefinitionRender layoutData : getlayoutDatas()) {
             layoutData.getXWidget().dispose();
          }
       } catch (OseeCoreException ex) {
@@ -155,25 +124,318 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
       return false;
    }
 
-   public SwtXWidgetRenderer createBody(IManagedForm managedForm, Composite parent, Artifact artifact, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
-      dynamicXWidgetLayout.createBody(managedForm, parent, artifact, xModListener, isEditable);
-      return dynamicXWidgetLayout;
-   }
+   public void createBody(IManagedForm managedForm, Composite parent, AbstractWorkflowArtifact awa, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
+      final FormToolkit toolkit = managedForm != null ? managedForm.getToolkit() : null;
 
-   public Pair<IStatus, XWidget> isPageComplete() {
-      try {
-         for (XWidgetRendererItem layoutData : dynamicXWidgetLayout.getLayoutDatas()) {
-            if (!layoutData.getXWidget().isValid().isOK()) {
-               // Check to see if widget is part of a completed OR or XOR group
-               if (!dynamicXWidgetLayout.isOrGroupFromAttrNameComplete(layoutData.getStoreName()) && !dynamicXWidgetLayout.isXOrGroupFromAttrNameComplete(layoutData.getStoreName())) {
-                  return new Pair<IStatus, XWidget>(layoutData.getXWidget().isValid(), layoutData.getXWidget());
+      final Composite topLevelComp = createComposite(parent, toolkit);
+      GridLayout layout = new GridLayout(1, false);
+      layout.marginWidth = 2;
+      layout.marginHeight = 2;
+      topLevelComp.setLayout(layout);
+      topLevelComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+      if (toolkit != null) {
+         toolkit.adapt(topLevelComp);
+      }
+
+      processLayoutItems(awa, managedForm, toolkit, topLevelComp, stateDefinition.getLayoutItems(), isEditable);
+
+      topLevelComp.layout();
+
+      Displays.ensureInDisplayThread(new Runnable() {
+         @Override
+         public void run() {
+            try {
+               for (IAtsWidgetDefinitionRender widgetItem : widgetItems) {
+                  widgetItem.getXWidget().validate();
                }
+               refreshOrAndXOrRequiredFlags();
+            } catch (OseeCoreException ex) {
+               OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
             }
          }
-      } catch (OseeCoreException ex) {
-         OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
+      });
+
+   }
+
+   private void processLayoutItems(AbstractWorkflowArtifact awa, IManagedForm managedForm, FormToolkit toolkit, Composite parent, List<IAtsLayoutItem> layoutItems, boolean isEditable) throws OseeCoreException {
+      for (IAtsLayoutItem item : layoutItems) {
+         if (item instanceof IAtsWidgetDefinition) {
+            IAtsWidgetDefinition widgetDef = (IAtsWidgetDefinition) item;
+            IAtsWidgetDefinitionRender widgetItem =
+               processWidgetDefinition(awa, managedForm, widgetDef, toolkit, parent, isEditable);
+            widgetItems.add(widgetItem);
+         } else if (item instanceof IAtsCompositeLayoutItem) {
+            IAtsCompositeLayoutItem compositeLayoutItem = (IAtsCompositeLayoutItem) item;
+            processCompositeLayout(awa, managedForm, compositeLayoutItem, toolkit, parent, isEditable);
+         } else if (item instanceof IAtsStepsLayoutItem) {
+            IAtsStepsLayoutItem stepsLayout = (IAtsStepsLayoutItem) item;
+            processStepsLayout(awa, managedForm, stepsLayout, toolkit, parent, isEditable);
+         }
       }
-      return OK_PAIR;
+      parent.layout();
+   }
+
+   private void processStepsLayout(AbstractWorkflowArtifact awa, IManagedForm managedForm, IAtsStepsLayoutItem stepsLayout, FormToolkit toolkit, Composite parent, boolean isEditable) throws OseeCoreException {
+
+      if (Strings.isValid(stepsLayout.getName())) {
+         Label label = new Label(parent, SWT.NONE);
+         label.setText(stepsLayout.getName() + ": ");
+         labels.add(label);
+      }
+
+      Composite stepsComp = createStepsLayoutComposite(parent);
+      TabFolder currentTabFolder = new TabFolder(stepsComp, SWT.LEFT | SWT.NONE);
+      currentTabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+      for (IAtsStepDefinition stepDef : stepsLayout.getStepDefinitions()) {
+         processStepDefinition(currentTabFolder, awa, managedForm, stepDef, toolkit, parent, isEditable);
+      }
+   }
+
+   private void processStepDefinition(TabFolder currentTabFolder, AbstractWorkflowArtifact awa, IManagedForm managedForm, IAtsStepDefinition stepDef, FormToolkit toolkit, Composite parent, boolean isEditable) throws OseeCoreException {
+      TabItem currentTabItem = new TabItem(currentTabFolder, 0);
+      currentTabItem.setText(stepDef.getName());
+      Composite tabComp = createStepDefinitionComposite(currentTabItem);
+
+      if (Strings.isValid(stepDef.getDescription())) {
+         Label label = new Label((Composite) currentTabItem.getControl(), SWT.NONE);
+         label.setText("Description: " + stepDef.getDescription());
+         labels.add(label);
+      }
+      processLayoutItems(awa, managedForm, toolkit, tabComp, stepDef.getLayoutItems(), isEditable);
+   }
+
+   private void processCompositeLayout(AbstractWorkflowArtifact awa, IManagedForm managedForm, IAtsCompositeLayoutItem compositeLayoutItem, FormToolkit toolkit, Composite parent, boolean isEditable) throws OseeCoreException {
+      Composite outComp = createCompositeLayoutComposite(parent, compositeLayoutItem.getNumColumns(), toolkit);
+      processLayoutItems(awa, managedForm, toolkit, outComp, compositeLayoutItem.getLayoutItems(), isEditable);
+   }
+
+   private Composite createStepsLayoutComposite(Composite parent) {
+      Composite comp = new Composite(parent, SWT.NONE);
+      GridLayout layout = new GridLayout(1, true);
+      layout.marginWidth = 20;
+      comp.setLayout(layout);
+      comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+      return comp;
+   }
+
+   private Composite createStepDefinitionComposite(TabItem ti) {
+      Composite comp = new Composite(ti.getParent(), SWT.NONE);
+      comp.setLayout(new GridLayout(1, true));
+      comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+      ti.setControl(comp);
+      return comp;
+   }
+
+   private Composite createCompositeLayoutComposite(Composite parent, int numColumns, FormToolkit toolkit) {
+      Composite comp = createComposite(parent, toolkit);
+      GridLayout layout = new GridLayout(numColumns, false);
+      layout.horizontalSpacing = 8;
+      comp.setLayout(layout);
+      comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+      if (toolkit != null) {
+         toolkit.adapt(comp);
+      }
+      return comp;
+   }
+
+   private IAtsWidgetDefinitionRender processWidgetDefinition(AbstractWorkflowArtifact awa, IManagedForm managedForm, IAtsWidgetDefinition widgetDef, FormToolkit toolkit, Composite parent, boolean isEditable) throws OseeCoreException {
+      IAtsWidgetDefinitionRender renderer = new SwtAtsWidgetDefinitionRenderer(widgetDef);
+
+      GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+      parent.setLayoutData(gd);
+
+      if (renderer.getOptions().contains(WidgetOption.FILL_VERTICALLY)) {
+         gd.grabExcessVerticalSpace = true;
+      }
+
+      XWidget xWidget = setupXWidget(awa, toolkit, isEditable, renderer);
+
+      setupArtifactInfo(awa, widgetDef.getAtrributeName(), xWidget);
+
+      if (xWidget instanceof XText) {
+         XText xText = (XText) xWidget;
+         if (renderer.getOptions().contains(WidgetOption.FILL_HORIZONTALLY)) {
+            xText.setFillHorizontally(true);
+         }
+         if (renderer.getOptions().contains(WidgetOption.FILL_VERTICALLY)) {
+            xText.setFillVertically(true);
+         }
+         if (renderer.isHeightSet()) {
+            xText.setHeight(renderer.getHeight());
+         }
+         xText.setDynamicallyCreated(true);
+      }
+
+      Composite currentComp = parent;
+      if (renderer.getOptions().contains(WidgetOption.HORIZONTAL_LABEL)) {
+         currentComp = createComposite(currentComp, toolkit);
+         currentComp.setLayout(ALayout.getZeroMarginLayout(2, false));
+         currentComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+         if (toolkit != null) {
+            toolkit.adapt(currentComp);
+         }
+      }
+      xWidget.createWidgets(managedForm, currentComp, 2);
+
+      if (xModListener != null) {
+         xWidget.addXModifiedListener(xModListener);
+      }
+
+      xWidget.addXModifiedListener(refreshRequiredModListener);
+      if (atsWidgetLayoutListener != null) {
+         atsWidgetLayoutListener.widgetCreated(xWidget, toolkit, awa, this, xModListener, isEditable);
+         atsWidgetLayoutListener.createXWidgetLayoutData(renderer, xWidget, toolkit, awa, xModListener, isEditable);
+      }
+
+      return renderer;
+   }
+
+   public XWidget setupXWidget(AbstractWorkflowArtifact awa, FormToolkit toolkit, boolean isEditable, IAtsWidgetDefinitionRender renderer) throws OseeCoreException {
+      XWidget xWidget = renderer.getXWidget();
+
+      if (Strings.isValid(renderer.getName())) {
+         xWidget.setLabel(renderer.getName().replaceFirst("^.*?\\.", ""));
+      }
+
+      if (Strings.isValid(renderer.getToolTip())) {
+         xWidget.setToolTip(renderer.getToolTip());
+      }
+
+      // TODO fix required for completed / required for transition
+      xWidget.setRequiredEntry(renderer.getOptions().contains(WidgetOption.REQUIRED_FOR_COMPLETION));
+      xWidget.setEditable(renderer.getOptions().contains(WidgetOption.EDITABLE) && isEditable);
+
+      if (atsWidgetLayoutListener != null) {
+         atsWidgetLayoutListener.widgetCreating(xWidget, toolkit, awa, this, xModListener, isEditable);
+      }
+      return xWidget;
+   }
+   private final XModifiedListener refreshRequiredModListener = new XModifiedListener() {
+      @Override
+      public void widgetModified(XWidget widget) {
+         try {
+            refreshOrAndXOrRequiredFlags();
+         } catch (OseeCoreException ex) {
+            OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
+         }
+      }
+   };
+
+   /**
+    * Required flags are set per XWidget and the labels change from Red to Black when the widget has been edited
+    * successfully. When a page is made up of two or more widgets that need to work together, these required flags need
+    * to be set/unset whenever a widget from the group gets modified.
+    */
+   private void refreshOrAndXOrRequiredFlags() throws OseeCoreException {
+      // Handle orRequired
+      for (Collection<String> orReq : orRequired) {
+         // If group is complete, change all to black, else all red
+         boolean isComplete = isOrGroupFromAttrNameComplete(orReq.iterator().next());
+         for (String aName : orReq) {
+            IAtsWidgetDefinitionRender layoutData = getLayoutData(aName);
+            Label label = layoutData.getXWidget().getLabelWidget();
+            if (label != null && !label.isDisposed()) {
+               label.setForeground(isComplete ? null : Displays.getSystemColor(SWT.COLOR_RED));
+            }
+         }
+      }
+      // Handle xorRequired
+      for (Collection<String> xorReq : xorRequired) {
+         // If group is complete, change all to black, else all red
+         boolean isComplete = isXOrGroupFromAttrNameComplete(xorReq.iterator().next());
+         for (String aName : xorReq) {
+            IAtsWidgetDefinitionRender layoutData = getLayoutData(aName);
+            Label label = layoutData.getXWidget().getLabelWidget();
+            if (label != null && !label.isDisposed()) {
+               label.setForeground(isComplete ? null : Displays.getSystemColor(SWT.COLOR_RED));
+            }
+         }
+      }
+   }
+
+   public boolean isOrRequired(String attrName) {
+      return !getOrRequiredGroup(attrName).isEmpty();
+   }
+
+   public boolean isXOrRequired(String attrName) {
+      return !getXOrRequiredGroup(attrName).isEmpty();
+   }
+
+   private Collection<String> getOrRequiredGroup(String attrName) {
+      return getRequiredGroup(orRequired, attrName);
+   }
+
+   private Collection<String> getXOrRequiredGroup(String attrName) {
+      return getRequiredGroup(xorRequired, attrName);
+   }
+
+   private Collection<String> getRequiredGroup(Collection<ArrayList<String>> requiredList, String attrName) {
+      for (Collection<String> list : requiredList) {
+         for (String aName : list) {
+            if (aName.equals(attrName)) {
+               return list;
+            }
+         }
+      }
+      return Collections.emptyList();
+   }
+
+   /**
+    * @return true if ANY item in group is entered
+    */
+   public boolean isOrGroupFromAttrNameComplete(String name) throws OseeCoreException {
+      for (String aName : getOrRequiredGroup(name)) {
+         IAtsWidgetDefinitionRender layoutData = getLayoutData(aName);
+         if (layoutData.getXWidget() != null && layoutData.getXWidget().isValid().isOK()) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   /**
+    * @return true if only ONE item in group is entered
+    */
+   public boolean isXOrGroupFromAttrNameComplete(String attrName) throws OseeCoreException {
+      boolean oneFound = false;
+      for (String aName : getXOrRequiredGroup(attrName)) {
+         IAtsWidgetDefinitionRender layoutData = getLayoutData(aName);
+         if (layoutData.getXWidget() != null && layoutData.getXWidget().isValid().isOK()) {
+            // If already found one, return false
+            if (oneFound) {
+               return false;
+            } else {
+               oneFound = true;
+            }
+         }
+      }
+      return oneFound;
+   }
+
+   private void setupArtifactInfo(Artifact artifact, String attributeName, XWidget xWidget) {
+      if (artifact == null) {
+         return;
+      }
+      if (xWidget instanceof IAttributeWidget) {
+         try {
+            IAttributeType attributeType = AttributeTypeManager.getType(attributeName);
+            ((IAttributeWidget) xWidget).setAttributeType(artifact, attributeType);
+         } catch (Exception ex) {
+            OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
+         }
+      } else if (xWidget instanceof IArtifactWidget) {
+         try {
+            ((IArtifactWidget) xWidget).setArtifact(artifact);
+         } catch (Exception ex) {
+            OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
+         }
+      }
+   }
+
+   private Composite createComposite(Composite parent, FormToolkit toolkit) {
+      return toolkit != null ? toolkit.createComposite(parent, SWT.WRAP) : new Composite(parent, SWT.NONE);
    }
 
    public String getHtml(String backgroundColor) throws OseeCoreException {
@@ -186,12 +448,12 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
       if (preHtml != null) {
          sb.append(preHtml);
       }
-      for (XWidgetRendererItem layoutData : dynamicXWidgetLayout.getLayoutDatas()) {
-         XWidget xWidget = layoutData.getXWidget();
+      for (IAtsWidgetDefinitionRender renderer : widgetItems) {
+         XWidget xWidget = renderer.getXWidget();
          if (xWidget instanceof IArtifactWidget) {
-            ((IArtifactWidget) xWidget).setArtifact(layoutData.getArtifact());
+            ((IArtifactWidget) xWidget).setArtifact(renderer.getArtifact());
          }
-         sb.append(layoutData.getXWidget().toHTML(AHTML.LABEL_FONT));
+         sb.append(renderer.getXWidget().toHTML(AHTML.LABEL_FONT));
          sb.append(AHTML.newline());
       }
       if (postHtml != null) {
@@ -216,25 +478,21 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
       return sb.toString();
    }
 
-   private Set<XWidgetRendererItem> getlayoutDatas() {
-      return dynamicXWidgetLayout.getLayoutDatas();
+   private List<IAtsWidgetDefinitionRender> getlayoutDatas() {
+      return widgetItems;
    }
 
-   private void addLayoutData(XWidgetRendererItem data) {
-      dynamicXWidgetLayout.addWorkLayoutData(data);
+   private void addLayoutData(IAtsWidgetDefinitionRender data) {
+      widgetItems.add(data);
    }
 
-   public XWidgetRendererItem getLayoutData(String layoutName) {
-      return dynamicXWidgetLayout.getLayoutData(layoutName);
-   }
-
-   protected void processXmlLayoutDatas(String xWidgetXml) throws OseeCoreException {
-      dynamicXWidgetLayout.processlayoutDatas(xWidgetXml);
-   }
-
-   @SuppressWarnings("unused")
-   protected void processLayoutDatas(Element element) throws OseeCoreException {
-      dynamicXWidgetLayout.processLayoutDatas(element);
+   public IAtsWidgetDefinitionRender getLayoutData(String layoutName) {
+      for (IAtsWidgetDefinitionRender item : widgetItems) {
+         if (item.getName().equals(layoutName)) {
+            return item;
+         }
+      }
+      return null;
    }
 
    @Override
@@ -268,10 +526,6 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
 
    public IAtsWorkDefinition getWorkDefinition() {
       return workDefinition;
-   }
-
-   public SwtXWidgetRenderer getDynamicXWidgetLayout() {
-      return dynamicXWidgetLayout;
    }
 
    @Override
@@ -310,7 +564,7 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
    }
 
    @Override
-   public void createXWidgetLayoutData(XWidgetRendererItem layoutData, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener xModListener, boolean isEditable) {
+   public void createXWidgetLayoutData(IAtsWidgetDefinitionRender layoutData, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener xModListener, boolean isEditable) {
 
       // If no tool tip, add global tool tip
       if (!Strings.isValid(xWidget.getToolTip())) {
@@ -346,112 +600,28 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
       }
    }
 
-   public void generateLayoutDatas(AbstractWorkflowArtifact sma) {
-      this.sma = sma;
-      // Add static layoutDatas to statePage
-      for (IAtsLayoutItem stateItem : stateDefinition.getLayoutItems()) {
-         if (stateItem instanceof IAtsWidgetDefinition) {
-            processWidgetDefinition((IAtsWidgetDefinition) stateItem, sma);
-         } else if (stateItem instanceof IAtsCompositeLayoutItem) {
-            processComposite((IAtsCompositeLayoutItem) stateItem, sma);
-         } else if (stateItem instanceof IAtsStepsLayoutItem) {
-            processSteps((IAtsStepsLayoutItem) stateItem, sma);
-         }
-      }
+   public List<IAtsWidgetDefinitionRender> getWidgetItems() {
+      return widgetItems;
    }
 
-   private void processSteps(IAtsStepsLayoutItem stepLayoutItem, AbstractWorkflowArtifact sma) {
-      boolean firstPage = true;
-      List<IAtsStepPageDefinition> stepDef = stepLayoutItem.getStepPageDefinitions();
-      for (int y = 0; y < stepDef.size(); y++) {
-         boolean lastPage = y == stepDef.size() - 1;
-         IAtsStepPageDefinition page = stepDef.get(y);
-         boolean firstLayoutItem = true;
-         List<IAtsLayoutItem> layoutItems = page.getLayoutItems();
-         for (int x = 0; x < layoutItems.size(); x++) {
-            boolean lastLayoutItem = x == layoutItems.size() - 1;
-            IAtsLayoutItem layoutItem = layoutItems.get(x);
-            if (layoutItem instanceof IAtsWidgetDefinition) {
-               XWidgetRendererItem data = processWidgetDefinition((IAtsWidgetDefinition) layoutItem, sma);
-               if (firstLayoutItem) {
-                  data.setBeginTabItem(page.getName());
-                  firstLayoutItem = false;
-                  if (Strings.isValid(page.getDescription())) {
-                     data.setTabItemDescription(page.getDescription());
-                  }
-               }
-               if (lastLayoutItem) {
-                  data.setEndTabItem(true);
-               }
-               if (firstPage) {
-                  data.setBeginTabFolder(stepLayoutItem.getName());
-                  firstPage = false;
-               }
-               if (lastPage) {
-                  data.setEndTabFolder(true);
-               }
-            } else if (layoutItem instanceof IAtsCompositeLayoutItem) {
-               processComposite((IAtsCompositeLayoutItem) layoutItem, sma);
-            }
-         }
+   public Collection<XWidget> getXWidgets() throws OseeCoreException {
+      List<XWidget> widgets = new ArrayList<XWidget>();
+      for (IAtsWidgetDefinitionRender render : widgetItems) {
+         widgets.add(render.getXWidget());
       }
+      return widgets;
    }
 
-   private void processComposite(IAtsCompositeLayoutItem compositeStateItem, AbstractWorkflowArtifact sma) {
-      boolean firstWidget = true;
-      List<IAtsLayoutItem> stateItems = compositeStateItem.getLayoutItems();
-      for (int x = 0; x < stateItems.size(); x++) {
-         boolean lastWidget = x == stateItems.size() - 1;
-         IAtsLayoutItem stateItem = stateItems.get(x);
-         if (stateItem instanceof IAtsWidgetDefinition) {
-            XWidgetRendererItem data = processWidgetDefinition((IAtsWidgetDefinition) stateItem, sma);
-            if (firstWidget) {
-               if (compositeStateItem.getNumColumns() > 0) {
-                  data.setBeginComposite(compositeStateItem.getNumColumns());
-               }
-            }
-            if (lastWidget) {
-               data.setEndComposite(true);
-            }
-         } else if (stateItem instanceof IAtsCompositeLayoutItem) {
-            processComposite((IAtsCompositeLayoutItem) stateItem, sma);
-         }
-         firstWidget = false;
-      }
+   public XModifiedListener getXModifiedListener() {
+      return xModListener;
    }
 
-   /**
-    * TODO This will eventually go away and ATS pages will be generated straight from WidgetDefinitions.
-    */
-   private XWidgetRendererItem processWidgetDefinition(IAtsWidgetDefinition widgetDef, AbstractWorkflowArtifact sma) {
-      XWidgetRendererItem data = new XWidgetRendererItem(getDynamicXWidgetLayout());
-      data.setDefaultValue(widgetDef.getDefaultValue());
-      data.setHeight(widgetDef.getHeight());
-      data.setStoreName(widgetDef.getAtrributeName());
-      data.setToolTip(widgetDef.getToolTip());
-      data.setId(widgetDef.getName());
-      data.setXWidgetName(widgetDef.getXWidgetName());
-      data.setArtifact(sma);
-      data.setName(widgetDef.getName());
-      data.setObject(widgetDef);
-      if (widgetDef.is(WidgetOption.REQUIRED_FOR_TRANSITION)) {
-         data.getXOptionHandler().add(XOption.REQUIRED);
-      } else if (widgetDef.is(WidgetOption.REQUIRED_FOR_COMPLETION)) {
-         data.getXOptionHandler().add(XOption.REQUIRED_FOR_COMPLETION);
-      }
-      for (WidgetOption widgetOpt : widgetDef.getOptions().getXOptions()) {
-         XOption option = null;
-         try {
-            option = XOption.valueOf(widgetOpt.name());
-         } catch (IllegalArgumentException ex) {
-            // do nothing
-         }
-         if (option != null) {
-            data.getXOptionHandler().add(option);
-         }
-      }
-      addLayoutData(data);
-      return data;
+   public void setXModifiedListener(XModifiedListener xModListener) {
+      this.xModListener = xModListener;
+   }
+
+   public List<Label> getLabels() {
+      return labels;
    }
 
 }

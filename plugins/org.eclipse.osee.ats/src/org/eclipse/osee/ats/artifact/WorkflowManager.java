@@ -38,7 +38,6 @@ import org.eclipse.osee.ats.core.workflow.AtsWorkItemService;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.workdef.StateXWidgetPage;
-import org.eclipse.osee.ats.workflow.ATSXWidgetOptionResolver;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.Collections;
@@ -320,9 +319,7 @@ public class WorkflowManager {
       for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.get().getStatesOrderedByOrdinal(
          awa.getWorkDefinition())) {
          try {
-            StateXWidgetPage statePage =
-               new StateXWidgetPage(awa.getWorkDefinition(), stateDefinition, null,
-                  ATSXWidgetOptionResolver.getInstance());
+            StateXWidgetPage statePage = new StateXWidgetPage(awa.getWorkDefinition(), stateDefinition, null);
             statePages.add(statePage);
          } catch (Exception ex) {
             OseeLog.log(Activator.class, Level.SEVERE, ex);
@@ -337,9 +334,7 @@ public class WorkflowManager {
       for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.get().getStatesOrderedByDefaultToState(
          awa.getWorkDefinition())) {
          try {
-            StateXWidgetPage statePage =
-               new StateXWidgetPage(awa.getWorkDefinition(), stateDefinition, null,
-                  ATSXWidgetOptionResolver.getInstance());
+            StateXWidgetPage statePage = new StateXWidgetPage(awa.getWorkDefinition(), stateDefinition, null);
             statePages.add(statePage);
          } catch (Exception ex) {
             OseeLog.log(Activator.class, Level.SEVERE, ex);

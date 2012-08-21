@@ -17,9 +17,9 @@ import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinitionFloatMinMaxConstraint;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinitionIntMinMaxConstraint;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinitionListMinMaxSelectedConstraint;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
 import org.eclipse.osee.ats.api.workdef.WidgetResult;
 import org.eclipse.osee.ats.api.workdef.WidgetStatus;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.DateUtil;
 

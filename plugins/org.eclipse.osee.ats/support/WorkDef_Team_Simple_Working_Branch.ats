@@ -27,7 +27,7 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
    }
 
    widgetDefinition "Priority" {
-      attributeName "ats.Priority"
+      attributeName "ats.Priority" 
       xWidgetName "XComboDam(OPTIONS_FROM_ATTRIBUTE_VALIDITY)"
       option REQUIRED_FOR_TRANSITION
    }
@@ -83,6 +83,16 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
       xWidgetName "XValidateReqChangesButton"
    }
 
+   widgetDefinition "Validate Changes Completed" {
+   	usename "Completed" 
+      xWidgetName "XValidateReqChangesCompletedCheckbox"
+   }
+
+   widgetDefinition "Check Signals Via CDB Completed" {
+   	usename "Completed" 
+      xWidgetName "XCheckSignalsViaCDBCompletedCheckbox"
+   }
+
    widgetDefinition "Show CDB Differences Report" { 
       xWidgetName "XShowCdbDiffReportButton"
    }
@@ -99,7 +109,6 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
       xWidgetName "XCommitManager"
    }
 
-
    state "Implement" { 
       type Working
       ordinal 1
@@ -108,25 +117,30 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
       rule RequireStateHourSpentPrompt
       layout {
          widget "Work Package" 
-         step "Requirements Development" {
+         step layout "Requirements Development" { 
          	description "Change to requirements or other related artifacts on working branch."
-         	page "Port" {
+         	has step "Port" {
          		description "Port changes from other branches actions"
          		widget "Work Package"
          	}
-         	page "Edit" {
+         	has step "Edit" {
          		description "Edit artifacts / requirements / documents"
 			      widget "Create Working Branch"
 		         widget "Validate Requirement Changes"
 		         widget "Show CDB Differences Report"
 		         widget "Check Signals Via CDB"
          	}
-         	page "Commit" { 
+         	has step "Commit" { 
          		description "Validate and commit changes to baseline branch"
 		         widget "Create Working Branch"
-		         widget "Validate Requirement Changes"
+		         composite {
+		         	numColumns 3
+		            widget "Validate Requirement Changes"
+		            widget "Validate Changes Completed"
+		            widget "Check Signals Via CDB"
+		            widget "Check Signals Via CDB Completed"
+		         }
 		         widget "Show CDB Differences Report"
-		         widget "Check Signals Via CDB"
 		         widget "Create Code/Test Tasks"
 		         widget "Commit Manager"
          	}

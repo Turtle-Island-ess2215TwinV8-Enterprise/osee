@@ -12,23 +12,23 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Step Page Def</b></em>'.
+ * A representation of the model object '<em><b>Step Def</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getLayoutItems <em>Layout Items</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getLayoutItems <em>Layout Items</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepPageDef()
+ * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepDef()
  * @model
  * @generated
  */
-public interface StepPageDef extends EObject
+public interface StepDef extends EObject
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -40,14 +40,14 @@ public interface StepPageDef extends EObject
    * <!-- end-user-doc -->
    * @return the value of the '<em>Name</em>' attribute.
    * @see #setName(String)
-   * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepPageDef_Name()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepDef_Name()
    * @model
    * @generated
    */
   String getName();
 
   /**
-   * Sets the value of the '{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getName <em>Name</em>}' attribute.
+   * Sets the value of the '{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getName <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Name</em>' attribute.
@@ -66,14 +66,14 @@ public interface StepPageDef extends EObject
    * <!-- end-user-doc -->
    * @return the value of the '<em>Description</em>' attribute.
    * @see #setDescription(String)
-   * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepPageDef_Description()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepDef_Description()
    * @model
    * @generated
    */
   String getDescription();
 
   /**
-   * Sets the value of the '{@link org.eclipse.osee.ats.dsl.atsDsl.StepPageDef#getDescription <em>Description</em>}' attribute.
+   * Sets the value of the '{@link org.eclipse.osee.ats.dsl.atsDsl.StepDef#getDescription <em>Description</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Description</em>' attribute.
@@ -92,10 +92,10 @@ public interface StepPageDef extends EObject
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Layout Items</em>' containment reference list.
-   * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepPageDef_LayoutItems()
+   * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getStepDef_LayoutItems()
    * @model containment="true"
    * @generated
    */
   EList<LayoutItem> getLayoutItems();
 
-} // StepPageDef
+} // StepDef

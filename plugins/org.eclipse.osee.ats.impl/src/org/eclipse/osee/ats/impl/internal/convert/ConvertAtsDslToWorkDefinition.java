@@ -33,7 +33,6 @@ import org.eclipse.osee.ats.api.workdef.ReviewBlockType;
 import org.eclipse.osee.ats.api.workdef.StateColor;
 import org.eclipse.osee.ats.api.workdef.StateEventType;
 import org.eclipse.osee.ats.api.workdef.StateType;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
 import org.eclipse.osee.ats.dsl.BooleanDefUtil;
 import org.eclipse.osee.ats.dsl.UserRefUtil;
 import org.eclipse.osee.ats.dsl.atsDsl.AtsDsl;
@@ -50,8 +49,8 @@ import org.eclipse.osee.ats.dsl.atsDsl.LayoutType;
 import org.eclipse.osee.ats.dsl.atsDsl.PeerReviewDef;
 import org.eclipse.osee.ats.dsl.atsDsl.PeerReviewRef;
 import org.eclipse.osee.ats.dsl.atsDsl.StateDef;
-import org.eclipse.osee.ats.dsl.atsDsl.StepPageDef;
-import org.eclipse.osee.ats.dsl.atsDsl.StepsDef;
+import org.eclipse.osee.ats.dsl.atsDsl.StepDef;
+import org.eclipse.osee.ats.dsl.atsDsl.StepsLayoutDef;
 import org.eclipse.osee.ats.dsl.atsDsl.ToState;
 import org.eclipse.osee.ats.dsl.atsDsl.UserByName;
 import org.eclipse.osee.ats.dsl.atsDsl.UserByUserId;
@@ -63,13 +62,14 @@ import org.eclipse.osee.ats.impl.internal.model.DecisionReviewDefinition;
 import org.eclipse.osee.ats.impl.internal.model.DecisionReviewOption;
 import org.eclipse.osee.ats.impl.internal.model.PeerReviewDefinition;
 import org.eclipse.osee.ats.impl.internal.model.StateDefinition;
-import org.eclipse.osee.ats.impl.internal.model.StepPageDefinition;
+import org.eclipse.osee.ats.impl.internal.model.StepDefinition;
 import org.eclipse.osee.ats.impl.internal.model.StepsLayoutItem;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinition;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinitionFloatMinMaxConstraint;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinitionIntMinMaxConstraint;
 import org.eclipse.osee.ats.impl.internal.model.WidgetDefinitionListMinMaxSelectedConstraint;
 import org.eclipse.osee.ats.impl.internal.model.WorkDefinition;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.util.XResultData;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 
@@ -288,11 +288,11 @@ public class ConvertAtsDslToWorkDefinition {
                processLayoutItems(SHEET_NAME, widgetDefs, compStateItem.getLayoutItems(), composite.getLayoutItems());
             }
             stateItems.add(compStateItem);
-         } else if (layoutItem instanceof StepsDef) {
-            StepsDef stepDef = (StepsDef) layoutItem;
-            StepsLayoutItem stepsLayoutItem = new StepsLayoutItem(Strings.unquote(stepDef.getName()));
-            if (!stepDef.getStepPageDefs().isEmpty()) {
-               processStepItems(SHEET_NAME, widgetDefs, stepsLayoutItem, stepDef);
+         } else if (layoutItem instanceof StepsLayoutDef) {
+            StepsLayoutDef stepsLayout = (StepsLayoutDef) layoutItem;
+            StepsLayoutItem stepsLayoutItem = new StepsLayoutItem(Strings.unquote(stepsLayout.getName()));
+            if (!stepsLayout.getSteps().isEmpty()) {
+               processStepItems(SHEET_NAME, widgetDefs, stepsLayoutItem, stepsLayout);
             }
             stateItems.add(stepsLayoutItem);
          } else {
@@ -302,14 +302,14 @@ public class ConvertAtsDslToWorkDefinition {
 
    }
 
-   private void processStepItems(String SHEET_NAME, List<IAtsWidgetDefinition> widgetDefs, StepsLayoutItem stepsLayoutItem, StepsDef stepDef) {
-      for (StepPageDef pageDef : stepDef.getStepPageDefs()) {
-         StepPageDefinition pageDefinition = new StepPageDefinition(Strings.unquote(pageDef.getName()));
-         if (Strings.isValid(pageDef.getDescription())) {
-            pageDefinition.setDescription(pageDef.getDescription());
+   private void processStepItems(String SHEET_NAME, List<IAtsWidgetDefinition> widgetDefs, StepsLayoutItem stepsLayoutItem, StepsLayoutDef stepLayout) {
+      for (StepDef stepDef : stepLayout.getSteps()) {
+         StepDefinition stepDefinition = new StepDefinition(Strings.unquote(stepDef.getName()));
+         if (Strings.isValid(stepDef.getDescription())) {
+            stepDefinition.setDescription(stepDef.getDescription());
          }
-         stepsLayoutItem.getStepPageDefinitions().add(pageDefinition);
-         processLayoutItems(SHEET_NAME, widgetDefs, pageDefinition.getLayoutItems(), pageDef.getLayoutItems());
+         stepsLayoutItem.getStepDefinitions().add(stepDefinition);
+         processLayoutItems(SHEET_NAME, widgetDefs, stepDefinition.getLayoutItems(), stepDef.getLayoutItems());
       }
    }
 
@@ -386,6 +386,9 @@ public class ConvertAtsDslToWorkDefinition {
 
    private IAtsWidgetDefinition convertDslWidgetDef(WidgetDef dslWidgetDef, String SHEET_NAME) {
       WidgetDefinition widgetDef = new WidgetDefinition(Strings.unquote(dslWidgetDef.getName()));
+      if (Strings.isValid(dslWidgetDef.getUsename())) {
+         widgetDef.setUsename(dslWidgetDef.getUsename());
+      }
       widgetDef.setAttributeName(dslWidgetDef.getAttributeName());
       try {
          // Set description if model defines it

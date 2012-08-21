@@ -7,8 +7,8 @@ package org.eclipse.osee.ats.impl.internal.model;
 
 import java.util.Arrays;
 import java.util.Collection;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
-import org.eclipse.osee.ats.api.workdef.WidgetOptionHandler;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
+import org.eclipse.osee.framework.core.util.WidgetOptionHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -113,7 +113,7 @@ public class WidgetOptionHandlerTest {
    public void testSetWidgetOptionArray() {
       WidgetOptionHandler handler = new WidgetOptionHandler();
       handler.add(Arrays.asList(WidgetOption.ADD_DEFAULT_VALUE, WidgetOption.FILL_HORIZONTALLY));
-      Assert.assertTrue(handler.getXOptions().contains(WidgetOption.ADD_DEFAULT_VALUE));
+      Assert.assertTrue(handler.getWidgetOptions().contains(WidgetOption.ADD_DEFAULT_VALUE));
    }
 
    @Test

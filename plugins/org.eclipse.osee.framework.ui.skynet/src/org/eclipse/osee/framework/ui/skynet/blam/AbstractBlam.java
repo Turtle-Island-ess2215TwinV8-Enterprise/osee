@@ -37,9 +37,10 @@ import org.eclipse.osee.framework.ui.skynet.XWidgetParser;
 import org.eclipse.osee.framework.ui.skynet.internal.Activator;
 import org.eclipse.osee.framework.ui.skynet.widgets.XModifiedListener;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidget;
+import org.eclipse.osee.framework.ui.skynet.widgets.util.IDynamicWidgetLayoutListener;
+import org.eclipse.osee.framework.ui.skynet.widgets.util.IXWidgetRendererItem;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.SwtXWidgetRenderer;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetRendererItem;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.IDynamicWidgetLayoutListener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.osgi.framework.Bundle;
 import org.xml.sax.SAXException;
@@ -183,7 +184,7 @@ public abstract class AbstractBlam implements IDynamicWidgetLayoutListener {
 
    @SuppressWarnings("unused")
    @Override
-   public void createXWidgetLayoutData(XWidgetRendererItem layoutData, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener modListener, boolean isEditable) throws OseeCoreException {
+   public void createXWidgetLayoutData(IXWidgetRendererItem layoutData, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener modListener, boolean isEditable) throws OseeCoreException {
       // provided for subclass implementation
    }
 

@@ -15,6 +15,6 @@ package org.eclipse.osee.framework.ui.skynet.widgets.util;
  */
 public interface IXWidgetOptionResolver {
 
-   public String[] getWidgetOptions(XWidgetRendererItem xWidgetData);
+   public String[] getWidgetOptions(IXWidgetRendererItem xWidgetData);
 
 }

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.osee.framework.core.data.IAttributeType;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.help.ui.OseeHelpContext;
@@ -31,7 +32,6 @@ import org.eclipse.osee.framework.ui.skynet.internal.Activator;
 import org.eclipse.osee.framework.ui.skynet.internal.ServiceUtil;
 import org.eclipse.osee.framework.ui.skynet.widgets.IArtifactStoredWidget;
 import org.eclipse.osee.framework.ui.skynet.widgets.XModifiedListener;
-import org.eclipse.osee.framework.ui.skynet.widgets.XOption;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidget;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidgetAccessDecorationProvider;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidgetDecorator;
@@ -39,10 +39,10 @@ import org.eclipse.osee.framework.ui.skynet.widgets.XWidgetUtility;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.AttributeXWidgetManager;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.DefaultAttributeXWidgetProvider;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.DefaultXWidgetOptionResolver;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.SwtXWidgetRenderer;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetRendererItem;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.IAttributeXWidgetProvider;
+import org.eclipse.osee.framework.ui.skynet.widgets.util.SwtXWidgetRenderer;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetPage;
+import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetRendererItem;
 import org.eclipse.osee.framework.ui.swt.ALayout;
 import org.eclipse.osee.framework.ui.swt.FontManager;
 import org.eclipse.osee.framework.ui.swt.Widgets;
@@ -199,7 +199,7 @@ public class AttributeFormPart extends AbstractFormPart {
          List<XWidgetRendererItem> concreteWidgets = xWidgetProvider.getDynamicXWidgetLayoutData(attributeType);
          if (isExpandable) {
             for (XWidgetRendererItem data : concreteWidgets) {
-               data.getXOptionHandler().add(XOption.NO_LABEL);
+               data.getWidgetOptionHandler().add(WidgetOption.NO_LABEL);
             }
          }
          XWidgetPage workPage = new XWidgetPage(concreteWidgets, new DefaultXWidgetOptionResolver());

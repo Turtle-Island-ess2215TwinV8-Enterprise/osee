@@ -29,8 +29,8 @@ import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.ui.plugin.util.AWorkbench;
 import org.eclipse.osee.framework.ui.plugin.xnavigate.XNavigateComposite.TableLoadOption;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetRendererItem;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.IDynamicWidgetLayoutListener;
+import org.eclipse.osee.framework.ui.skynet.widgets.util.IXWidgetRendererItem;
 import org.eclipse.osee.framework.ui.swt.CursorManager;
 import org.eclipse.osee.framework.ui.swt.Displays;
 import org.eclipse.osee.framework.ui.swt.Widgets;
@@ -187,7 +187,7 @@ public class WorldEditorParameterSearchItemProvider extends WorldEditorProvider 
    }
 
    @Override
-   public String[] getWidgetOptions(XWidgetRendererItem widgetData) {
+   public String[] getWidgetOptions(IXWidgetRendererItem widgetData) {
       return null;
    }
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.framework.ui.skynet.widgets.util;
+package org.eclipse.osee.ats.workdef;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
@@ -19,12 +19,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * @author Donald G. Dunne
  */
-public interface IDynamicWidgetLayoutListener {
+public interface IAtsWidgetLayoutListener {
 
-   public void widgetCreating(XWidget xWidget, FormToolkit toolkit, Artifact art, SwtXWidgetRenderer dynamicXWidgetLayout, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException;
+   public void widgetCreating(XWidget xWidget, FormToolkit toolkit, Artifact art, StateXWidgetPage stateXWidgetPage, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException;
 
-   public void widgetCreated(XWidget xWidget, FormToolkit toolkit, Artifact art, SwtXWidgetRenderer dynamicXWidgetLayout, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException;
+   public void widgetCreated(XWidget xWidget, FormToolkit toolkit, Artifact art, StateXWidgetPage stateXWidgetPage, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException;
 
-   public void createXWidgetLayoutData(IXWidgetRendererItem layoutData, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException;
+   public void createXWidgetLayoutData(IAtsWidgetDefinitionRender layoutData, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException;
 
 }

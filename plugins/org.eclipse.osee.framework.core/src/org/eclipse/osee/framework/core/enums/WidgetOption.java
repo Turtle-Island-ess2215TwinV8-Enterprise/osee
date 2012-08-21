@@ -8,7 +8,7 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.ats.api.workdef;
+package org.eclipse.osee.framework.core.enums;
 
 /**
  * @author Donald G. Dunne
@@ -51,6 +51,11 @@ public enum WidgetOption {
    BEGIN_COMPOSITE_8,
    BEGIN_COMPOSITE_10,
    END_COMPOSITE,
+
+   BEGIN_GROUP_COMPOSITE_4,
+   BEGIN_GROUP_COMPOSITE_6,
+   BEGIN_GROUP_COMPOSITE_8,
+   BEGIN_GROUP_COMPOSITE_10,
 
    // Fill Options
    FILL_NONE,

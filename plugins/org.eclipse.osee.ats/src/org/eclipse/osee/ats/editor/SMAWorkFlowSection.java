@@ -44,7 +44,6 @@ import org.eclipse.osee.framework.ui.skynet.widgets.XComboViewer;
 import org.eclipse.osee.framework.ui.skynet.widgets.XLabelValue;
 import org.eclipse.osee.framework.ui.skynet.widgets.XModifiedListener;
 import org.eclipse.osee.framework.ui.skynet.widgets.XWidget;
-import org.eclipse.osee.framework.ui.skynet.widgets.util.SwtXWidgetRenderer;
 import org.eclipse.osee.framework.ui.swt.ALayout;
 import org.eclipse.osee.framework.ui.swt.Displays;
 import org.eclipse.osee.framework.ui.swt.FontManager;
@@ -161,7 +160,6 @@ public class SMAWorkFlowSection extends SectionPart {
    }
 
    protected Composite createWorkArea(Composite comp, StateXWidgetPage statePage, XFormToolkit toolkit) throws OseeCoreException {
-      statePage.generateLayoutDatas(sma);
 
       if (statePage.getStateDefinition().getDescription() != null) {
          Composite labelComp = toolkit.createContainer(comp, 1);
@@ -205,9 +203,8 @@ public class SMAWorkFlowSection extends SectionPart {
       }
 
       // Create dynamic XWidgets
-      SwtXWidgetRenderer dynamicXWidgetLayout =
-         statePage.createBody(getManagedForm(), workComp, sma, xModListener, isEditable || isGlobalEditable);
-      for (XWidget xWidget : dynamicXWidgetLayout.getXWidgets()) {
+      statePage.createBody(getManagedForm(), workComp, sma, xModListener, isEditable || isGlobalEditable);
+      for (XWidget xWidget : statePage.getXWidgets()) {
          allXWidgets.add(xWidget);
          allXWidgets.addAll(xWidget.getChildrenXWidgets());
       }
@@ -229,6 +226,10 @@ public class SMAWorkFlowSection extends SectionPart {
          if (xWidget.getLabelWidget() != null) {
             SMAEditor.setLabelFonts(xWidget.getLabelWidget(), FontManager.getDefaultLabelFont());
          }
+      }
+      // Set extra labels outside of XWidgets to bold font
+      for (Label label : statePage.getLabels()) {
+         SMAEditor.setLabelFonts(label, FontManager.getDefaultLabelFont());
       }
 
       return workComp;

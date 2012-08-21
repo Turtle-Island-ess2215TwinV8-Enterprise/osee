@@ -88,7 +88,7 @@ public class XWidgetPage implements IDynamicWidgetLayoutListener {
 
    @SuppressWarnings("unused")
    @Override
-   public void createXWidgetLayoutData(XWidgetRendererItem workAttr, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
+   public void createXWidgetLayoutData(IXWidgetRendererItem workAttr, XWidget xWidget, FormToolkit toolkit, Artifact art, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
       // provided for subclass implementation
    }
 

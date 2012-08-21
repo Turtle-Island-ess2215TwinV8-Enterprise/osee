@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getUsename <em>Usename</em>}</li>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getAttributeName <em>Attribute Name</em>}</li>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getDescription <em>Description</em>}</li>
  *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getXWidgetName <em>XWidget Name</em>}</li>
@@ -61,6 +62,32 @@ public interface WidgetDef extends EObject
    * @generated
    */
   void setName(String value);
+
+  /**
+   * Returns the value of the '<em><b>Usename</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Usename</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Usename</em>' attribute.
+   * @see #setUsename(String)
+   * @see org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage#getWidgetDef_Usename()
+   * @model
+   * @generated
+   */
+  String getUsename();
+
+  /**
+   * Sets the value of the '{@link org.eclipse.osee.ats.dsl.atsDsl.WidgetDef#getUsename <em>Usename</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Usename</em>' attribute.
+   * @see #getUsename()
+   * @generated
+   */
+  void setUsename(String value);
 
   /**
    * Returns the value of the '<em><b>Attribute Name</b></em>' attribute.

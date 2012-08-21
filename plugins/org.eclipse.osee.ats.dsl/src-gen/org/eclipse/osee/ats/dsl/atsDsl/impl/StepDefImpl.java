@@ -17,30 +17,31 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.osee.ats.dsl.atsDsl.AtsDslPackage;
-import org.eclipse.osee.ats.dsl.atsDsl.StepPageDef;
-import org.eclipse.osee.ats.dsl.atsDsl.StepsDef;
+import org.eclipse.osee.ats.dsl.atsDsl.LayoutItem;
+import org.eclipse.osee.ats.dsl.atsDsl.StepDef;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Steps Def</b></em>'.
+ * An implementation of the model object '<em><b>Step Def</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepsDefImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepsDefImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepsDefImpl#getStepPageDefs <em>Step Page Defs</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepDefImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepDefImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.eclipse.osee.ats.dsl.atsDsl.impl.StepDefImpl#getLayoutItems <em>Layout Items</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class StepsDefImpl extends LayoutItemImpl implements StepsDef
+public class StepDefImpl extends MinimalEObjectImpl.Container implements StepDef
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -83,21 +84,21 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
   protected String description = DESCRIPTION_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getStepPageDefs() <em>Step Page Defs</em>}' containment reference list.
+   * The cached value of the '{@link #getLayoutItems() <em>Layout Items</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getStepPageDefs()
+   * @see #getLayoutItems()
    * @generated
    * @ordered
    */
-  protected EList<StepPageDef> stepPageDefs;
+  protected EList<LayoutItem> layoutItems;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected StepsDefImpl()
+  protected StepDefImpl()
   {
     super();
   }
@@ -110,7 +111,7 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
   @Override
   protected EClass eStaticClass()
   {
-    return AtsDslPackage.Literals.STEPS_DEF;
+    return AtsDslPackage.Literals.STEP_DEF;
   }
 
   /**
@@ -133,7 +134,7 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
     String oldName = name;
     name = newName;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AtsDslPackage.STEPS_DEF__NAME, oldName, name));
+      eNotify(new ENotificationImpl(this, Notification.SET, AtsDslPackage.STEP_DEF__NAME, oldName, name));
   }
 
   /**
@@ -156,7 +157,7 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
     String oldDescription = description;
     description = newDescription;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AtsDslPackage.STEPS_DEF__DESCRIPTION, oldDescription, description));
+      eNotify(new ENotificationImpl(this, Notification.SET, AtsDslPackage.STEP_DEF__DESCRIPTION, oldDescription, description));
   }
 
   /**
@@ -164,13 +165,13 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<StepPageDef> getStepPageDefs()
+  public EList<LayoutItem> getLayoutItems()
   {
-    if (stepPageDefs == null)
+    if (layoutItems == null)
     {
-      stepPageDefs = new EObjectContainmentEList<StepPageDef>(StepPageDef.class, this, AtsDslPackage.STEPS_DEF__STEP_PAGE_DEFS);
+      layoutItems = new EObjectContainmentEList<LayoutItem>(LayoutItem.class, this, AtsDslPackage.STEP_DEF__LAYOUT_ITEMS);
     }
-    return stepPageDefs;
+    return layoutItems;
   }
 
   /**
@@ -183,8 +184,8 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
   {
     switch (featureID)
     {
-      case AtsDslPackage.STEPS_DEF__STEP_PAGE_DEFS:
-        return ((InternalEList<?>)getStepPageDefs()).basicRemove(otherEnd, msgs);
+      case AtsDslPackage.STEP_DEF__LAYOUT_ITEMS:
+        return ((InternalEList<?>)getLayoutItems()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -199,12 +200,12 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
   {
     switch (featureID)
     {
-      case AtsDslPackage.STEPS_DEF__NAME:
+      case AtsDslPackage.STEP_DEF__NAME:
         return getName();
-      case AtsDslPackage.STEPS_DEF__DESCRIPTION:
+      case AtsDslPackage.STEP_DEF__DESCRIPTION:
         return getDescription();
-      case AtsDslPackage.STEPS_DEF__STEP_PAGE_DEFS:
-        return getStepPageDefs();
+      case AtsDslPackage.STEP_DEF__LAYOUT_ITEMS:
+        return getLayoutItems();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -220,15 +221,15 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
   {
     switch (featureID)
     {
-      case AtsDslPackage.STEPS_DEF__NAME:
+      case AtsDslPackage.STEP_DEF__NAME:
         setName((String)newValue);
         return;
-      case AtsDslPackage.STEPS_DEF__DESCRIPTION:
+      case AtsDslPackage.STEP_DEF__DESCRIPTION:
         setDescription((String)newValue);
         return;
-      case AtsDslPackage.STEPS_DEF__STEP_PAGE_DEFS:
-        getStepPageDefs().clear();
-        getStepPageDefs().addAll((Collection<? extends StepPageDef>)newValue);
+      case AtsDslPackage.STEP_DEF__LAYOUT_ITEMS:
+        getLayoutItems().clear();
+        getLayoutItems().addAll((Collection<? extends LayoutItem>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -244,14 +245,14 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
   {
     switch (featureID)
     {
-      case AtsDslPackage.STEPS_DEF__NAME:
+      case AtsDslPackage.STEP_DEF__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case AtsDslPackage.STEPS_DEF__DESCRIPTION:
+      case AtsDslPackage.STEP_DEF__DESCRIPTION:
         setDescription(DESCRIPTION_EDEFAULT);
         return;
-      case AtsDslPackage.STEPS_DEF__STEP_PAGE_DEFS:
-        getStepPageDefs().clear();
+      case AtsDslPackage.STEP_DEF__LAYOUT_ITEMS:
+        getLayoutItems().clear();
         return;
     }
     super.eUnset(featureID);
@@ -267,12 +268,12 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
   {
     switch (featureID)
     {
-      case AtsDslPackage.STEPS_DEF__NAME:
+      case AtsDslPackage.STEP_DEF__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case AtsDslPackage.STEPS_DEF__DESCRIPTION:
+      case AtsDslPackage.STEP_DEF__DESCRIPTION:
         return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-      case AtsDslPackage.STEPS_DEF__STEP_PAGE_DEFS:
-        return stepPageDefs != null && !stepPageDefs.isEmpty();
+      case AtsDslPackage.STEP_DEF__LAYOUT_ITEMS:
+        return layoutItems != null && !layoutItems.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -296,4 +297,4 @@ public class StepsDefImpl extends LayoutItemImpl implements StepsDef
     return result.toString();
   }
 
-} //StepsDefImpl
+} //StepDefImpl

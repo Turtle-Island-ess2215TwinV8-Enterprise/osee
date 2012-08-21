@@ -14,17 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.osee.ats.api.workdef.IAtsLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
-import org.eclipse.osee.ats.api.workdef.IAtsStepPageDefinition;
+import org.eclipse.osee.ats.api.workdef.IAtsStepDefinition;
 
 /**
  * @author Donald G. Dunne
  */
-public class StepPageDefinition extends AbstractWorkDefItem implements IAtsStepPageDefinition {
+public class StepDefinition extends AbstractWorkDefItem implements IAtsStepDefinition {
 
    private final List<IAtsLayoutItem> layoutItems = new ArrayList<IAtsLayoutItem>(5);
    private String description = null;
 
-   public StepPageDefinition(String name) {
+   public StepDefinition(String name) {
       super(name);
    }
 
@@ -38,20 +38,11 @@ public class StepPageDefinition extends AbstractWorkDefItem implements IAtsStepP
       return String.format("[%s]", getName());
    }
 
-   /**
-    * Returns fully qualified name of <work definition name>.<this state name
-    */
-
-   @Override
-   public String getFullName() {
-      return getName();
-   }
-
    @Override
    public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + ((getFullName() == null) ? 0 : getFullName().hashCode());
+      result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
       return result;
    }
 
@@ -67,13 +58,13 @@ public class StepPageDefinition extends AbstractWorkDefItem implements IAtsStepP
          return false;
       }
       IAtsStateDefinition other = (IAtsStateDefinition) obj;
-      if (getFullName() == null) {
+      if (getName() == null) {
          if (other.getFullName() != null) {
             return false;
          } else {
             return false;
          }
-      } else if (!getFullName().equals(other.getFullName())) {
+      } else if (!getName().equals(other.getFullName())) {
          return false;
       }
       return true;

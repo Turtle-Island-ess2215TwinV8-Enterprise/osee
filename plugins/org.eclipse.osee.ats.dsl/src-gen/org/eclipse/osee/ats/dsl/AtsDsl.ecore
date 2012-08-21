@@ -104,6 +104,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WidgetDef">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="usename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="attributeName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="xWidgetName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -145,14 +146,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="layout" eType="ecore:EClass platform:/resource/org.eclipse.osee.ats.dsl/src-gen/org/eclipse/osee/ats/dsl/AtsDsl.ecore#//LayoutType"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StepsDef" eSuperTypes="platform:/resource/org.eclipse.osee.ats.dsl/src-gen/org/eclipse/osee/ats/dsl/AtsDsl.ecore#//LayoutItem">
+  <eClassifiers xsi:type="ecore:EClass" name="StepsLayoutDef" eSuperTypes="platform:/resource/org.eclipse.osee.ats.dsl/src-gen/org/eclipse/osee/ats/dsl/AtsDsl.ecore#//LayoutItem">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stepPageDefs" upperBound="-1"
-        eType="ecore:EClass platform:/resource/org.eclipse.osee.ats.dsl/src-gen/org/eclipse/osee/ats/dsl/AtsDsl.ecore#//StepPageDef"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
+        eType="ecore:EClass platform:/resource/org.eclipse.osee.ats.dsl/src-gen/org/eclipse/osee/ats/dsl/AtsDsl.ecore#//StepDef"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StepPageDef">
+  <eClassifiers xsi:type="ecore:EClass" name="StepDef">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="layoutItems" upperBound="-1"

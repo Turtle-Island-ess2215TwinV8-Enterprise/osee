@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.framework.skynet.core.attribute.ArtifactReferenceAttribute;
@@ -22,7 +23,6 @@ import org.eclipse.osee.framework.skynet.core.attribute.AttributeTypeManager;
 import org.eclipse.osee.framework.skynet.core.attribute.BranchReferenceAttribute;
 import org.eclipse.osee.framework.skynet.core.attribute.WordAttribute;
 import org.eclipse.osee.framework.skynet.core.utility.AttributeTypeToXWidgetName;
-import org.eclipse.osee.framework.ui.skynet.widgets.XOption;
 
 /**
  * @author Donald G. Dunne
@@ -35,9 +35,9 @@ public class DefaultAttributeXWidgetProvider implements IAttributeXWidgetProvide
       defaultData.setStoreName(attributeType.getName());
       defaultData.setToolTip(attributeType.getDescription());
       if (minOccurrence > 0) {
-         defaultData.getXOptionHandler().add(XOption.REQUIRED);
+         defaultData.getXOptionHandler().add(WidgetOption.REQUIRED_FOR_COMPLETION);
       }
-      defaultData.getXOptionHandler().add(XOption.HORIZONTAL_LABEL);
+      defaultData.getXOptionHandler().add(WidgetOption.HORIZONTAL_LABEL);
       return defaultData;
    }
 
@@ -58,7 +58,7 @@ public class DefaultAttributeXWidgetProvider implements IAttributeXWidgetProvide
          xWidgetName = AttributeTypeToXWidgetName.getXWidgetName(attributeType);
          if (useMultiLineWidget(attributeType)) {
             xWidgetName = "XStackedDam";
-            defaultData.getXOptionHandler().add(XOption.NOT_EDITABLE);
+            defaultData.getXOptionHandler().add(WidgetOption.NOT_EDITABLE);
          } else if (AttributeTypeManager.isBaseTypeCompatible(BranchReferenceAttribute.class, attributeType)) {
             xWidgetName = "XBranchSelectWidgetWithSave";
          } else if (AttributeTypeManager.isBaseTypeCompatible(ArtifactReferenceAttribute.class, attributeType)) {
@@ -74,8 +74,8 @@ public class DefaultAttributeXWidgetProvider implements IAttributeXWidgetProvide
       }
 
       defaultData.setXWidgetName(xWidgetName);
-      defaultData.getXOptionHandler().add(XOption.FILL_HORIZONTALLY);
-      defaultData.getXOptionHandler().add(XOption.NO_DEFAULT_VALUE);
+      defaultData.getXOptionHandler().add(WidgetOption.FILL_HORIZONTALLY);
+      defaultData.getXOptionHandler().add(WidgetOption.NO_DEFAULT_VALUE);
 
       return xWidgetLayoutData;
    }

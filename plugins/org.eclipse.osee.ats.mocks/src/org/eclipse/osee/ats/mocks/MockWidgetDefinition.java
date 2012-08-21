@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetConstraint;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
-import org.eclipse.osee.ats.api.workdef.IAtsWidgetOptionHandler;
-import org.eclipse.osee.ats.api.workdef.WidgetOption;
-import org.eclipse.osee.ats.api.workdef.WidgetOptionHandler;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
+import org.eclipse.osee.framework.core.util.WidgetOptionHandler;
 
 /**
  * @author Donald G. Dunne
@@ -108,13 +107,18 @@ public class MockWidgetDefinition implements IAtsWidgetDefinition {
    }
 
    @Override
-   public IAtsWidgetOptionHandler getOptions() {
-      return options;
+   public List<IAtsWidgetConstraint> getConstraints() {
+      return constraints;
    }
 
    @Override
-   public List<IAtsWidgetConstraint> getConstraints() {
-      return constraints;
+   public String getUsename() {
+      return name;
+   }
+
+   @Override
+   public WidgetOptionHandler getOptions() {
+      return options;
    }
 
 }

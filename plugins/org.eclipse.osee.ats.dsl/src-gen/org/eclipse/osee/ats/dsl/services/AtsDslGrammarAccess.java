@@ -913,48 +913,54 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameWIDGET_NAME_REFERENCEParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Keyword cAttributeNameKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
-		private final Assignment cAttributeNameAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
-		private final RuleCall cAttributeNameSTRINGTerminalRuleCall_3_1_0 = (RuleCall)cAttributeNameAssignment_3_1.eContents().get(0);
+		private final Keyword cUsenameKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cUsenameAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cUsenameSTRINGTerminalRuleCall_3_1_0 = (RuleCall)cUsenameAssignment_3_1.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Keyword cDescriptionKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Assignment cDescriptionAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cDescriptionSTRINGTerminalRuleCall_4_1_0 = (RuleCall)cDescriptionAssignment_4_1.eContents().get(0);
+		private final Keyword cAttributeNameKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final Assignment cAttributeNameAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
+		private final RuleCall cAttributeNameSTRINGTerminalRuleCall_4_1_0 = (RuleCall)cAttributeNameAssignment_4_1.eContents().get(0);
 		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
-		private final Keyword cXWidgetNameKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
-		private final Assignment cXWidgetNameAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
-		private final RuleCall cXWidgetNameSTRINGTerminalRuleCall_5_1_0 = (RuleCall)cXWidgetNameAssignment_5_1.eContents().get(0);
+		private final Keyword cDescriptionKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Assignment cDescriptionAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
+		private final RuleCall cDescriptionSTRINGTerminalRuleCall_5_1_0 = (RuleCall)cDescriptionAssignment_5_1.eContents().get(0);
 		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
-		private final Keyword cDefaultValueKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
-		private final Assignment cDefaultValueAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
-		private final RuleCall cDefaultValueSTRINGTerminalRuleCall_6_1_0 = (RuleCall)cDefaultValueAssignment_6_1.eContents().get(0);
+		private final Keyword cXWidgetNameKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Assignment cXWidgetNameAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
+		private final RuleCall cXWidgetNameSTRINGTerminalRuleCall_6_1_0 = (RuleCall)cXWidgetNameAssignment_6_1.eContents().get(0);
 		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
-		private final Keyword cHeightKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
-		private final Assignment cHeightAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final RuleCall cHeightINTTerminalRuleCall_7_1_0 = (RuleCall)cHeightAssignment_7_1.eContents().get(0);
+		private final Keyword cDefaultValueKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
+		private final Assignment cDefaultValueAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
+		private final RuleCall cDefaultValueSTRINGTerminalRuleCall_7_1_0 = (RuleCall)cDefaultValueAssignment_7_1.eContents().get(0);
 		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
-		private final Keyword cOptionKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
-		private final Assignment cOptionAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
-		private final RuleCall cOptionWidgetOptionParserRuleCall_8_1_0 = (RuleCall)cOptionAssignment_8_1.eContents().get(0);
+		private final Keyword cHeightKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
+		private final Assignment cHeightAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
+		private final RuleCall cHeightINTTerminalRuleCall_8_1_0 = (RuleCall)cHeightAssignment_8_1.eContents().get(0);
 		private final Group cGroup_9 = (Group)cGroup.eContents().get(9);
-		private final Keyword cMinConstraintKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
-		private final Assignment cMinConstraintAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
-		private final RuleCall cMinConstraintSTRINGTerminalRuleCall_9_1_0 = (RuleCall)cMinConstraintAssignment_9_1.eContents().get(0);
+		private final Keyword cOptionKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
+		private final Assignment cOptionAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
+		private final RuleCall cOptionWidgetOptionParserRuleCall_9_1_0 = (RuleCall)cOptionAssignment_9_1.eContents().get(0);
 		private final Group cGroup_10 = (Group)cGroup.eContents().get(10);
-		private final Keyword cMaxConstraintKeyword_10_0 = (Keyword)cGroup_10.eContents().get(0);
-		private final Assignment cMaxConstraintAssignment_10_1 = (Assignment)cGroup_10.eContents().get(1);
-		private final RuleCall cMaxConstraintSTRINGTerminalRuleCall_10_1_0 = (RuleCall)cMaxConstraintAssignment_10_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_11 = (Keyword)cGroup.eContents().get(11);
+		private final Keyword cMinConstraintKeyword_10_0 = (Keyword)cGroup_10.eContents().get(0);
+		private final Assignment cMinConstraintAssignment_10_1 = (Assignment)cGroup_10.eContents().get(1);
+		private final RuleCall cMinConstraintSTRINGTerminalRuleCall_10_1_0 = (RuleCall)cMinConstraintAssignment_10_1.eContents().get(0);
+		private final Group cGroup_11 = (Group)cGroup.eContents().get(11);
+		private final Keyword cMaxConstraintKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
+		private final Assignment cMaxConstraintAssignment_11_1 = (Assignment)cGroup_11.eContents().get(1);
+		private final RuleCall cMaxConstraintSTRINGTerminalRuleCall_11_1_0 = (RuleCall)cMaxConstraintAssignment_11_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
 		
 		//WidgetDef:
-		//	"widgetDefinition" name=WIDGET_NAME_REFERENCE "{" ("attributeName" attributeName=STRING)? ("description"
-		//	description=STRING)? ("xWidgetName" xWidgetName=STRING)? ("defaultValue" defaultValue=STRING)? ("height" height=INT)?
-		//	("option" option+=WidgetOption)* ("minConstraint" minConstraint=STRING)? ("maxConstraint" maxConstraint=STRING)? "}";
+		//	"widgetDefinition" name=WIDGET_NAME_REFERENCE "{" ("usename" usename=STRING)? ("attributeName" attributeName=STRING)?
+		//	("description" description=STRING)? ("xWidgetName" xWidgetName=STRING)? ("defaultValue" defaultValue=STRING)?
+		//	("height" height=INT)? ("option" option+=WidgetOption)* ("minConstraint" minConstraint=STRING)? ("maxConstraint"
+		//	maxConstraint=STRING)? "}";
 		public ParserRule getRule() { return rule; }
 
-		//"widgetDefinition" name=WIDGET_NAME_REFERENCE "{" ("attributeName" attributeName=STRING)? ("description"
-		//description=STRING)? ("xWidgetName" xWidgetName=STRING)? ("defaultValue" defaultValue=STRING)? ("height" height=INT)?
-		//("option" option+=WidgetOption)* ("minConstraint" minConstraint=STRING)? ("maxConstraint" maxConstraint=STRING)? "}"
+		//"widgetDefinition" name=WIDGET_NAME_REFERENCE "{" ("usename" usename=STRING)? ("attributeName" attributeName=STRING)?
+		//("description" description=STRING)? ("xWidgetName" xWidgetName=STRING)? ("defaultValue" defaultValue=STRING)? ("height"
+		//height=INT)? ("option" option+=WidgetOption)* ("minConstraint" minConstraint=STRING)? ("maxConstraint"
+		//maxConstraint=STRING)? "}"
 		public Group getGroup() { return cGroup; }
 
 		//"widgetDefinition"
@@ -969,104 +975,116 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		//"{"
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
 
-		//("attributeName" attributeName=STRING)?
+		//("usename" usename=STRING)?
 		public Group getGroup_3() { return cGroup_3; }
 
-		//"attributeName"
-		public Keyword getAttributeNameKeyword_3_0() { return cAttributeNameKeyword_3_0; }
+		//"usename"
+		public Keyword getUsenameKeyword_3_0() { return cUsenameKeyword_3_0; }
 
-		//attributeName=STRING
-		public Assignment getAttributeNameAssignment_3_1() { return cAttributeNameAssignment_3_1; }
+		//usename=STRING
+		public Assignment getUsenameAssignment_3_1() { return cUsenameAssignment_3_1; }
 
 		//STRING
-		public RuleCall getAttributeNameSTRINGTerminalRuleCall_3_1_0() { return cAttributeNameSTRINGTerminalRuleCall_3_1_0; }
+		public RuleCall getUsenameSTRINGTerminalRuleCall_3_1_0() { return cUsenameSTRINGTerminalRuleCall_3_1_0; }
 
-		//("description" description=STRING)?
+		//("attributeName" attributeName=STRING)?
 		public Group getGroup_4() { return cGroup_4; }
 
-		//"description"
-		public Keyword getDescriptionKeyword_4_0() { return cDescriptionKeyword_4_0; }
+		//"attributeName"
+		public Keyword getAttributeNameKeyword_4_0() { return cAttributeNameKeyword_4_0; }
 
-		//description=STRING
-		public Assignment getDescriptionAssignment_4_1() { return cDescriptionAssignment_4_1; }
+		//attributeName=STRING
+		public Assignment getAttributeNameAssignment_4_1() { return cAttributeNameAssignment_4_1; }
 
 		//STRING
-		public RuleCall getDescriptionSTRINGTerminalRuleCall_4_1_0() { return cDescriptionSTRINGTerminalRuleCall_4_1_0; }
+		public RuleCall getAttributeNameSTRINGTerminalRuleCall_4_1_0() { return cAttributeNameSTRINGTerminalRuleCall_4_1_0; }
 
-		//("xWidgetName" xWidgetName=STRING)?
+		//("description" description=STRING)?
 		public Group getGroup_5() { return cGroup_5; }
 
-		//"xWidgetName"
-		public Keyword getXWidgetNameKeyword_5_0() { return cXWidgetNameKeyword_5_0; }
+		//"description"
+		public Keyword getDescriptionKeyword_5_0() { return cDescriptionKeyword_5_0; }
 
-		//xWidgetName=STRING
-		public Assignment getXWidgetNameAssignment_5_1() { return cXWidgetNameAssignment_5_1; }
+		//description=STRING
+		public Assignment getDescriptionAssignment_5_1() { return cDescriptionAssignment_5_1; }
 
 		//STRING
-		public RuleCall getXWidgetNameSTRINGTerminalRuleCall_5_1_0() { return cXWidgetNameSTRINGTerminalRuleCall_5_1_0; }
+		public RuleCall getDescriptionSTRINGTerminalRuleCall_5_1_0() { return cDescriptionSTRINGTerminalRuleCall_5_1_0; }
 
-		//("defaultValue" defaultValue=STRING)?
+		//("xWidgetName" xWidgetName=STRING)?
 		public Group getGroup_6() { return cGroup_6; }
 
-		//"defaultValue"
-		public Keyword getDefaultValueKeyword_6_0() { return cDefaultValueKeyword_6_0; }
+		//"xWidgetName"
+		public Keyword getXWidgetNameKeyword_6_0() { return cXWidgetNameKeyword_6_0; }
 
-		//defaultValue=STRING
-		public Assignment getDefaultValueAssignment_6_1() { return cDefaultValueAssignment_6_1; }
+		//xWidgetName=STRING
+		public Assignment getXWidgetNameAssignment_6_1() { return cXWidgetNameAssignment_6_1; }
 
 		//STRING
-		public RuleCall getDefaultValueSTRINGTerminalRuleCall_6_1_0() { return cDefaultValueSTRINGTerminalRuleCall_6_1_0; }
+		public RuleCall getXWidgetNameSTRINGTerminalRuleCall_6_1_0() { return cXWidgetNameSTRINGTerminalRuleCall_6_1_0; }
 
-		//("height" height=INT)?
+		//("defaultValue" defaultValue=STRING)?
 		public Group getGroup_7() { return cGroup_7; }
 
-		//"height"
-		public Keyword getHeightKeyword_7_0() { return cHeightKeyword_7_0; }
+		//"defaultValue"
+		public Keyword getDefaultValueKeyword_7_0() { return cDefaultValueKeyword_7_0; }
 
-		//height=INT
-		public Assignment getHeightAssignment_7_1() { return cHeightAssignment_7_1; }
+		//defaultValue=STRING
+		public Assignment getDefaultValueAssignment_7_1() { return cDefaultValueAssignment_7_1; }
 
-		//INT
-		public RuleCall getHeightINTTerminalRuleCall_7_1_0() { return cHeightINTTerminalRuleCall_7_1_0; }
+		//STRING
+		public RuleCall getDefaultValueSTRINGTerminalRuleCall_7_1_0() { return cDefaultValueSTRINGTerminalRuleCall_7_1_0; }
 
-		//("option" option+=WidgetOption)*
+		//("height" height=INT)?
 		public Group getGroup_8() { return cGroup_8; }
 
-		//"option"
-		public Keyword getOptionKeyword_8_0() { return cOptionKeyword_8_0; }
+		//"height"
+		public Keyword getHeightKeyword_8_0() { return cHeightKeyword_8_0; }
 
-		//option+=WidgetOption
-		public Assignment getOptionAssignment_8_1() { return cOptionAssignment_8_1; }
+		//height=INT
+		public Assignment getHeightAssignment_8_1() { return cHeightAssignment_8_1; }
 
-		//WidgetOption
-		public RuleCall getOptionWidgetOptionParserRuleCall_8_1_0() { return cOptionWidgetOptionParserRuleCall_8_1_0; }
+		//INT
+		public RuleCall getHeightINTTerminalRuleCall_8_1_0() { return cHeightINTTerminalRuleCall_8_1_0; }
 
-		//("minConstraint" minConstraint=STRING)?
+		//("option" option+=WidgetOption)*
 		public Group getGroup_9() { return cGroup_9; }
 
-		//"minConstraint"
-		public Keyword getMinConstraintKeyword_9_0() { return cMinConstraintKeyword_9_0; }
+		//"option"
+		public Keyword getOptionKeyword_9_0() { return cOptionKeyword_9_0; }
 
-		//minConstraint=STRING
-		public Assignment getMinConstraintAssignment_9_1() { return cMinConstraintAssignment_9_1; }
+		//option+=WidgetOption
+		public Assignment getOptionAssignment_9_1() { return cOptionAssignment_9_1; }
 
-		//STRING
-		public RuleCall getMinConstraintSTRINGTerminalRuleCall_9_1_0() { return cMinConstraintSTRINGTerminalRuleCall_9_1_0; }
+		//WidgetOption
+		public RuleCall getOptionWidgetOptionParserRuleCall_9_1_0() { return cOptionWidgetOptionParserRuleCall_9_1_0; }
 
-		//("maxConstraint" maxConstraint=STRING)?
+		//("minConstraint" minConstraint=STRING)?
 		public Group getGroup_10() { return cGroup_10; }
 
-		//"maxConstraint"
-		public Keyword getMaxConstraintKeyword_10_0() { return cMaxConstraintKeyword_10_0; }
+		//"minConstraint"
+		public Keyword getMinConstraintKeyword_10_0() { return cMinConstraintKeyword_10_0; }
 
-		//maxConstraint=STRING
-		public Assignment getMaxConstraintAssignment_10_1() { return cMaxConstraintAssignment_10_1; }
+		//minConstraint=STRING
+		public Assignment getMinConstraintAssignment_10_1() { return cMinConstraintAssignment_10_1; }
 
 		//STRING
-		public RuleCall getMaxConstraintSTRINGTerminalRuleCall_10_1_0() { return cMaxConstraintSTRINGTerminalRuleCall_10_1_0; }
+		public RuleCall getMinConstraintSTRINGTerminalRuleCall_10_1_0() { return cMinConstraintSTRINGTerminalRuleCall_10_1_0; }
+
+		//("maxConstraint" maxConstraint=STRING)?
+		public Group getGroup_11() { return cGroup_11; }
+
+		//"maxConstraint"
+		public Keyword getMaxConstraintKeyword_11_0() { return cMaxConstraintKeyword_11_0; }
+
+		//maxConstraint=STRING
+		public Assignment getMaxConstraintAssignment_11_1() { return cMaxConstraintAssignment_11_1; }
+
+		//STRING
+		public RuleCall getMaxConstraintSTRINGTerminalRuleCall_11_1_0() { return cMaxConstraintSTRINGTerminalRuleCall_11_1_0; }
 
 		//"}"
-		public Keyword getRightCurlyBracketKeyword_11() { return cRightCurlyBracketKeyword_11; }
+		public Keyword getRightCurlyBracketKeyword_12() { return cRightCurlyBracketKeyword_12; }
 	}
 
 	public class WidgetRefElements extends AbstractParserRuleElementFinder {
@@ -1311,36 +1329,36 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getRightCurlyBracketKeyword_16() { return cRightCurlyBracketKeyword_16; }
 	}
 
-	public class StepsDefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "StepsDef");
+	public class StepsLayoutDefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "StepsLayoutDef");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cStepKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cStepLayoutKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameSTEPS_NAME_REFERENCEParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final RuleCall cNameSTEP_LAYOUT_NAME_REFERENCEParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
 		private final Keyword cDescriptionKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
 		private final Assignment cDescriptionAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
 		private final RuleCall cDescriptionSTRINGTerminalRuleCall_3_1_0 = (RuleCall)cDescriptionAssignment_3_1.eContents().get(0);
-		private final Assignment cStepPageDefsAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cStepPageDefsStepPageDefParserRuleCall_4_0 = (RuleCall)cStepPageDefsAssignment_4.eContents().get(0);
+		private final Assignment cStepsAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cStepsStepDefParserRuleCall_4_0 = (RuleCall)cStepsAssignment_4.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
-		//StepsDef:
-		//	"step" name=STEPS_NAME_REFERENCE "{" ("description" description=STRING)? stepPageDefs+=StepPageDef+ "}";
+		//StepsLayoutDef:
+		//	"step layout" name=STEP_LAYOUT_NAME_REFERENCE "{" ("description" description=STRING)? steps+=StepDef+ "}";
 		public ParserRule getRule() { return rule; }
 
-		//"step" name=STEPS_NAME_REFERENCE "{" ("description" description=STRING)? stepPageDefs+=StepPageDef+ "}"
+		//"step layout" name=STEP_LAYOUT_NAME_REFERENCE "{" ("description" description=STRING)? steps+=StepDef+ "}"
 		public Group getGroup() { return cGroup; }
 
-		//"step"
-		public Keyword getStepKeyword_0() { return cStepKeyword_0; }
+		//"step layout"
+		public Keyword getStepLayoutKeyword_0() { return cStepLayoutKeyword_0; }
 
-		//name=STEPS_NAME_REFERENCE
+		//name=STEP_LAYOUT_NAME_REFERENCE
 		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
 
-		//STEPS_NAME_REFERENCE
-		public RuleCall getNameSTEPS_NAME_REFERENCEParserRuleCall_1_0() { return cNameSTEPS_NAME_REFERENCEParserRuleCall_1_0; }
+		//STEP_LAYOUT_NAME_REFERENCE
+		public RuleCall getNameSTEP_LAYOUT_NAME_REFERENCEParserRuleCall_1_0() { return cNameSTEP_LAYOUT_NAME_REFERENCEParserRuleCall_1_0; }
 
 		//"{"
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
@@ -1357,22 +1375,22 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		//STRING
 		public RuleCall getDescriptionSTRINGTerminalRuleCall_3_1_0() { return cDescriptionSTRINGTerminalRuleCall_3_1_0; }
 
-		//stepPageDefs+=StepPageDef+
-		public Assignment getStepPageDefsAssignment_4() { return cStepPageDefsAssignment_4; }
+		//steps+=StepDef+
+		public Assignment getStepsAssignment_4() { return cStepsAssignment_4; }
 
-		//StepPageDef
-		public RuleCall getStepPageDefsStepPageDefParserRuleCall_4_0() { return cStepPageDefsStepPageDefParserRuleCall_4_0; }
+		//StepDef
+		public RuleCall getStepsStepDefParserRuleCall_4_0() { return cStepsStepDefParserRuleCall_4_0; }
 
 		//"}"
 		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
 	}
 
-	public class StepPageDefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "StepPageDef");
+	public class StepDefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "StepDef");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cPageKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cHasStepKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameSTEP_PAGE_NAME_REFERENCEParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final RuleCall cNameSTEP_NAME_REFERENCEParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
 		private final Keyword cDescriptionKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
@@ -1382,21 +1400,21 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cLayoutItemsLayoutItemParserRuleCall_4_0 = (RuleCall)cLayoutItemsAssignment_4.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
-		//StepPageDef:
-		//	"page" name=STEP_PAGE_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}";
+		//StepDef:
+		//	"has step" name=STEP_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}";
 		public ParserRule getRule() { return rule; }
 
-		//"page" name=STEP_PAGE_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}"
+		//"has step" name=STEP_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}"
 		public Group getGroup() { return cGroup; }
 
-		//"page"
-		public Keyword getPageKeyword_0() { return cPageKeyword_0; }
+		//"has step"
+		public Keyword getHasStepKeyword_0() { return cHasStepKeyword_0; }
 
-		//name=STEP_PAGE_NAME_REFERENCE
+		//name=STEP_NAME_REFERENCE
 		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
 
-		//STEP_PAGE_NAME_REFERENCE
-		public RuleCall getNameSTEP_PAGE_NAME_REFERENCEParserRuleCall_1_0() { return cNameSTEP_PAGE_NAME_REFERENCEParserRuleCall_1_0; }
+		//STEP_NAME_REFERENCE
+		public RuleCall getNameSTEP_NAME_REFERENCEParserRuleCall_1_0() { return cNameSTEP_NAME_REFERENCEParserRuleCall_1_0; }
 
 		//"{"
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
@@ -1945,11 +1963,11 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getSTRINGTerminalRuleCall() { return cSTRINGTerminalRuleCall; }
 	}
 
-	public class STEPS_NAME_REFERENCEElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "STEPS_NAME_REFERENCE");
+	public class STEP_LAYOUT_NAME_REFERENCEElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "STEP_LAYOUT_NAME_REFERENCE");
 		private final RuleCall cSTRINGTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
-		//STEPS_NAME_REFERENCE:
+		//STEP_LAYOUT_NAME_REFERENCE:
 		//	STRING;
 		public ParserRule getRule() { return rule; }
 
@@ -1957,11 +1975,11 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getSTRINGTerminalRuleCall() { return cSTRINGTerminalRuleCall; }
 	}
 
-	public class STEP_PAGE_NAME_REFERENCEElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "STEP_PAGE_NAME_REFERENCE");
+	public class STEP_NAME_REFERENCEElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "STEP_NAME_REFERENCE");
 		private final RuleCall cSTRINGTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
-		//STEP_PAGE_NAME_REFERENCE:
+		//STEP_NAME_REFERENCE:
 		//	STRING;
 		public ParserRule getRule() { return rule; }
 
@@ -2115,13 +2133,13 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cWidgetRefParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cAttrWidgetParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cCompositeParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cStepsDefParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cStepsLayoutDefParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		
 		//LayoutItem:
-		//	WidgetRef | AttrWidget | Composite | StepsDef;
+		//	WidgetRef | AttrWidget | Composite | StepsLayoutDef;
 		public ParserRule getRule() { return rule; }
 
-		//WidgetRef | AttrWidget | Composite | StepsDef
+		//WidgetRef | AttrWidget | Composite | StepsLayoutDef
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//WidgetRef
@@ -2133,8 +2151,8 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		//Composite
 		public RuleCall getCompositeParserRuleCall_2() { return cCompositeParserRuleCall_2; }
 
-		//StepsDef
-		public RuleCall getStepsDefParserRuleCall_3() { return cStepsDefParserRuleCall_3; }
+		//StepsLayoutDef
+		public RuleCall getStepsLayoutDefParserRuleCall_3() { return cStepsLayoutDefParserRuleCall_3; }
 	}
 
 	public class CompositeElements extends AbstractParserRuleElementFinder {
@@ -2867,8 +2885,8 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 	private WidgetRefElements pWidgetRef;
 	private AttrWidgetElements pAttrWidget;
 	private StateDefElements pStateDef;
-	private StepsDefElements pStepsDef;
-	private StepPageDefElements pStepPageDef;
+	private StepsLayoutDefElements pStepsLayoutDef;
+	private StepDefElements pStepDef;
 	private DecisionReviewRefElements pDecisionReviewRef;
 	private DecisionReviewDefElements pDecisionReviewDef;
 	private DECISION_REVIEW_OPT_REFElements pDECISION_REVIEW_OPT_REF;
@@ -2885,8 +2903,8 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 	private DECISION_REVIEW_NAME_REFERENCEElements pDECISION_REVIEW_NAME_REFERENCE;
 	private PEER_REVIEW_NAME_REFERENCEElements pPEER_REVIEW_NAME_REFERENCE;
 	private STATE_NAME_REFERENCEElements pSTATE_NAME_REFERENCE;
-	private STEPS_NAME_REFERENCEElements pSTEPS_NAME_REFERENCE;
-	private STEP_PAGE_NAME_REFERENCEElements pSTEP_PAGE_NAME_REFERENCE;
+	private STEP_LAYOUT_NAME_REFERENCEElements pSTEP_LAYOUT_NAME_REFERENCE;
+	private STEP_NAME_REFERENCEElements pSTEP_NAME_REFERENCE;
 	private WIDGET_NAME_REFERENCEElements pWIDGET_NAME_REFERENCE;
 	private WORK_DEFINITION_NAME_REFERENCEElements pWORK_DEFINITION_NAME_REFERENCE;
 	private ToStateElements pToState;
@@ -3049,9 +3067,10 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//WidgetDef:
-	//	"widgetDefinition" name=WIDGET_NAME_REFERENCE "{" ("attributeName" attributeName=STRING)? ("description"
-	//	description=STRING)? ("xWidgetName" xWidgetName=STRING)? ("defaultValue" defaultValue=STRING)? ("height" height=INT)?
-	//	("option" option+=WidgetOption)* ("minConstraint" minConstraint=STRING)? ("maxConstraint" maxConstraint=STRING)? "}";
+	//	"widgetDefinition" name=WIDGET_NAME_REFERENCE "{" ("usename" usename=STRING)? ("attributeName" attributeName=STRING)?
+	//	("description" description=STRING)? ("xWidgetName" xWidgetName=STRING)? ("defaultValue" defaultValue=STRING)?
+	//	("height" height=INT)? ("option" option+=WidgetOption)* ("minConstraint" minConstraint=STRING)? ("maxConstraint"
+	//	maxConstraint=STRING)? "}";
 	public WidgetDefElements getWidgetDefAccess() {
 		return (pWidgetDef != null) ? pWidgetDef : (pWidgetDef = new WidgetDefElements());
 	}
@@ -3093,24 +3112,24 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		return getStateDefAccess().getRule();
 	}
 
-	//StepsDef:
-	//	"step" name=STEPS_NAME_REFERENCE "{" ("description" description=STRING)? stepPageDefs+=StepPageDef+ "}";
-	public StepsDefElements getStepsDefAccess() {
-		return (pStepsDef != null) ? pStepsDef : (pStepsDef = new StepsDefElements());
+	//StepsLayoutDef:
+	//	"step layout" name=STEP_LAYOUT_NAME_REFERENCE "{" ("description" description=STRING)? steps+=StepDef+ "}";
+	public StepsLayoutDefElements getStepsLayoutDefAccess() {
+		return (pStepsLayoutDef != null) ? pStepsLayoutDef : (pStepsLayoutDef = new StepsLayoutDefElements());
 	}
 	
-	public ParserRule getStepsDefRule() {
-		return getStepsDefAccess().getRule();
+	public ParserRule getStepsLayoutDefRule() {
+		return getStepsLayoutDefAccess().getRule();
 	}
 
-	//StepPageDef:
-	//	"page" name=STEP_PAGE_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}";
-	public StepPageDefElements getStepPageDefAccess() {
-		return (pStepPageDef != null) ? pStepPageDef : (pStepPageDef = new StepPageDefElements());
+	//StepDef:
+	//	"has step" name=STEP_NAME_REFERENCE "{" ("description" description=STRING)? layoutItems+=LayoutItem+ "}";
+	public StepDefElements getStepDefAccess() {
+		return (pStepDef != null) ? pStepDef : (pStepDef = new StepDefElements());
 	}
 	
-	public ParserRule getStepPageDefRule() {
-		return getStepPageDefAccess().getRule();
+	public ParserRule getStepDefRule() {
+		return getStepDefAccess().getRule();
 	}
 
 	//DecisionReviewRef:
@@ -3278,24 +3297,24 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 		return getSTATE_NAME_REFERENCEAccess().getRule();
 	}
 
-	//STEPS_NAME_REFERENCE:
+	//STEP_LAYOUT_NAME_REFERENCE:
 	//	STRING;
-	public STEPS_NAME_REFERENCEElements getSTEPS_NAME_REFERENCEAccess() {
-		return (pSTEPS_NAME_REFERENCE != null) ? pSTEPS_NAME_REFERENCE : (pSTEPS_NAME_REFERENCE = new STEPS_NAME_REFERENCEElements());
+	public STEP_LAYOUT_NAME_REFERENCEElements getSTEP_LAYOUT_NAME_REFERENCEAccess() {
+		return (pSTEP_LAYOUT_NAME_REFERENCE != null) ? pSTEP_LAYOUT_NAME_REFERENCE : (pSTEP_LAYOUT_NAME_REFERENCE = new STEP_LAYOUT_NAME_REFERENCEElements());
 	}
 	
-	public ParserRule getSTEPS_NAME_REFERENCERule() {
-		return getSTEPS_NAME_REFERENCEAccess().getRule();
+	public ParserRule getSTEP_LAYOUT_NAME_REFERENCERule() {
+		return getSTEP_LAYOUT_NAME_REFERENCEAccess().getRule();
 	}
 
-	//STEP_PAGE_NAME_REFERENCE:
+	//STEP_NAME_REFERENCE:
 	//	STRING;
-	public STEP_PAGE_NAME_REFERENCEElements getSTEP_PAGE_NAME_REFERENCEAccess() {
-		return (pSTEP_PAGE_NAME_REFERENCE != null) ? pSTEP_PAGE_NAME_REFERENCE : (pSTEP_PAGE_NAME_REFERENCE = new STEP_PAGE_NAME_REFERENCEElements());
+	public STEP_NAME_REFERENCEElements getSTEP_NAME_REFERENCEAccess() {
+		return (pSTEP_NAME_REFERENCE != null) ? pSTEP_NAME_REFERENCE : (pSTEP_NAME_REFERENCE = new STEP_NAME_REFERENCEElements());
 	}
 	
-	public ParserRule getSTEP_PAGE_NAME_REFERENCERule() {
-		return getSTEP_PAGE_NAME_REFERENCEAccess().getRule();
+	public ParserRule getSTEP_NAME_REFERENCERule() {
+		return getSTEP_NAME_REFERENCEAccess().getRule();
 	}
 
 	//WIDGET_NAME_REFERENCE:
@@ -3359,7 +3378,7 @@ public class AtsDslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//LayoutItem:
-	//	WidgetRef | AttrWidget | Composite | StepsDef;
+	//	WidgetRef | AttrWidget | Composite | StepsLayoutDef;
 	public LayoutItemElements getLayoutItemAccess() {
 		return (pLayoutItem != null) ? pLayoutItem : (pLayoutItem = new LayoutItemElements());
 	}

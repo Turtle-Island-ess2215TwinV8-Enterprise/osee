@@ -6,6 +6,8 @@
 package org.eclipse.osee.ats.api.workdef;
 
 import java.util.List;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
+import org.eclipse.osee.framework.core.util.WidgetOptionHandler;
 
 /**
  * @author Donald G. Dunne
@@ -17,6 +19,8 @@ public interface IAtsWidgetDefinition extends IAtsLayoutItem {
     */
    @Override
    public abstract String getName();
+
+   public abstract String getUsename();
 
    public abstract String getToolTip();
 
@@ -34,7 +38,7 @@ public interface IAtsWidgetDefinition extends IAtsLayoutItem {
     */
    public abstract boolean is(WidgetOption widgetOption);
 
-   public abstract IAtsWidgetOptionHandler getOptions();
+   public abstract WidgetOptionHandler getOptions();
 
    public abstract List<IAtsWidgetConstraint> getConstraints();
 

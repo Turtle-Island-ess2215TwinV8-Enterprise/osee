@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.ui.skynet.widgets.XOption;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.DefaultAttributeXWidgetProvider;
 import org.eclipse.osee.framework.ui.skynet.widgets.util.XWidgetRendererItem;
 
@@ -51,7 +51,7 @@ public class AtsAttributeXWidgetProvider extends DefaultAttributeXWidgetProvider
       } else if (attributeType.getName().equals(AtsAttributeTypes.DslSheet.getName())) {
          layouts = super.getDynamicXWidgetLayoutData(attributeType);
          XWidgetRendererItem layoutData = layouts.get(0);
-         layoutData.getXOptionHandler().add(XOption.FILL_VERTICALLY);
+         layoutData.getWidgetOptionHandler().add(WidgetOption.FILL_VERTICALLY);
       }
       return layouts;
    }

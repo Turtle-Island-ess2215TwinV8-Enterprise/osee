@@ -14,7 +14,7 @@ public interface IAtsStepsLayoutItem extends IAtsLayoutItem {
 
    public abstract void setName(String string);
 
-   public abstract List<IAtsStepPageDefinition> getStepPageDefinitions();
+   public abstract List<IAtsStepDefinition> getStepDefinitions();
 
    @Override
    public abstract String toString();
