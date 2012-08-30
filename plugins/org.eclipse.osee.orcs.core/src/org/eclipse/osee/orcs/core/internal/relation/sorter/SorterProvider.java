@@ -18,10 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.osee.framework.core.data.IRelationSorterId;
+import org.eclipse.osee.framework.core.data.IRelationType;
 import org.eclipse.osee.framework.core.data.Named;
+import org.eclipse.osee.framework.core.enums.RelationOrderBaseTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
+import org.eclipse.osee.framework.core.model.type.RelationType;
 import org.eclipse.osee.framework.core.util.Conditions;
-import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.orcs.utility.SortOrder;
 
 /**
@@ -30,10 +33,14 @@ import org.eclipse.osee.orcs.utility.SortOrder;
  */
 public class SorterProvider {
 
-   private final Map<String, Sorter> orderMap = new HashMap<String, Sorter>();
+   private final Map<IRelationSorterId, Sorter> orderMap = new HashMap<IRelationSorterId, Sorter>();
    private final List<IRelationSorterId> ids = new ArrayList<IRelationSorterId>();
 
-   public SorterProvider() {
+   private final RelationTypeCache typeCache;
+
+   public SorterProvider(RelationTypeCache typeCache) {
+      this.typeCache = typeCache;
+
       registerOrderType(new LexicographicalSorter(SortOrder.ASCENDING));
       registerOrderType(new LexicographicalSorter(SortOrder.DESCENDING));
       registerOrderType(new UnorderedSorter());
@@ -47,23 +54,32 @@ public class SorterProvider {
    }
 
    private void registerOrderType(Sorter order) {
-      orderMap.put(order.getId().getGuid(), order);
+      orderMap.put(order.getId(), order);
    }
 
-   public boolean exists(String orderGuid) throws OseeCoreException {
-      Conditions.checkExpressionFailOnTrue(!GUID.isValid(orderGuid), "Error invalid id argument [%s]", orderGuid);
-      return orderMap.containsKey(orderGuid);
-   }
+   public IRelationSorterId getDefaultSorterId(IRelationType type) throws OseeCoreException {
+      Conditions.checkNotNull(type, "type");
+      RelationType relationType = typeCache.getByGuid(type.getGuid());
+      Conditions.checkNotNull(relationType, "relationType", "RelationType was not found for [%s]", type);
 
-   public Sorter getSorter(String orderGuid) throws OseeCoreException {
-      Conditions.checkExpressionFailOnTrue(!GUID.isValid(orderGuid), "Error invalid id argument [%s]", orderGuid);
-      Sorter order = orderMap.get(orderGuid);
-      Conditions.checkNotNull(order, "sorter", "Unable to locate sorter with id[%s]", orderGuid);
-      return order;
+      String sorterGuid = relationType.getDefaultOrderTypeGuid();
+      return RelationOrderBaseTypes.getFromGuid(sorterGuid);
    }
 
    public List<IRelationSorterId> getSorterIds() {
       return ids;
+   }
+
+   public boolean exists(IRelationSorterId sorterId) throws OseeCoreException {
+      Conditions.checkNotNull(sorterId, "sorterId");
+      return orderMap.containsKey(sorterId);
+   }
+
+   public Sorter getSorter(IRelationSorterId sorterId) throws OseeCoreException {
+      Conditions.checkNotNull(sorterId, "sorterId");
+      Sorter sorter = orderMap.get(sorterId);
+      Conditions.checkNotNull(sorter, "sorter", "Unable to locate sorter with sorterId %s", sorterId);
+      return sorter;
    }
 
    private static final class CaseInsensitiveNameComparator implements Comparator<Named> {

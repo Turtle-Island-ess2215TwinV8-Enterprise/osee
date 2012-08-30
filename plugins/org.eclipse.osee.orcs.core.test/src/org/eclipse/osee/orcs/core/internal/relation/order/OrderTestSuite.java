@@ -8,7 +8,7 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.relation.sorter;
+package org.eclipse.osee.orcs.core.internal.relation.order;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author Roberto E. Escobar
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({SorterTest.class, SorterProviderTest.class})
-public class SorterTestSuite {
+@Suite.SuiteClasses({OrderManagerTest.class, OrderParserTest.class})
+public class OrderTestSuite {
    // Test Suite
 }

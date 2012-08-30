@@ -8,16 +8,18 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.core.internal.relation.sorter;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+package org.eclipse.osee.orcs.core.internal.relation.order;
+
+import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 /**
  * @author Roberto E. Escobar
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({SorterTest.class, SorterProviderTest.class})
-public class SorterTestSuite {
-   // Test Suite
+public interface OrderAccessor {
+
+   void load(HasOrderData data) throws OseeCoreException;
+
+   void store(HasOrderData data, OrderChange changeType) throws OseeCoreException;
+
 }

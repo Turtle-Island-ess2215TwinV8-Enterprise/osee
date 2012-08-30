@@ -17,16 +17,23 @@ import static org.eclipse.osee.framework.core.enums.RelationOrderBaseTypes.USER_
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import java.util.List;
 import org.eclipse.osee.framework.core.data.IRelationSorterId;
+import org.eclipse.osee.framework.core.data.TokenFactory;
+import org.eclipse.osee.framework.core.enums.CoreRelationTypes;
 import org.eclipse.osee.framework.core.enums.RelationOrderBaseTypes;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
+import org.eclipse.osee.framework.core.model.type.RelationType;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Test Case for {@link SorterProvider}
@@ -38,11 +45,51 @@ public class SorterProviderTest {
    @Rule
    public ExpectedException thrown = ExpectedException.none();
 
+   // @formatter:off
+   @Mock private RelationTypeCache relationTypeCache;
+   @Mock private RelationType type1;
+   @Mock private RelationType type2;
+   // @formatter:on
+
    private SorterProvider provider;
 
    @Before
    public void setUp() {
-      provider = new SorterProvider();
+      MockitoAnnotations.initMocks(this);
+
+      provider = new SorterProvider(relationTypeCache);
+   }
+
+   @Test
+   public void testGetDefaultSorterId() throws OseeCoreException {
+      when(relationTypeCache.getByGuid(CoreRelationTypes.Default_Hierarchical__Child.getGuid())).thenReturn(type1);
+      when(type1.getDefaultOrderTypeGuid()).thenReturn(RelationOrderBaseTypes.USER_DEFINED.getGuid());
+
+      IRelationSorterId actual1 = provider.getDefaultSorterId(CoreRelationTypes.Default_Hierarchical__Child);
+      assertEquals(RelationOrderBaseTypes.USER_DEFINED, actual1);
+
+      when(relationTypeCache.getByGuid(CoreRelationTypes.Users_User.getGuid())).thenReturn(type2);
+      when(type2.getDefaultOrderTypeGuid()).thenReturn(RelationOrderBaseTypes.LEXICOGRAPHICAL_DESC.getGuid());
+
+      IRelationSorterId actual2 = provider.getDefaultSorterId(CoreRelationTypes.Users_User);
+      assertEquals(RelationOrderBaseTypes.LEXICOGRAPHICAL_DESC, actual2);
+   }
+
+   @Test
+   public void testGetDefaultSorterIdNull() throws OseeCoreException {
+      thrown.expect(OseeArgumentException.class);
+      thrown.expectMessage("type cannot be null");
+
+      provider.getDefaultSorterId(null);
+   }
+
+   @Test
+   public void testGetDefaultSorterIdTypeNotfound() throws OseeCoreException {
+      thrown.expect(OseeArgumentException.class);
+      thrown.expectMessage(String.format("relationType cannot be null - RelationType was not found for [%s]",
+         CoreRelationTypes.Allocation__Component));
+
+      provider.getDefaultSorterId(CoreRelationTypes.Allocation__Component);
    }
 
    @Test
@@ -58,18 +105,18 @@ public class SorterProviderTest {
 
    @Test
    public void testGetRelationOrder() throws OseeCoreException {
-      for (RelationOrderBaseTypes baseType : RelationOrderBaseTypes.values) {
-         Sorter actual = provider.getSorter(baseType.getGuid());
-         assertEquals(baseType, actual.getId());
+      for (IRelationSorterId sorterId : RelationOrderBaseTypes.values()) {
+         Sorter actual = provider.getSorter(sorterId);
+         assertEquals(sorterId, actual.getId());
          boolean matches = false;
 
-         if (baseType == LEXICOGRAPHICAL_ASC) {
+         if (sorterId == LEXICOGRAPHICAL_ASC) {
             matches = actual instanceof LexicographicalSorter;
-         } else if (baseType == LEXICOGRAPHICAL_DESC) {
+         } else if (sorterId == LEXICOGRAPHICAL_DESC) {
             matches = actual instanceof LexicographicalSorter;
-         } else if (baseType == UNORDERED) {
+         } else if (sorterId == UNORDERED) {
             matches = actual instanceof UnorderedSorter;
-         } else if (baseType == USER_DEFINED) {
+         } else if (sorterId == USER_DEFINED) {
             matches = actual instanceof UserDefinedSorter;
          } else {
             assertNull("This line should not be reached");
@@ -81,17 +128,18 @@ public class SorterProviderTest {
    @Test
    public void testArgumentExceptions() throws OseeCoreException {
       thrown.expect(OseeArgumentException.class);
-      thrown.expectMessage("Error invalid id argument [ABC]");
-      provider.getSorter("ABC");
+      thrown.expectMessage("sorterId cannot be null");
+      provider.getSorter(null);
    }
 
    @Test
    public void testNotFoundExceptions() throws OseeCoreException {
       String randomGuid = GUID.create();
-
+      String idName = "TestSorterId";
+      IRelationSorterId sorterId = TokenFactory.createSorterId(randomGuid, "TestSorterId");
       thrown.expect(OseeArgumentException.class);
-      thrown.expectMessage(String.format("sorter cannot be null - Unable to locate sorter with id[%s]", randomGuid));
-      provider.getSorter(randomGuid);
+      thrown.expectMessage(String.format("sorter cannot be null - Unable to locate sorter with sorterId [%s:%s]",
+         idName, randomGuid));
+      provider.getSorter(sorterId);
    }
-
 }
