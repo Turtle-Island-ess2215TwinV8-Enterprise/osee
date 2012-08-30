@@ -11,25 +11,24 @@
 package org.eclipse.osee.orcs.core.internal.relation.order;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.orcs.core.internal.artifact.Artifact;
 import org.eclipse.osee.orcs.core.internal.relation.sorter.SorterProvider;
 
 /**
  * @author Roberto E. Escobar
  */
-public class OrderFactory {
+public class OrderManagerFactory {
 
    private final OrderParser parser;
    private final SorterProvider sorterProvider;
 
-   public OrderFactory(OrderParser parser, SorterProvider sorterProvider) {
+   public OrderManagerFactory(OrderParser parser, SorterProvider sorterProvider) {
       super();
       this.parser = parser;
       this.sorterProvider = sorterProvider;
    }
 
-   public OrderManager createOrderManager(Artifact artifact) throws OseeCoreException {
-      ArtifactOrderAccessor accessor = new ArtifactOrderAccessor(artifact, parser);
+   public OrderManager createOrderManager(OrderStore store) throws OseeCoreException {
+      OrderAccessor accessor = new OrderAccessor(parser, store);
       OrderManager manager = new OrderManager(sorterProvider, accessor);
       manager.load();
       return manager;

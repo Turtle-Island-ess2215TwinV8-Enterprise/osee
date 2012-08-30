@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author Roberto E. Escobar
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({OrderManagerTest.class, OrderParserTest.class})
+@Suite.SuiteClasses({OrderAccessorTest.class, OrderManagerTest.class, OrderParserTest.class})
 public class OrderTestSuite {
    // Test Suite
 }

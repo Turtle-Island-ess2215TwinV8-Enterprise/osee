@@ -16,10 +16,12 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 /**
  * @author Roberto E. Escobar
  */
-public interface OrderAccessor {
+public interface OrderStore {
 
-   void load(HasOrderData data) throws OseeCoreException;
+   boolean isAccessible();
 
-   void store(HasOrderData data, OrderChange changeType) throws OseeCoreException;
+   String getOrderData() throws OseeCoreException;
+
+   void storeOrderData(OrderChange changeType, String data) throws OseeCoreException;
 
 }
