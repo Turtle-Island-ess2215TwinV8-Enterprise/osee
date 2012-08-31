@@ -89,6 +89,7 @@ public final class AtsAttributeTypes {
    public static final IAttributeType PercentComplete = createType(0x10000000000000CFL, "Percent Complete");
 
    public static final IAttributeType Points = createType(0x10000000000000CAL, "Points", "Abstract value that describes risk, complexity, and size of Actions.");
+   public static final IAttributeType PortBranches = createType(0x1000000000000198L, "Port Branches", "");
    public static final IAttributeType PriorityType = createType(0x10000000000000CBL, "Priority", "1 = High; 5 = Low");
    public static final IAttributeType Problem = createType(0x10000000000000D9L, "Problem", "Problem found during analysis.");
    public static final IAttributeType ProposedResolution = createType(0x10000000000000DAL, "Proposed Resolution", "Recommended resolution.");

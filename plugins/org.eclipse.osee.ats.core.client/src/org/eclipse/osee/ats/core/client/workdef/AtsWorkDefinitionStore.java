@@ -21,6 +21,7 @@ import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.framework.core.enums.DeletionFlag;
 import org.eclipse.osee.framework.core.exception.ArtifactDoesNotExist;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.exception.OseeStateException;
 import org.eclipse.osee.framework.core.exception.OseeWrappedException;
 import org.eclipse.osee.framework.jdk.core.type.Pair;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
@@ -97,6 +98,9 @@ public class AtsWorkDefinitionStore implements IAtsWorkDefinitionStore {
       Artifact artifact = null;
       try {
          artifact = getWorkDefinitionArtifact(name);
+         if (artifact == null) {
+            throw new OseeStateException("No Work Definition Artifact with name [%s]", name);
+         }
          return loadWorkDefinitionFromArtifact(artifact);
       } catch (ArtifactDoesNotExist ex) {
          // do nothing

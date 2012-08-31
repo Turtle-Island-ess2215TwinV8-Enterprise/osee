@@ -48,7 +48,7 @@ public abstract class CommitHandler extends CommandHandler {
       this.useParentBranch = useParentBranch;
    }
 
-   public static boolean commitBranch(final ConflictManagerExternal conflictManager, boolean archiveSourceBranch) throws OseeCoreException {
+   public static boolean commitBranch(final ConflictManagerExternal conflictManager, boolean archiveSourceBranch, final boolean popupOnZeroConflict) throws OseeCoreException {
       final Branch sourceBranch = conflictManager.getSourceBranch();
       final Branch destinationBranch = conflictManager.getDestinationBranch();
       final TransactionRecord transactionId = sourceBranch.getBaseTransaction();
@@ -103,10 +103,14 @@ public abstract class CommitHandler extends CommandHandler {
             public void run() {
                try {
                   if (conflictManager.getOriginalConflicts().isEmpty()) {
-                     MessageDialog dialog =
-                        new MessageDialog(Displays.getActiveShell(), "Commit Branch", null, message.toString(),
-                           MessageDialog.QUESTION, new String[] {"Ok", "Cancel"}, 0);
-                     dialogResult.setValue(dialog.open());
+                     if (popupOnZeroConflict) {
+                        MessageDialog dialog =
+                           new MessageDialog(Displays.getActiveShell(), "Commit Branch", null, message.toString(),
+                              MessageDialog.QUESTION, new String[] {"Ok", "Cancel"}, 0);
+                        dialogResult.setValue(dialog.open());
+                     } else {
+                        dialogResult.setValue(0);
+                     }
                   } else {
                      MessageDialog dialog =
                         new MessageDialog(Displays.getActiveShell(), "Commit Branch", null, message.toString(),
@@ -183,7 +187,7 @@ public abstract class CommitHandler extends CommandHandler {
       @Override
       protected IStatus run(IProgressMonitor monitor) {
          try {
-            commitBranch(new ConflictManagerExternal(destinationBranch, sourceBranch), archiveSourceBranch);
+            commitBranch(new ConflictManagerExternal(destinationBranch, sourceBranch), archiveSourceBranch, true);
          } catch (OseeCoreException ex) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID, ex.getLocalizedMessage(), ex);
          }

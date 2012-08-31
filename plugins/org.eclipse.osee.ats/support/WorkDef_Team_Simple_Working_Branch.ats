@@ -108,6 +108,30 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
    widgetDefinition "Commit Manager" {
       xWidgetName "XCommitManager"
    }
+   widgetDefinition "Port Drop Table" {
+      xWidgetName "XPortTableWidget"
+   }
+	decisionReviewDefinition "Validate Req Changes Review" {
+		title "Has \"Check Signals\" been run?"
+		description "Instructions: On implement state of Requirements workflow, select \"Check Signals Via CDB\" icon and resolve any issues.\n\nComplete this review with any comments necessary."
+		blockingType Commit
+		onEvent CreateBranch 
+		assignee named "UnAssigned"
+		autoTransitionToDecision True
+		option "Yes"
+		option "No"
+	}
+	
+	decisionReviewDefinition "Check Signals Review" {
+		title "Has \"Validate Req Changes\" been run?"
+		description "Instructions: On implement state of parent workflow, select \"Validate Requirement Changes\" play icon and resolve any issues.\n\nComplete this review with any comments necessary."
+		blockingType Commit
+		onEvent CreateBranch 
+		assignee named "UnAssigned"
+		autoTransitionToDecision True
+		option "Yes" 
+		option "No"
+	}
 
    state "Implement" { 
       type Working
@@ -115,13 +139,15 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
       to "Cancelled"
       to "Completed" AsDefault 
       rule RequireStateHourSpentPrompt
+      decisionReview "Validate Req Changes Review"
+      decisionReview "Check Signals Review"
       layout {
          widget "Work Package" 
          step layout "Requirements Development" { 
          	description "Change to requirements or other related artifacts on working branch."
          	has step "Port" {
          		description "Port changes from other branches actions"
-         		widget "Work Package"
+         		widget "Port Drop Table"
          	}
          	has step "Edit" {
          		description "Edit artifacts / requirements / documents"

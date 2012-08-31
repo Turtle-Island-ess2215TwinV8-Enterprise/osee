@@ -113,7 +113,7 @@ public class AtsBranchCommitJob extends Job {
             new ConflictManagerExternal(destinationBranch, workflowWorkingBranch);
 
          if (commitPopup) {
-            branchCommitted = CommitHandler.commitBranch(conflictManager, archiveWorkingBranch);
+            branchCommitted = CommitHandler.commitBranch(conflictManager, archiveWorkingBranch, true);
          } else {
             BranchManager.commitBranch(null, conflictManager, archiveWorkingBranch, true);
             branchCommitted = true;

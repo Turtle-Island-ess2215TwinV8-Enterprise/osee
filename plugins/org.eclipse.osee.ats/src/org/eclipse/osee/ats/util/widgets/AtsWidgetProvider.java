@@ -21,6 +21,7 @@ import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.XVersionList;
 import org.eclipse.osee.ats.util.widgets.commit.XCommitManager;
 import org.eclipse.osee.ats.util.widgets.defect.XDefectViewer;
+import org.eclipse.osee.ats.util.widgets.port.XPortTableWidget;
 import org.eclipse.osee.ats.util.widgets.role.XUserRoleViewer;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.logging.OseeLevel;
@@ -94,6 +95,8 @@ public class AtsWidgetProvider implements IXWidgetProvider {
          }
       } else if (widgetName.equals(XVersionList.WIDGET_ID)) {
          return new XVersionList();
+      } else if (widgetName.equals("XPortTableWidget")) {
+         return new XPortTableWidget();
       }
       return toReturn;
    }

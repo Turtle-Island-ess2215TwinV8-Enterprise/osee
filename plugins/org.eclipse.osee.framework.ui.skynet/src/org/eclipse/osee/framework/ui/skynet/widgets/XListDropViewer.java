@@ -18,11 +18,13 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.operation.ClientLogger;
 import org.eclipse.osee.framework.core.operation.Operations;
 import org.eclipse.osee.framework.jdk.core.util.Collections;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
+import org.eclipse.osee.framework.skynet.core.artifact.ArtifactData;
 import org.eclipse.osee.framework.ui.skynet.ArtifactLabelProvider;
 import org.eclipse.osee.framework.ui.skynet.artifact.ArtifactTransfer;
 import org.eclipse.osee.framework.ui.skynet.blam.operation.StringGuidsToArtifactListOperation;
@@ -49,6 +51,7 @@ public class XListDropViewer extends XListViewer implements IXWidgetInputAddable
    private TableViewer myTableViewer;
    private ArrayContentProvider myArrayContentProvider = null;
    private ArtifactLabelProvider myArtifactLabelProvider = null;
+   private ArrayList<IArtifactType> validTypes = null;
 
    private Menu popupMenu;
 
@@ -182,8 +185,18 @@ public class XListDropViewer extends XListViewer implements IXWidgetInputAddable
 
       @Override
       public void performDragOver(DropTargetEvent event) {
-         if (ArtifactTransfer.getInstance().isSupportedType(event.currentDataType)) {
-            event.detail = DND.DROP_COPY;
+
+         ArtifactTransfer artTransfer = ArtifactTransfer.getInstance();
+         if (artTransfer.isSupportedType(event.currentDataType)) {
+
+            ArtifactData artData = artTransfer.nativeToJava(event.currentDataType);
+            Artifact[] selectedArtifacts = artData.getArtifacts();
+            if (testArtifactTypes(selectedArtifacts)) {
+               event.detail = DND.DROP_COPY;
+            } else {
+               event.detail = DND.ERROR_INVALID_DATA;
+            }
+
          }
       }
 
@@ -203,5 +216,33 @@ public class XListDropViewer extends XListViewer implements IXWidgetInputAddable
          notifyXModifiedListeners();
          refresh();
       }
+
+      private boolean testArtifactTypes(Artifact[] selectedArtifacts) {
+         if (validTypes != null) {
+            for (Artifact art : selectedArtifacts) {
+               if (!testValidType(art)) {
+                  return false;
+               }
+            }
+         }
+         // if valid types are not specified, all of the types are valid
+         return true;
+      }
+   }
+
+   public boolean testValidType(Artifact art) {
+      for (IArtifactType at : validTypes) {
+         if (art.isOfType(at)) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   public void addValidType(IArtifactType at) {
+      if (validTypes == null) {
+         validTypes = new ArrayList<IArtifactType>();
+      }
+      validTypes.add(at);
    }
 }
