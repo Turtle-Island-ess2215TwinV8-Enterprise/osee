@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.db.internal.change;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +30,7 @@ import org.eclipse.osee.framework.core.model.change.ChangeItem;
 import org.eclipse.osee.framework.core.model.change.RelationChangeItem;
 import org.eclipse.osee.framework.core.services.IdentityService;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
-import org.eclipse.osee.orcs.core.ds.ArtifactBuilder;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactDataHandler;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
@@ -35,6 +38,7 @@ import org.eclipse.osee.orcs.core.ds.AttributeDataHandler;
 import org.eclipse.osee.orcs.core.ds.DataLoader;
 import org.eclipse.osee.orcs.core.ds.DataLoaderFactory;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
+import org.eclipse.osee.orcs.core.ds.LoadDataHandler;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.RelationDataHandler;
@@ -64,6 +68,8 @@ public class MissingChangeItemFactoryTest {
    @Mock private Branch destBranch;
    @Mock private TransactionRecord sourceTx;
    @Mock private TransactionRecord destTx;
+   @Mock private OrcsSession session;
+   @Mock private HasCancellation cancellation;
    // @formatter:on
 
    private MissingChangeItemFactory changeItemFactory;
@@ -97,9 +103,9 @@ public class MissingChangeItemFactoryTest {
    @Before
    public void init() throws OseeCoreException {
       MockitoAnnotations.initMocks(this);
-      when(dataLoaderFactory.fromBranchAndArtifactIds(anyString(), eq(sourceBranch), any(Collection.class))).thenReturn(
+      when(dataLoaderFactory.fromBranchAndArtifactIds(eq(session), eq(sourceBranch), any(Collection.class))).thenReturn(
          sourceDataLoader);
-      when(dataLoaderFactory.fromBranchAndArtifactIds(anyString(), eq(destBranch), any(Collection.class))).thenReturn(
+      when(dataLoaderFactory.fromBranchAndArtifactIds(eq(session), eq(destBranch), any(Collection.class))).thenReturn(
          destDataLoader);
       when(sourceTx.getBranch()).thenReturn(sourceBranch);
       when(destTx.getBranch()).thenReturn(destBranch);
@@ -112,23 +118,23 @@ public class MissingChangeItemFactoryTest {
 
          @Override
          public Object answer(InvocationOnMock invocation) throws Throwable {
-            ArtifactBuilder builder = (ArtifactBuilder) invocation.getArguments()[1];
+            LoadDataHandler builder = (LoadDataHandler) invocation.getArguments()[1];
 
-            AttributeDataHandler attributeDataHandler = builder.createAttributeDataHandler();
+            AttributeDataHandler attributeDataHandler = builder.getAttributeDataHandler();
             if (attributeDataHandler != null && attributeData != null) {
                for (AttributeData data : attributeData) {
                   attributeDataHandler.onData(data);
                }
             }
 
-            ArtifactDataHandler artifactDataHandler = builder.createArtifactDataHandler();
+            ArtifactDataHandler artifactDataHandler = builder.getArtifactDataHandler();
             if (artifactDataHandler != null && artifactData != null) {
                for (ArtifactData data : artifactData) {
                   artifactDataHandler.onData(data);
                }
             }
 
-            RelationDataHandler relationDataHandler = builder.createRelationDataHandler();
+            RelationDataHandler relationDataHandler = builder.getRelationDataHandler();
             if (relationDataHandler != null && relationData != null) {
                for (RelationData data : relationData) {
                   relationDataHandler.onData(data);
@@ -137,15 +143,15 @@ public class MissingChangeItemFactoryTest {
 
             return null;
          }
-      }).when(sourceDataLoader).load(any(HasCancellation.class), any(ArtifactBuilder.class));
+      }).when(sourceDataLoader).load(any(HasCancellation.class), any(LoadDataHandler.class));
 
       doAnswer(new Answer<Object>() {
 
          @Override
          public Object answer(InvocationOnMock invocation) throws Throwable {
-            ArtifactBuilder builder = (ArtifactBuilder) invocation.getArguments()[1];
+            LoadDataHandler builder = (LoadDataHandler) invocation.getArguments()[1];
 
-            ArtifactDataHandler artifactDataHandler = builder.createArtifactDataHandler();
+            ArtifactDataHandler artifactDataHandler = builder.getArtifactDataHandler();
             if (artifactDataHandler != null && destArtifactData != null) {
                for (ArtifactData data : destArtifactData) {
                   artifactDataHandler.onData(data);
@@ -154,9 +160,10 @@ public class MissingChangeItemFactoryTest {
 
             return null;
          }
-      }).when(destDataLoader).load(any(HasCancellation.class), any(ArtifactBuilder.class));
+      }).when(destDataLoader).load(any(HasCancellation.class), any(LoadDataHandler.class));
 
-      Collection<ChangeItem> results = changeItemFactory.createMissingChanges(changes, sourceTx, destTx, null);
+      Collection<ChangeItem> results =
+         changeItemFactory.createMissingChanges(session, cancellation, changes, sourceTx, destTx);
       if (expectedMissingChanges == null) {
          Assert.assertTrue(results.isEmpty());
       } else {

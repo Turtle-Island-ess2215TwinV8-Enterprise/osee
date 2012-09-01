@@ -23,6 +23,7 @@ import org.eclipse.osee.framework.core.model.cache.TransactionCache;
 import org.eclipse.osee.framework.core.model.change.ChangeItem;
 import org.eclipse.osee.framework.database.IOseeDatabaseService;
 import org.eclipse.osee.logger.Log;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.db.internal.change.AddArtifactChangeDataCallable;
 import org.eclipse.osee.orcs.db.internal.change.ComputeNetChangeCallable;
 import org.eclipse.osee.orcs.db.internal.change.LoadDeltasBetweenBranches;
@@ -36,16 +37,16 @@ public class CompareDatabaseCallable extends DatabaseCallable<List<ChangeItem>> 
    private final TransactionRecord sourceTx;
    private final TransactionRecord destinationTx;
    private final MissingChangeItemFactory missingChangeItemFactory;
-   private final String sessionId;
+   private final OrcsSession session;
 
-   public CompareDatabaseCallable(Log logger, IOseeDatabaseService service, BranchCache branchCache, TransactionCache txCache, TransactionRecord sourceTx, TransactionRecord destinationTx, MissingChangeItemFactory missingChangeItemFactory, String sessionId) {
+   public CompareDatabaseCallable(Log logger, IOseeDatabaseService service, BranchCache branchCache, TransactionCache txCache, TransactionRecord sourceTx, TransactionRecord destinationTx, MissingChangeItemFactory missingChangeItemFactory, OrcsSession session) {
       super(logger, service);
       this.branchCache = branchCache;
       this.txCache = txCache;
       this.sourceTx = sourceTx;
       this.destinationTx = destinationTx;
       this.missingChangeItemFactory = missingChangeItemFactory;
-      this.sessionId = sessionId;
+      this.session = session;
    }
 
    private TransactionCache getTxCache() {
@@ -69,7 +70,7 @@ public class CompareDatabaseCallable extends DatabaseCallable<List<ChangeItem>> 
       }
       List<ChangeItem> changes = callAndCheckForCancel(callable);
 
-      changes.addAll(missingChangeItemFactory.createMissingChanges(changes, sourceTx, destinationTx, sessionId));
+      changes.addAll(missingChangeItemFactory.createMissingChanges(session, this, changes, sourceTx, destinationTx));
       Callable<List<ChangeItem>> computeChanges = new ComputeNetChangeCallable(changes);
       changes = callAndCheckForCancel(computeChanges);
 

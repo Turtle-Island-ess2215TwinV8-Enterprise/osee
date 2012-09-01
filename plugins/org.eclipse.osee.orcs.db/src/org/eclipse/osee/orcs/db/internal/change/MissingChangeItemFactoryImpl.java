@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.osee.executor.admin.HasCancellation;
 import org.eclipse.osee.framework.core.enums.LoadLevel;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -25,17 +26,17 @@ import org.eclipse.osee.framework.core.model.change.AttributeChangeItem;
 import org.eclipse.osee.framework.core.model.change.ChangeItem;
 import org.eclipse.osee.framework.core.model.change.RelationChangeItem;
 import org.eclipse.osee.framework.core.services.IdentityService;
-import org.eclipse.osee.orcs.core.ds.ArtifactBuilder;
+import org.eclipse.osee.orcs.OrcsSession;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactDataHandler;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributeDataHandler;
 import org.eclipse.osee.orcs.core.ds.DataLoader;
 import org.eclipse.osee.orcs.core.ds.DataLoaderFactory;
+import org.eclipse.osee.orcs.core.ds.LoadDataHandlerAdaptor;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.RelationDataHandler;
-import org.eclipse.osee.orcs.data.ArtifactReadable;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -54,7 +55,7 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
    }
 
    @Override
-   public Collection<ChangeItem> createMissingChanges(List<ChangeItem> changes, TransactionRecord sourceTx, TransactionRecord destTx, String sessionId) throws OseeCoreException {
+   public Collection<ChangeItem> createMissingChanges(OrcsSession session, HasCancellation cancellation, List<ChangeItem> changes, TransactionRecord sourceTx, TransactionRecord destTx) throws OseeCoreException {
       if (changes != null && !changes.isEmpty()) {
          Set<Integer> modifiedArtIds = new HashSet<Integer>();
          Multimap<Integer, Integer> modifiedAttrIds = LinkedListMultimap.create();
@@ -77,26 +78,27 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
          allArtIds.addAll(modifiedAttrIds.keySet());
          allArtIds.addAll(modifiedRels.keySet());
 
-         Set<Integer> missingArtIds = determineWhichArtifactsNotOnDestination(allArtIds, destTx, sessionId);
+         Set<Integer> missingArtIds = determineWhichArtifactsNotOnDestination(session, cancellation, allArtIds, destTx);
 
          if (!missingArtIds.isEmpty()) {
-            return createMissingChangeItems(sourceTx, destTx, sessionId, modifiedArtIds, modifiedAttrIds, modifiedRels,
-               missingArtIds, allArtIds);
+            return createMissingChangeItems(session, cancellation, sourceTx, destTx, modifiedArtIds, modifiedAttrIds,
+               modifiedRels, missingArtIds, allArtIds);
          }
       }
       return Collections.emptyList();
    }
 
-   private Set<Integer> determineWhichArtifactsNotOnDestination(Set<Integer> artIds, TransactionRecord destTx, String sessionId) throws OseeCoreException {
-      DataLoader loader = dataLoaderFactory.fromBranchAndArtifactIds(sessionId, destTx.getBranch(), artIds);
+   private Set<Integer> determineWhichArtifactsNotOnDestination(OrcsSession session, HasCancellation cancellation, Set<Integer> artIds, TransactionRecord destTx) throws OseeCoreException {
       final Set<Integer> missingArtIds = new LinkedHashSet<Integer>(artIds);
+
+      DataLoader loader = dataLoaderFactory.fromBranchAndArtifactIds(session, destTx.getBranch(), artIds);
       loader.includeDeleted();
       loader.fromTransaction(destTx.getId());
 
-      loader.load(null, new ArtifactBuilder() {
+      loader.load(cancellation, new LoadDataHandlerAdaptor() {
 
          @Override
-         public ArtifactDataHandler createArtifactDataHandler() {
+         public ArtifactDataHandler getArtifactDataHandler() {
             return new ArtifactDataHandler() {
 
                @Override
@@ -105,39 +107,23 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
                }
             };
          }
-
-         @Override
-         public RelationDataHandler createRelationDataHandler() {
-            return null;
-         }
-
-         @Override
-         public AttributeDataHandler createAttributeDataHandler() {
-            return null;
-         }
-
-         @Override
-         public List<ArtifactReadable> getArtifacts() {
-            return null;
-         }
       });
 
       return missingArtIds;
    }
 
-   private Collection<ChangeItem> createMissingChangeItems(TransactionRecord sourceTx, TransactionRecord destTx, String sessionId, final Set<Integer> modifiedArtIds, final Multimap<Integer, Integer> modifiedAttrIds, final Multimap<Integer, Integer> modifiedRels, final Set<Integer> missingArtIds, final Set<Integer> allArtIds) throws OseeCoreException {
+   private Collection<ChangeItem> createMissingChangeItems(OrcsSession session, HasCancellation cancellation, TransactionRecord sourceTx, TransactionRecord destTx, final Set<Integer> modifiedArtIds, final Multimap<Integer, Integer> modifiedAttrIds, final Multimap<Integer, Integer> modifiedRels, final Set<Integer> missingArtIds, final Set<Integer> allArtIds) throws OseeCoreException {
       final Set<ChangeItem> toReturn = new LinkedHashSet<ChangeItem>();
       final Set<RelationData> relations = new LinkedHashSet<RelationData>();
 
-      DataLoader loader = dataLoaderFactory.fromBranchAndArtifactIds(sessionId, sourceTx.getBranch(), missingArtIds);
+      DataLoader loader = dataLoaderFactory.fromBranchAndArtifactIds(session, sourceTx.getBranch(), missingArtIds);
       loader.setLoadLevel(LoadLevel.FULL);
       loader.includeDeleted();
       loader.fromTransaction(sourceTx.getId());
-
-      loader.load(null, new ArtifactBuilder() {
+      loader.load(cancellation, new LoadDataHandlerAdaptor() {
 
          @Override
-         public ArtifactDataHandler createArtifactDataHandler() {
+         public ArtifactDataHandler getArtifactDataHandler() {
             return new ArtifactDataHandler() {
 
                @Override
@@ -147,11 +133,10 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
                   }
                }
             };
-
          }
 
          @Override
-         public RelationDataHandler createRelationDataHandler() {
+         public RelationDataHandler getRelationDataHandler() {
             return new RelationDataHandler() {
 
                @Override
@@ -166,7 +151,7 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
          }
 
          @Override
-         public AttributeDataHandler createAttributeDataHandler() {
+         public AttributeDataHandler getAttributeDataHandler() {
             return new AttributeDataHandler() {
 
                @Override
@@ -178,10 +163,6 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
             };
          }
 
-         @Override
-         public List<ArtifactReadable> getArtifacts() {
-            return null;
-         }
       });
 
       if (!relations.isEmpty()) {
@@ -199,21 +180,21 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
                relationChangesToAdd.put(data.getArtIdA(), data);
             }
          }
-         toReturn.addAll(createExistingRelations(destTx, sessionId, relationChangesToAdd));
+         toReturn.addAll(createExistingRelations(session, cancellation, destTx, relationChangesToAdd));
       }
       return toReturn;
    }
 
-   private Set<RelationChangeItem> createExistingRelations(TransactionRecord destTx, String sessionId, final Multimap<Integer, RelationData> relationChangesToAdd) throws OseeCoreException {
+   private Set<RelationChangeItem> createExistingRelations(OrcsSession session, HasCancellation cancellation, TransactionRecord destTx, final Multimap<Integer, RelationData> relationChangesToAdd) throws OseeCoreException {
       final Set<RelationChangeItem> toReturn = new LinkedHashSet<RelationChangeItem>();
 
       DataLoader loader =
-         dataLoaderFactory.fromBranchAndArtifactIds(sessionId, destTx.getBranch(), relationChangesToAdd.keySet());
+         dataLoaderFactory.fromBranchAndArtifactIds(session, destTx.getBranch(), relationChangesToAdd.keySet());
       loader.fromTransaction(destTx.getId());
-      loader.load(null, new ArtifactBuilder() {
+      loader.load(cancellation, new LoadDataHandlerAdaptor() {
 
          @Override
-         public ArtifactDataHandler createArtifactDataHandler() {
+         public ArtifactDataHandler getArtifactDataHandler() {
             return new ArtifactDataHandler() {
 
                @Override
@@ -223,21 +204,6 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
                   }
                }
             };
-         }
-
-         @Override
-         public RelationDataHandler createRelationDataHandler() {
-            return null;
-         }
-
-         @Override
-         public AttributeDataHandler createAttributeDataHandler() {
-            return null;
-         }
-
-         @Override
-         public List<ArtifactReadable> getArtifacts() {
-            return null;
          }
       });
 

@@ -112,7 +112,7 @@ public class BranchDataStoreImpl implements BranchDataStore {
    public Callable<TransactionRecord> commitBranch(OrcsSession session, ArtifactReadable committer, Branch source, Branch destination) {
       return new CommitBranchDatabaseCallable(logger, dbService, cachingService.getBranchCache(),
          cachingService.getTransactionCache(), modelFactory.getTransactionFactory(), committer, source, destination,
-         missingChangeItemFactory, sessionId);
+         missingChangeItemFactory, session);
    }
 
    @Override
@@ -123,14 +123,14 @@ public class BranchDataStoreImpl implements BranchDataStore {
    @Override
    public Callable<List<ChangeItem>> compareBranch(OrcsSession session, TransactionRecord sourceTx, TransactionRecord destinationTx) {
       return new CompareDatabaseCallable(logger, dbService, cachingService.getBranchCache(),
-         cachingService.getTransactionCache(), sourceTx, destinationTx, missingChangeItemFactory, sessionId);
+         cachingService.getTransactionCache(), sourceTx, destinationTx, missingChangeItemFactory, session);
    }
 
    @Override
    public Callable<List<ChangeItem>> compareBranch(OrcsSession session, Branch branch) throws OseeCoreException {
       TransactionCache txCache = cachingService.getTransactionCache();
       return new CompareDatabaseCallable(logger, dbService, cachingService.getBranchCache(), txCache,
-         branch.getBaseTransaction(), txCache.getHeadTransaction(branch), missingChangeItemFactory, sessionId);
+         branch.getBaseTransaction(), txCache.getHeadTransaction(branch), missingChangeItemFactory, session);
    }
 
    @Override
