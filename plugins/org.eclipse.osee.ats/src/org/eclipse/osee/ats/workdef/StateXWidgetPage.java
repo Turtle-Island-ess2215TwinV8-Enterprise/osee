@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.workdef.IAtsCompositeLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsLayoutItem;
@@ -49,7 +47,6 @@ import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
-import org.eclipse.osee.framework.jdk.core.type.Pair;
 import org.eclipse.osee.framework.jdk.core.util.AHTML;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.logging.OseeLevel;
@@ -83,7 +80,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class StateXWidgetPage implements IAtsWidgetLayoutListener, IStateToken {
 
-   private static final Pair<IStatus, XWidget> OK_PAIR = new Pair<IStatus, XWidget>(Status.OK_STATUS, null);
    protected final IAtsStateDefinition stateDefinition;
    protected final IAtsWorkDefinition workDefinition;
    private final AbstractWorkflowArtifact sma;
@@ -132,8 +128,8 @@ public class StateXWidgetPage implements IAtsWidgetLayoutListener, IStateToken {
 
    public void createBody(IManagedForm managedForm, Composite parent, AbstractWorkflowArtifact awa, XModifiedListener xModListener, boolean isEditable) throws OseeCoreException {
       final FormToolkit toolkit = managedForm != null ? managedForm.getToolkit() : null;
-
       final Composite topLevelComp = createComposite(parent, toolkit);
+      this.xModListener = xModListener;
       GridLayout layout = new GridLayout(1, false);
       layout.marginWidth = 2;
       layout.marginHeight = 2;
@@ -325,7 +321,7 @@ public class StateXWidgetPage implements IAtsWidgetLayoutListener, IStateToken {
 
       // TODO fix required for completed / required for transition
       xWidget.setRequiredEntry(renderer.getOptions().contains(WidgetOption.REQUIRED_FOR_COMPLETION));
-      xWidget.setEditable(renderer.getOptions().contains(WidgetOption.EDITABLE) && isEditable);
+      xWidget.setEditable(isEditable);
 
       if (atsWidgetLayoutListener != null) {
          atsWidgetLayoutListener.widgetCreating(xWidget, toolkit, awa, this, xModListener, isEditable);
