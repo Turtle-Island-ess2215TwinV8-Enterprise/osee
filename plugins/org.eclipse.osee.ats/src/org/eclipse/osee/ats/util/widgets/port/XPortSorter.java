@@ -5,10 +5,14 @@
  */
 package org.eclipse.osee.ats.util.widgets.port;
 
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Level;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.nebula.widgets.xviewer.Activator;
+import org.eclipse.osee.ats.api.commit.ICommitConfigArtifact;
 import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
 import org.eclipse.osee.ats.core.client.branch.AtsBranchManagerCore;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
@@ -43,14 +47,56 @@ public class XPortSorter extends ViewerSorter {
             if (portStatus.isError()) {
                return 1;
             }
-            TransactionRecord transId1 = AtsBranchManagerCore.getEarliestTransactionId(teamWf1);
-            TransactionRecord transId2 = AtsBranchManagerCore.getEarliestTransactionId(teamWf2);
-            if (transId1 == null && transId2 != null) {
+            ICommitConfigArtifact configArt1 =
+               AtsBranchManagerCore.getParentBranchConfigArtifactConfiguredToCommitTo(teamWf1);
+            ICommitConfigArtifact configArt2 =
+               AtsBranchManagerCore.getParentBranchConfigArtifactConfiguredToCommitTo(teamWf2);
+
+            if (configArt1 == null && configArt2 != null) {
                return -1;
-            } else if (transId1 != null && transId2 == null) {
+            } else if (configArt1 != null && configArt2 == null) {
+               return 1;
+            } else if (configArt1 == null && configArt2 == null) {
+               return 0;
+            }
+
+            Collection<TransactionRecord> txIds1 = AtsBranchManagerCore.getTransactionIds(teamWf1, false);
+            Collection<TransactionRecord> txIds2 = AtsBranchManagerCore.getTransactionIds(teamWf2, false);
+
+            TransactionRecord tx1 = null;
+            TransactionRecord tx2 = null;
+
+            for (TransactionRecord txRec : txIds1) {
+               String txBranchGuid = txRec.getBranch().getGuid();
+               String configArtBranchGuid = configArt1.getBaslineBranchGuid();
+               if (txBranchGuid.compareTo(configArtBranchGuid) == 0) {
+                  tx1 = txRec;
+                  break;
+               }
+            }
+
+            for (TransactionRecord txRec : txIds2) {
+               String txBranchGuid = txRec.getBranch().getGuid();
+               String configArtBranchGuid = configArt1.getBaslineBranchGuid();
+               if (txBranchGuid.compareTo(configArtBranchGuid) == 0) {
+                  tx2 = txRec;
+                  break;
+               }
+            }
+
+            if (tx1 == null && tx2 != null) {
+               return -1;
+            } else if (tx1 != null && tx2 == null) {
                return 1;
             }
-            return super.compare(viewer, transId1.getTimeStamp(), transId2.getTimeStamp());
+
+            Date date1 = tx1.getTimeStamp();
+            Date date2 = tx2.getTimeStamp();
+
+            Timestamp timeStamp1 = new Timestamp(date1.getTime());
+            Timestamp timeStamp2 = new Timestamp(date2.getTime());
+
+            return super.compare(viewer, timeStamp1, timeStamp2);
          } catch (OseeCoreException ex) {
             OseeLog.log(Activator.class, Level.SEVERE, ex);
          }
