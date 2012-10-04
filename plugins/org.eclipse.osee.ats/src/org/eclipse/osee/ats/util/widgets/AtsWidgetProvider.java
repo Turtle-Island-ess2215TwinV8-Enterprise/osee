@@ -20,6 +20,7 @@ import org.eclipse.osee.ats.core.client.validator.AtsOperationalImpactWithWorkar
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.XVersionList;
 import org.eclipse.osee.ats.util.widgets.commit.XCommitManager;
+import org.eclipse.osee.ats.util.widgets.commit.XSingleCommitManager;
 import org.eclipse.osee.ats.util.widgets.defect.XDefectViewer;
 import org.eclipse.osee.ats.util.widgets.port.XPortTableWidget;
 import org.eclipse.osee.ats.util.widgets.role.XUserRoleViewer;
@@ -97,6 +98,8 @@ public class AtsWidgetProvider implements IXWidgetProvider {
          return new XVersionList();
       } else if (widgetName.equals("XPortTableWidget")) {
          return new XPortTableWidget();
+      } else if (widgetName.equals(XSingleCommitManager.WIDGET_NAME)) {
+         return new XSingleCommitManager();
       }
       return toReturn;
    }

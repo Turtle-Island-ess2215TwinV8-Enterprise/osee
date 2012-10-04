@@ -125,11 +125,39 @@ public abstract class SkynetDragAndDrop {
          public void dropAccept(DropTargetEvent event) {
             // do nothing
          }
+
+         @Override
+         public void dragEnter(DropTargetEvent event) {
+            try {
+               performDragEnter(event);
+            } catch (OseeCoreException ex) {
+               OseeLog.log(Activator.class, Level.SEVERE, ex);
+            }
+         }
+
+         @Override
+         public void dragLeave(DropTargetEvent event) {
+            try {
+               performDragLeave(event);
+            } catch (OseeCoreException ex) {
+               OseeLog.log(Activator.class, Level.SEVERE, ex);
+            }
+         }
       });
    }
 
    @SuppressWarnings("unused")
    public void performDragOver(DropTargetEvent event) throws OseeCoreException {
+      // provided for subclass implementation
+   }
+
+   @SuppressWarnings("unused")
+   public void performDragEnter(DropTargetEvent event) throws OseeCoreException {
+      // provided for subclass implementation
+   }
+
+   @SuppressWarnings("unused")
+   public void performDragLeave(DropTargetEvent event) throws OseeCoreException {
       // provided for subclass implementation
    }
 

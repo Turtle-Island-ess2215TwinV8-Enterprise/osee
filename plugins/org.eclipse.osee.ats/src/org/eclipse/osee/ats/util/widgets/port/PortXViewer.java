@@ -17,13 +17,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.nebula.widgets.xviewer.XViewer;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
-import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.logging.OseeLevel;
-import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -33,11 +28,11 @@ import org.eclipse.swt.widgets.TreeItem;
  */
 public class PortXViewer extends XViewer {
 
-   private final XPortTableWidget xPortTableWidget;
+   private final PortController portController;
 
-   public PortXViewer(Composite parent, int style, XPortTableWidget xPortTableWidget) {
+   public PortXViewer(Composite parent, int style, PortController controller) {
       super(parent, style, new PortXManagerFactory());
-      this.xPortTableWidget = xPortTableWidget;
+      portController = controller;
    }
 
    @Override
@@ -63,10 +58,6 @@ public class PortXViewer extends XViewer {
       return arts;
    }
 
-   public XPortTableWidget getXPortTableWidget() {
-      return xPortTableWidget;
-   }
-
    @Override
    public void handleDoubleClick() {
       Object selected = getSelectedArtifacts().iterator().next();
@@ -81,22 +72,23 @@ public class PortXViewer extends XViewer {
       XViewerColumn xCol = (XViewerColumn) treeColumn.getData();
       if (xCol.equals(PortXManagerFactory.Remove_Col)) {
          Object input = getInput();
-         Collection colInput = null;
+         Collection<TeamWorkFlowArtifact> colInput = null;
          if (input instanceof Collection) {
-            colInput = (Collection<TeamWorkFlowArtifact>) getInput();
-         } else {
-            colInput = new ArrayList<TeamWorkFlowArtifact>();
+            colInput = (Collection<TeamWorkFlowArtifact>) input;
+            Object teamArtToRemove = treeItem.getData();
+            if (colInput.remove(teamArtToRemove)) {
+               if (teamArtToRemove instanceof TeamWorkFlowArtifact) {
+                  portController.removeSourceWorkflow((TeamWorkFlowArtifact) teamArtToRemove);
+               }
+            }
+            setInput(colInput);
          }
-         colInput.remove(treeItem.getData());
-         setInput(colInput);
-         xPortTableWidget.refresh();
-         try {
-            xPortTableWidget.getTeamArt().setRelations(AtsRelationTypes.Port_From, colInput);
-            xPortTableWidget.getTeamArt().persist("Port Team Workflow Removed");
-         } catch (OseeCoreException ex) {
-            OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
+      }
+      if (xCol.equals(PortXManagerFactory.Action_Col)) {
+         Object teamArtToApplyAction = treeItem.getData();
+         if (teamArtToApplyAction instanceof TeamWorkFlowArtifact) {
+            portController.portSourceWorkflow((TeamWorkFlowArtifact) teamArtToApplyAction);
          }
-
       }
       return false;
    }

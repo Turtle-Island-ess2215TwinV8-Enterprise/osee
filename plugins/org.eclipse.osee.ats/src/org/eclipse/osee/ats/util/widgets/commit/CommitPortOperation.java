@@ -3,12 +3,16 @@
  *
  * PLACE_YOUR_DISTRIBUTION_STATEMENT_RIGHT_HERE
  */
-package org.eclipse.osee.ats.util.widgets.port;
+package org.eclipse.osee.ats.util.widgets.commit;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osee.ats.core.client.branch.AtsBranchManagerCore;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.internal.Activator;
+import org.eclipse.osee.ats.util.widgets.port.PortBranch;
+import org.eclipse.osee.ats.util.widgets.port.PortBranches;
+import org.eclipse.osee.ats.util.widgets.port.PortStatus;
+import org.eclipse.osee.ats.util.widgets.port.PortUtil;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
 import org.eclipse.osee.framework.core.model.Branch;
 import org.eclipse.osee.framework.core.model.TransactionRecord;
@@ -19,11 +23,11 @@ import org.eclipse.osee.framework.skynet.core.artifact.BranchManager;
 import org.eclipse.osee.framework.skynet.core.conflict.ConflictManagerExternal;
 import org.eclipse.osee.framework.ui.skynet.commandHandlers.branch.commit.CommitHandler;
 
-public class PortApplyAllOperation extends AbstractOperation {
+public class CommitPortOperation extends AbstractOperation {
 
    private final TeamWorkFlowArtifact destTeamArt;
 
-   public PortApplyAllOperation(TeamWorkFlowArtifact destTeamArt) {
+   public CommitPortOperation(TeamWorkFlowArtifact destTeamArt) {
       super("Port Apply All", Activator.PLUGIN_ID);
       this.destTeamArt = destTeamArt;
    }

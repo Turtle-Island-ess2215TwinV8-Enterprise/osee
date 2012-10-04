@@ -179,7 +179,11 @@ public class StateXWidgetPage implements IAtsWidgetLayoutListener, IStateToken {
          labels.add(label);
       }
 
+      toolkit.adapt(parent);
+
       Composite stepsComp = createStepsLayoutComposite(parent);
+      toolkit.adapt(stepsComp);
+
       final TabFolder currentTabFolder = new TabFolder(stepsComp, SWT.LEFT | SWT.NONE);
       currentTabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 

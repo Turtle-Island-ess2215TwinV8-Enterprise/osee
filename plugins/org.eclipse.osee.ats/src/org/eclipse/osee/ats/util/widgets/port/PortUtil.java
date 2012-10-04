@@ -6,30 +6,66 @@
 package org.eclipse.osee.ats.util.widgets.port;
 
 import java.util.Collection;
+import java.util.List;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
+import org.eclipse.osee.ats.api.version.IAtsVersion;
+import org.eclipse.osee.ats.api.version.IAtsVersionService;
 import org.eclipse.osee.ats.core.client.branch.AtsBranchManagerCore;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
+import org.eclipse.osee.ats.core.config.AtsVersionService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.TransactionRecord;
+import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.skynet.core.transaction.TransactionManager;
 
 public class PortUtil {
 
-   public static PortStatus getPortStatus(TeamWorkFlowArtifact destTeamArt, TeamWorkFlowArtifact portFromTeamArt) throws OseeCoreException {
-      if (AtsBranchManagerCore.isWorkingBranchInWork(portFromTeamArt)) {
-         return PortStatus.ERROR_WORKING_BRANCH_EXISTS;
-      } else if (!AtsBranchManagerCore.isCommittedBranchExists(portFromTeamArt)) {
-         return PortStatus.ERROR_NO_COMMIT_TRANSACTION_FOUND;
+   public static PortStatus getPortStatus(TeamWorkFlowArtifact destinationWorkflow, TeamWorkFlowArtifact sourceWorkflow) throws OseeCoreException {
+      PortStatus toReturn = PortStatus.NONE;
+      if (AtsBranchManagerCore.isWorkingBranchInWork(sourceWorkflow)) {
+         toReturn = PortStatus.ERROR_WORKING_BRANCH_EXISTS;
+      } else if (!AtsBranchManagerCore.isCommittedBranchExists(sourceWorkflow)) {
+         // TODO from parallel dev meeting - what is the difference between committed and completed - should be reflected here
+         toReturn = PortStatus.ERROR_NO_COMMIT_TRANSACTION_FOUND;
+      } else {
+         // determine if the source work flow has already been ported to the target version of the destination work flow
+         IAtsVersionService versionService = AtsVersionService.get();
+
+         IAtsVersion destinationVersion = versionService.getTargetedVersion(destinationWorkflow);
+         if (destinationVersion != null) {
+            boolean isAlreadyPorted = false;
+            List<Artifact> destinations = sourceWorkflow.getRelatedArtifacts(AtsRelationTypes.Port_To);
+            for (Artifact artifact : destinations) {
+               if (artifact instanceof TeamWorkFlowArtifact) {
+                  TeamWorkFlowArtifact destination = (TeamWorkFlowArtifact) artifact;
+                  if (!destinationWorkflow.equals(destination)) {
+                     IAtsVersion otherDestionationVersion = versionService.getTargetedVersion(destination);
+                     isAlreadyPorted = destinationVersion.equals(otherDestionationVersion);
+                     if (isAlreadyPorted) {
+                        break;
+                     }
+                  }
+               }
+            }
+
+            if (isAlreadyPorted) {
+               toReturn = PortStatus.ERROR_ALREADY_PORTED_TO_TARGET_VERSION;
+            } else {
+               boolean committed = PortUtil.isPortedToWorkingBranch(destinationWorkflow, sourceWorkflow);
+               if (committed) {
+                  toReturn = PortStatus.PORTED;
+               } else {
+                  PortBranches portBranches = new PortBranches(destinationWorkflow);
+                  if (portBranches.getPortBranch(sourceWorkflow) != null) {
+                     toReturn = PortStatus.PORT_FROM_BRANCH_CREATED;
+                  }
+               }
+            }
+         } else {
+            toReturn = PortStatus.ERROR_TARGET_VERSION_NOT_SET;
+         }
       }
-      boolean committed = PortUtil.isPortedToWorkingBranch(destTeamArt, portFromTeamArt);
-      if (committed) {
-         return PortStatus.PORTED;
-      }
-      PortBranches portBranches = new PortBranches(destTeamArt);
-      if (portBranches.getPortBranch(portFromTeamArt) != null) {
-         return PortStatus.PORT_FROM_BRANCH_CREATED;
-      }
-      return PortStatus.NONE;
+      return toReturn;
    }
 
    public static PortAction getPortAction(TeamWorkFlowArtifact destTeamArt, TeamWorkFlowArtifact portFromTeamArt) throws OseeCoreException {

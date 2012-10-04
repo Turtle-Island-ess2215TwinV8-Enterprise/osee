@@ -105,8 +105,8 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
       xWidgetName "XCreateCodeTestTasksButton"
    }
 
-   widgetDefinition "Commit Manager" {
-      xWidgetName "XCommitManager"
+   widgetDefinition "Single Commit Manager" {
+      xWidgetName "XSingleCommitManager"
    }
    widgetDefinition "Port Drop Table" {
       xWidgetName "XPortTableWidget"
@@ -168,7 +168,7 @@ workDefinition "WorkDef_Team_Simple_Working_Branch" {
 		         }
 		         widget "Show CDB Differences Report"
 		         widget "Create Code/Test Tasks"
-		         widget "Commit Manager"
+		         widget "Single Commit Manager"
          	}
          }
          widget "Estimated Completion Date"

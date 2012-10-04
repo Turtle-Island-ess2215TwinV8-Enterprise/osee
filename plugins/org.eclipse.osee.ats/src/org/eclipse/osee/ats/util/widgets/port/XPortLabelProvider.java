@@ -29,65 +29,72 @@ import org.eclipse.swt.graphics.Image;
 public class XPortLabelProvider extends XViewerLabelProvider {
 
    private final PortXViewer portXViewer;
+   private final PortController controller;
 
-   public XPortLabelProvider(PortXViewer portXViewer) {
+   public XPortLabelProvider(PortXViewer portXViewer, PortController controller) {
       super(portXViewer);
       this.portXViewer = portXViewer;
+      this.controller = controller;
    }
 
    @Override
    public Image getColumnImage(Object element, XViewerColumn xCol, int columnIndex) throws OseeCoreException {
+      Image image = null;
       if (element instanceof TeamWorkFlowArtifact) {
          TeamWorkFlowArtifact teamArt = (TeamWorkFlowArtifact) element;
          if (xCol.equals(PortXManagerFactory.Action_Col)) {
-            PortStatus status = PortUtil.getPortStatus(portXViewer.getXPortTableWidget().getTeamArt(), teamArt);
+            PortStatus status = controller.getSourceWorkflowStatus(teamArt);
             if (status.isError()) {
-               return ImageManager.getImage(FrameworkImage.ERROR);
-            }
-            PortAction action = PortUtil.getPortAction(portXViewer.getXPortTableWidget().getTeamArt(), teamArt);
-            if (action == PortAction.APPLY_NEXT) {
-               return ImageManager.getImage(AtsImage.RIGHT_ARROW_SM);
+               image = ImageManager.getImage(FrameworkImage.ERROR);
+            } else {
+               PortAction action = controller.getSourceWorkflowAction(teamArt);
+               if (action == PortAction.APPLY_NEXT) {
+                  image = ImageManager.getImage(AtsImage.RIGHT_ARROW_SM);
+               }
             }
          } else if (xCol.equals(PortXManagerFactory.Remove_Col)) {
-            return ImageManager.getImage(FrameworkImage.REMOVE);
+            image = ImageManager.getImage(FrameworkImage.REMOVE);
          } else if (xCol.equals(PortXManagerFactory.Status_Col)) {
-            PortStatus status = PortUtil.getPortStatus(portXViewer.getXPortTableWidget().getTeamArt(), teamArt);
+            PortStatus status = controller.getSourceWorkflowStatus(teamArt);
             if (status.isError()) {
-               return ImageManager.getImage(FrameworkImage.ERROR);
+               image = ImageManager.getImage(FrameworkImage.ERROR);
             }
          }
       }
-      return null;
+      return image;
    }
 
    @Override
    public String getColumnText(Object element, XViewerColumn xCol, int columnIndex) throws OseeCoreException {
+      String toReturn = "unhandled element type " + element;
       if (element instanceof TeamWorkFlowArtifact) {
          TeamWorkFlowArtifact teamArt = (TeamWorkFlowArtifact) element;
          if (xCol.equals(PortXManagerFactory.Title_Col)) {
-            return teamArt.getName();
+            toReturn = teamArt.getName();
          } else if (xCol.equals(PortXManagerFactory.Status_Col)) {
-            PortStatus portStatus = PortUtil.getPortStatus(portXViewer.getXPortTableWidget().getTeamArt(), teamArt);
-            return portStatus.getDisplayName();
+            PortStatus portStatus = controller.getSourceWorkflowStatus(teamArt);
+            toReturn = portStatus.getDisplayName();
          } else if (xCol.equals(PortXManagerFactory.Action_Col)) {
-            PortAction portAction = PortUtil.getPortAction(portXViewer.getXPortTableWidget().getTeamArt(), teamArt);
-            return portAction.getDisplayName();
+            PortAction portAction = controller.getSourceWorkflowAction(teamArt);
+            toReturn = portAction.getDisplayName();
          } else if (xCol.equals(PortXManagerFactory.Remove_Col)) {
-            return "Remove";
+            toReturn = "Remove";
          } else if (xCol.equals(PortXManagerFactory.Commit_Date_Col)) {
             TransactionRecord earliestTransactionId = AtsBranchManagerCore.getEarliestTransactionId(teamArt);
             if (earliestTransactionId != null) {
-               return DateUtil.get(earliestTransactionId.getTimeStamp(), DateUtil.MMDDYYHHMM);
+               toReturn = DateUtil.get(earliestTransactionId.getTimeStamp(), DateUtil.MMDDYYHHMM);
             }
-            return "";
          }
-      } else if (element instanceof String) {
-         if (xCol.equals(PortXManagerFactory.Title_Col)) {
-            return (String) element;
-         }
-         return "";
       }
-      return "unhandled element type " + element;
+
+      if (element instanceof String) {
+         if (xCol.equals(PortXManagerFactory.Title_Col)) {
+            toReturn = (String) element;
+         } else {
+            toReturn = "";
+         }
+      }
+      return toReturn;
    }
 
    @Override

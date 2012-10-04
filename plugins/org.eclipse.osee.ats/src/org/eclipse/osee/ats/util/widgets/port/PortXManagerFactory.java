@@ -20,8 +20,6 @@ import org.eclipse.swt.SWT;
  */
 public class PortXManagerFactory extends SkynetXViewerFactory {
 
-   public static XViewerColumn Empty_Col = new XViewerColumn("osee.port.empty", "Empty", 0, SWT.LEFT, true,
-      SortDataType.String, false, null);
    public static XViewerColumn Title_Col = new XViewerColumn("osee.port.title", "Title", 250, SWT.LEFT, true,
       SortDataType.String, false, null);
    public static XViewerColumn Commit_Date_Col = new XViewerColumn("osee.port.commitDate", "Committed Date", 180,
@@ -30,12 +28,12 @@ public class PortXManagerFactory extends SkynetXViewerFactory {
       SortDataType.String, false, null);
    public static XViewerColumn Remove_Col = new XViewerColumn("osee.port.remove", "Remove", 90, SWT.LEFT, true,
       SortDataType.String, false, null);
-   public static XViewerColumn Status_Col = new XViewerColumn("osee.port.status", "Staus", 200, SWT.LEFT, true,
+   public static XViewerColumn Status_Col = new XViewerColumn("osee.port.status", "Status", 200, SWT.LEFT, true,
       SortDataType.String, false, null);
 
    public PortXManagerFactory() {
       super("osee.skynet.gui.PortXViewer");
-      registerColumns(Empty_Col, Title_Col, Commit_Date_Col, Action_Col, Remove_Col, Status_Col);
+      registerColumns(Title_Col, Commit_Date_Col, Action_Col, Remove_Col, Status_Col);
    }
 
    @Override

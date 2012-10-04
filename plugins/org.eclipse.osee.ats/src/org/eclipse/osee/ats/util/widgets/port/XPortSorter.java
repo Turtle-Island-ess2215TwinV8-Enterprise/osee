@@ -27,78 +27,84 @@ import org.eclipse.osee.framework.logging.OseeLog;
  */
 public class XPortSorter extends ViewerSorter {
 
-   private final XPortTableWidget portManager;
+   private TeamWorkFlowArtifact teamWorkflow;
 
-   public XPortSorter(XPortTableWidget portManager) {
-      this.portManager = portManager;
+   public XPortSorter() {
+      //
+   }
+
+   public void setTeamWorkflow(TeamWorkFlowArtifact teamWorkflow) {
+      this.teamWorkflow = teamWorkflow;
    }
 
    @Override
    public int compare(Viewer viewer, Object o1, Object o2) {
-      if (o1 instanceof IAtsTeamWorkflow && o2 instanceof IAtsTeamWorkflow) {
-         try {
-            TeamWorkFlowArtifact teamWf1 = (TeamWorkFlowArtifact) o1;
-            TeamWorkFlowArtifact teamWf2 = (TeamWorkFlowArtifact) o2;
-            PortStatus portStatus = PortUtil.getPortStatus(portManager.getTeamArt(), teamWf1);
-            if (portStatus.isError()) {
-               return -1;
-            }
-            portStatus = PortUtil.getPortStatus(portManager.getTeamArt(), teamWf2);
-            if (portStatus.isError()) {
-               return 1;
-            }
-            ICommitConfigArtifact configArt1 =
-               AtsBranchManagerCore.getParentBranchConfigArtifactConfiguredToCommitTo(teamWf1);
-            ICommitConfigArtifact configArt2 =
-               AtsBranchManagerCore.getParentBranchConfigArtifactConfiguredToCommitTo(teamWf2);
-
-            if (configArt1 == null && configArt2 != null) {
-               return -1;
-            } else if (configArt1 != null && configArt2 == null) {
-               return 1;
-            } else if (configArt1 == null && configArt2 == null) {
-               return 0;
-            }
-
-            Collection<TransactionRecord> txIds1 = AtsBranchManagerCore.getTransactionIds(teamWf1, false);
-            Collection<TransactionRecord> txIds2 = AtsBranchManagerCore.getTransactionIds(teamWf2, false);
-
-            TransactionRecord tx1 = null;
-            TransactionRecord tx2 = null;
-
-            for (TransactionRecord txRec : txIds1) {
-               String txBranchGuid = txRec.getBranch().getGuid();
-               String configArtBranchGuid = configArt1.getBaslineBranchGuid();
-               if (txBranchGuid.compareTo(configArtBranchGuid) == 0) {
-                  tx1 = txRec;
-                  break;
+      if (teamWorkflow != null) {
+         if (o1 instanceof IAtsTeamWorkflow && o2 instanceof IAtsTeamWorkflow) {
+            try {
+               TeamWorkFlowArtifact teamWf1 = (TeamWorkFlowArtifact) o1;
+               TeamWorkFlowArtifact teamWf2 = (TeamWorkFlowArtifact) o2;
+               PortStatus portStatus = PortUtil.getPortStatus(teamWorkflow, teamWf1);
+               if (portStatus.isError()) {
+                  return -1;
                }
-            }
-
-            for (TransactionRecord txRec : txIds2) {
-               String txBranchGuid = txRec.getBranch().getGuid();
-               String configArtBranchGuid = configArt1.getBaslineBranchGuid();
-               if (txBranchGuid.compareTo(configArtBranchGuid) == 0) {
-                  tx2 = txRec;
-                  break;
+               portStatus = PortUtil.getPortStatus(teamWorkflow, teamWf2);
+               if (portStatus.isError()) {
+                  return 1;
                }
+               ICommitConfigArtifact configArt1 =
+                  AtsBranchManagerCore.getParentBranchConfigArtifactConfiguredToCommitTo(teamWf1);
+               ICommitConfigArtifact configArt2 =
+                  AtsBranchManagerCore.getParentBranchConfigArtifactConfiguredToCommitTo(teamWf2);
+
+               if (configArt1 == null && configArt2 != null) {
+                  return -1;
+               } else if (configArt1 != null && configArt2 == null) {
+                  return 1;
+               } else if (configArt1 == null && configArt2 == null) {
+                  return 0;
+               }
+
+               Collection<TransactionRecord> txIds1 = AtsBranchManagerCore.getTransactionIds(teamWf1, false);
+               Collection<TransactionRecord> txIds2 = AtsBranchManagerCore.getTransactionIds(teamWf2, false);
+
+               TransactionRecord tx1 = null;
+               TransactionRecord tx2 = null;
+
+               for (TransactionRecord txRec : txIds1) {
+                  String txBranchGuid = txRec.getBranch().getGuid();
+                  String configArtBranchGuid = configArt1.getBaslineBranchGuid();
+                  if (txBranchGuid.compareTo(configArtBranchGuid) == 0) {
+                     tx1 = txRec;
+                     break;
+                  }
+               }
+
+               for (TransactionRecord txRec : txIds2) {
+                  String txBranchGuid = txRec.getBranch().getGuid();
+                  String configArtBranchGuid = configArt1.getBaslineBranchGuid();
+                  if (txBranchGuid.compareTo(configArtBranchGuid) == 0) {
+                     tx2 = txRec;
+                     break;
+                  }
+               }
+
+               if (tx1 == null && tx2 != null) {
+                  return -1;
+               } else if (tx1 != null && tx2 == null) {
+                  return 1;
+               }
+
+               Date date1 = tx1.getTimeStamp();
+               Date date2 = tx2.getTimeStamp();
+
+               Timestamp timeStamp1 = new Timestamp(date1.getTime());
+               Timestamp timeStamp2 = new Timestamp(date2.getTime());
+
+               return super.compare(viewer, timeStamp1, timeStamp2);
+            } catch (OseeCoreException ex) {
+               OseeLog.log(Activator.class, Level.SEVERE, ex);
             }
-
-            if (tx1 == null && tx2 != null) {
-               return -1;
-            } else if (tx1 != null && tx2 == null) {
-               return 1;
-            }
-
-            Date date1 = tx1.getTimeStamp();
-            Date date2 = tx2.getTimeStamp();
-
-            Timestamp timeStamp1 = new Timestamp(date1.getTime());
-            Timestamp timeStamp2 = new Timestamp(date2.getTime());
-
-            return super.compare(viewer, timeStamp1, timeStamp2);
-         } catch (OseeCoreException ex) {
-            OseeLog.log(Activator.class, Level.SEVERE, ex);
          }
       }
       return super.compare(viewer, o1, o2);
