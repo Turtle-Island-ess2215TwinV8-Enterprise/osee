@@ -96,7 +96,7 @@ public class AtsWidgetProvider implements IXWidgetProvider {
          }
       } else if (widgetName.equals(XVersionList.WIDGET_ID)) {
          return new XVersionList();
-      } else if (widgetName.equals("XPortTableWidget")) {
+      } else if (widgetName.equals(XPortTableWidget.WIDGET_NAME)) {
          return new XPortTableWidget();
       } else if (widgetName.equals(XSingleCommitManager.WIDGET_NAME)) {
          return new XSingleCommitManager();

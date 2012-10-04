@@ -5,10 +5,8 @@
  */
 package org.eclipse.osee.ats.util.widgets.commit;
 
-import java.util.Collection;
 import java.util.List;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
-import org.eclipse.osee.ats.core.client.branch.AtsBranchManagerCore;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowManager;
 import org.eclipse.osee.ats.internal.Activator;
@@ -34,7 +32,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 
 public class XSingleCommitManager extends GenericXWidget implements IArtifactWidget, IBranchEventListener {
 
@@ -42,9 +39,7 @@ public class XSingleCommitManager extends GenericXWidget implements IArtifactWid
    public static final String NAME = "Single Commit Manager";
    public static final String DESCRIPTION = "Commit a single branch to the targets destination branch.";
    private TeamWorkFlowArtifact teamArt;
-   private Composite mainComp;
    private Composite parentComp;
-   private Label extraInfoLabel;
 
    public XSingleCommitManager() {
       super(NAME);
@@ -58,10 +53,12 @@ public class XSingleCommitManager extends GenericXWidget implements IArtifactWid
 
    @Override
    public void saveToArtifact() throws OseeCoreException {
+      // currently not used
    }
 
    @Override
    public void revert() throws OseeCoreException {
+      // currently not used
    }
 
    @Override
@@ -107,26 +104,16 @@ public class XSingleCommitManager extends GenericXWidget implements IArtifactWid
 
          @Override
          public void widgetSelected(SelectionEvent e) {
-            CommitPortOperation operation = new CommitPortOperation(teamArt);
-            try {
-               operation.doWork(null);
-            } catch (Exception ex) {
-               OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
-            }
+            handleCommit();
          }
       });
 
-      button = toolkit.createButton(buttonBar, "Merge", SWT.PUSH);
-      button.setGrayed(true);
    }
 
    public void handleCommit() {
+      CommitPortOperation operation = new CommitPortOperation(teamArt);
       try {
-         if (teamArt != null) {
-            Collection<Object> commitMgrInputObjs =
-               AtsBranchManagerCore.getCommitTransactionsAndConfigItemsForTeamWf(teamArt);
-            System.out.println(commitMgrInputObjs.size());
-         }
+         operation.doWork(null);
       } catch (Exception ex) {
          OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
       }
