@@ -143,7 +143,7 @@ public class AtsWorkDefinitionImporter {
 
    public void convertAndOpenAtsDsl(IAtsWorkDefinition workDef, XResultData resultData, String filename) throws OseeCoreException {
       try {
-         String storageStr = AtsWorkDefinitionService.getService().getStorageString(workDef, resultData);
+         String storageStr = AtsWorkDefinitionService.get().getStorageString(workDef, resultData);
          IFile iFile = OseeData.getIFile(filename);
          Lib.writeStringToFile(storageStr, AWorkspace.iFileToFile(iFile));
          AWorkspace.openEditor(iFile);

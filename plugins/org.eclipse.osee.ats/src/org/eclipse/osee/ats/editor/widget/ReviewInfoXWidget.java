@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.workdef.IStateToken;
 import org.eclipse.osee.ats.core.client.review.AbstractReviewArtifact;
 import org.eclipse.osee.ats.core.client.review.DecisionReviewManager;
@@ -39,7 +40,6 @@ import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.review.NewDecisionReviewJob;
 import org.eclipse.osee.ats.review.NewPeerToPeerReviewJob;
 import org.eclipse.osee.ats.util.AtsUtil;
-import org.eclipse.osee.ats.util.Overview;
 import org.eclipse.osee.ats.util.widgets.dialog.StateListAndTitleDialog;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.AHTML;
@@ -132,7 +132,7 @@ public class ReviewInfoXWidget extends XLabelValueBase {
                   StateListAndTitleDialog dialog =
                      new StateListAndTitleDialog("Create Decision Review",
                         "Select state to that review will be associated with.",
-                        AtsWorkDefinitionService.getService().getStateNames(teamArt.getWorkDefinition()));
+                        AtsWorkDefinitionService.get().getStateNames(teamArt.getWorkDefinition()));
                   dialog.setInitialSelections(new Object[] {forState.getName()});
                   if (dialog.open() == 0) {
                      if (!Strings.isValid(dialog.getReviewTitle())) {
@@ -175,7 +175,7 @@ public class ReviewInfoXWidget extends XLabelValueBase {
                   StateListAndTitleDialog dialog =
                      new StateListAndTitleDialog("Add Peer to Peer Review",
                         "Select state to that review will be associated with.",
-                        AtsWorkDefinitionService.getService().getStateNames(teamArt.getWorkDefinition()));
+                        AtsWorkDefinitionService.get().getStateNames(teamArt.getWorkDefinition()));
                   dialog.setInitialSelections(new Object[] {forState.getName()});
                   dialog.setReviewTitle(PeerToPeerReviewManager.getDefaultReviewTitle(teamArt));
                   if (dialog.open() == 0) {
@@ -229,7 +229,7 @@ public class ReviewInfoXWidget extends XLabelValueBase {
       try {
          html.append(AHTML.addSpace(1) + AHTML.getLabelStr(AHTML.LABEL_FONT,
             "\"" + forState.getName() + "\" State Reviews"));
-         html.append(AHTML.startBorderTable(100, Overview.normalColor, ""));
+         html.append(AHTML.startBorderTable(100, AtsLib.normalColor, ""));
          html.append(AHTML.addHeaderRowMultiColumnTable(new String[] {"Review Type", "Title", "ID"}));
          for (AbstractReviewArtifact art : ReviewManager.getReviews(teamArt, forState)) {
             html.append(AHTML.addRowMultiColumnTable(new String[] {

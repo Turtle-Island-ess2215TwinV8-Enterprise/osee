@@ -86,8 +86,6 @@ public final class AtsUtil {
    public final static Color ACTIVE_COLOR = new Color(null, 206, 212, 239);
    private static final Date today = new Date();
    public final static int MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
-   public final static String normalColor = "#FFFFFF";
-   public final static String activeColor = "#EEEEEE";
 
    private AtsUtil() {
       super();

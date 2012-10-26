@@ -18,7 +18,7 @@ public interface IAtsCompositeLayoutItem extends IAtsLayoutItem {
 
    public abstract void setNumColumns(int numColumns);
 
-   public abstract List<IAtsLayoutItem> getaLayoutItems();
+   public abstract List<IAtsLayoutItem> getLayoutItems();
 
    @Override
    public abstract String toString();

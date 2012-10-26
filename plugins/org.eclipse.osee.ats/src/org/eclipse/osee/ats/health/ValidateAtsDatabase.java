@@ -34,6 +34,7 @@ import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
@@ -48,7 +49,7 @@ import org.eclipse.osee.ats.core.client.review.role.UserRoleManager;
 import org.eclipse.osee.ats.core.client.task.TaskArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamState;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
+import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactoryClient;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.client.workflow.log.AtsLog;
 import org.eclipse.osee.ats.core.client.workflow.log.LogItem;
@@ -57,8 +58,7 @@ import org.eclipse.osee.ats.core.client.workflow.transition.TransitionManager;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
 import org.eclipse.osee.ats.core.config.TeamDefinitions;
-import org.eclipse.osee.ats.core.users.AtsUsers;
-import org.eclipse.osee.ats.core.util.AtsObjects;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.world.WorldXNavigateItemAction;
@@ -485,7 +485,7 @@ public class ValidateAtsDatabase extends WorldXNavigateItemAction {
       for (Artifact artifact : artifacts) {
          try {
             String workDefName = artifact.getSoleAttributeValue(AtsAttributeTypes.WorkflowDefinition, "");
-            if (Strings.isValid(workDefName) && WorkDefinitionFactory.getWorkDefinition(workDefName) == null) {
+            if (Strings.isValid(workDefName) && WorkDefinitionFactoryClient.getWorkDefinition(workDefName) == null) {
                testNameToResultsMap.put(
                   "testAttributeSetWorkDefinitionsExist",
                   String.format(
@@ -1124,8 +1124,8 @@ public class ValidateAtsDatabase extends WorldXNavigateItemAction {
    private void testStateMachineAssignees(Collection<Artifact> artifacts) {
       Date date = new Date();
       if (unAssignedUser == null) {
-         unAssignedUser = AtsUsers.getUnAssigned();
-         oseeSystemUser = AtsUsers.getSystemUser();
+         unAssignedUser = AtsUserService.get().getUnAssigned();
+         oseeSystemUser = AtsUserService.get().getSystemUser();
       }
       for (Artifact art : artifacts) {
          if (art.isDeleted()) {
@@ -1148,7 +1148,7 @@ public class ValidateAtsDatabase extends WorldXNavigateItemAction {
                if (assignees.size() > 1 && assignees.contains(unAssignedUser)) {
                   testNameToResultsMap.put(
                      "testStateMachineAssignees",
-                     "Error: " + awa.getArtifactTypeName() + " " + XResultDataUI.getHyperlink(awa) + " is unassigned and assigned => " + AtsObjects.toString(
+                     "Error: " + awa.getArtifactTypeName() + " " + XResultDataUI.getHyperlink(awa) + " is unassigned and assigned => " + AtsLib.toString(
                         "; ", assignees));
                   if (fixAssignees) {
                      awa.getStateMgr().removeAssignee(unAssignedUser);

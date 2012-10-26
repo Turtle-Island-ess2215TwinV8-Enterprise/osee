@@ -46,7 +46,7 @@ public class XStateCombo extends XComboDam {
             workDef = ((AbstractWorkflowArtifact) getArtifact()).getParentTeamWorkflow().getWorkDefinition();
          }
          if (workDef != null) {
-            for (String stateName : AtsWorkDefinitionService.getService().getStateNames(workDef)) {
+            for (String stateName : AtsWorkDefinitionService.get().getStateNames(workDef)) {
                if (!validStates.contains(stateName)) {
                   validStates.add(stateName);
                }

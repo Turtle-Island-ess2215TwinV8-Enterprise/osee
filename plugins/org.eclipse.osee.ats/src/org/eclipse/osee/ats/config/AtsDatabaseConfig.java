@@ -13,11 +13,11 @@ package org.eclipse.osee.ats.config;
 import java.util.Arrays;
 import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.workdef.WorkDefinitionDefault;
 import org.eclipse.osee.ats.core.client.config.AtsArtifactToken;
 import org.eclipse.osee.ats.core.client.config.store.ActionableItemArtifactStore;
 import org.eclipse.osee.ats.core.client.config.store.TeamDefinitionArtifactStore;
 import org.eclipse.osee.ats.core.client.util.AtsGroup;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.workdef.AtsWorkDefinitionSheetProviders;
@@ -47,7 +47,7 @@ public class AtsDatabaseConfig implements IDbInitializationTask {
       TeamDefinitionArtifactStore teamDefStore =
          new TeamDefinitionArtifactStore(topTeamDefArt, AtsConfigCache.instance);
       IAtsTeamDefinition teamDef = teamDefStore.getTeamDefinition();
-      teamDef.setWorkflowDefinition(WorkDefinitionFactory.TeamWorkflowDefaultDefinitionId);
+      teamDef.setWorkflowDefinition(WorkDefinitionDefault.TeamWorkflowDefaultDefinitionId);
       teamDefStore.save("Set Top Team Work Definition");
 
       // load top ai into cache

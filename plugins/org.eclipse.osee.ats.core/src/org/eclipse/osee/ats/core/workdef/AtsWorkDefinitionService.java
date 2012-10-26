@@ -15,7 +15,7 @@ public class AtsWorkDefinitionService {
    private static AtsWorkDefinitionService instance;
    private IAtsWorkDefinitionService service;
 
-   public static IAtsWorkDefinitionService getService() {
+   public static IAtsWorkDefinitionService get() {
       if (instance == null) {
          throw new IllegalStateException("ATS Work Definition Service has not been activated");
       }
@@ -29,4 +29,9 @@ public class AtsWorkDefinitionService {
    public void start() {
       instance = this;
    }
+
+   public static boolean isActive() {
+      return instance != null;
+   }
+
 }

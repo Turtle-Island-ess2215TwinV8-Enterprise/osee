@@ -13,7 +13,7 @@ package org.eclipse.osee.ats.notify;
 import java.util.List;
 import org.eclipse.osee.ats.core.client.notify.AtsNotificationManager;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.util.Overview.PreviewStyle;
+import org.eclipse.osee.ats.core.workflow.AtsWorkItemService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.ui.skynet.util.email.EmailWizard;
 
@@ -27,8 +27,7 @@ public class ArtifactEmailWizard extends EmailWizard {
    }
 
    public ArtifactEmailWizard(AbstractWorkflowArtifact sma, List<Object> toAddress) throws OseeCoreException {
-      super(
-         AtsNotificationManagerUI.getPreviewHtml(sma, PreviewStyle.HYPEROPEN, PreviewStyle.NO_SUBSCRIBE_OR_FAVORITE),
+      super(AtsWorkItemService.get().getOverviewHtml(sma),
          " Regarding " + sma.getArtifactTypeName() + " - " + sma.getName(),
          AtsNotificationManager.getEmailableGroups(sma), toAddress);
    }

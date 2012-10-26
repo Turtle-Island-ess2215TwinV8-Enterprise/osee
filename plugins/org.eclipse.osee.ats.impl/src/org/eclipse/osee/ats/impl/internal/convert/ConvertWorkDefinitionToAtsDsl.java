@@ -278,7 +278,7 @@ public class ConvertWorkDefinitionToAtsDsl {
       } else {
          layout.getLayoutItems().add(newDslComposite);
       }
-      processStateItems(composite.getaLayoutItems(), layout, newDslComposite);
+      processStateItems(composite.getLayoutItems(), layout, newDslComposite);
    }
 
    protected void processWidgetDefinition(LayoutDef layout, Composite dslComposite, IAtsWidgetDefinition widgetDef) {

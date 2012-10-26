@@ -13,13 +13,13 @@ package org.eclipse.osee.ats.world;
 import java.util.regex.Pattern;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.osee.ats.api.IAtsWorkItem;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
-import org.eclipse.osee.ats.core.column.AssigneeColumn;
 import org.eclipse.osee.ats.internal.Activator;
+import org.eclipse.osee.ats.workflow.AtsAssigneeService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.logging.OseeLevel;
 import org.eclipse.osee.framework.logging.OseeLog;
-import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 
 /**
  * @author Donald G. Dunne
@@ -35,8 +35,8 @@ public class WorldAssigneeFilter extends ViewerFilter {
    @Override
    public boolean select(Viewer viewer, Object parentElement, Object element) {
       try {
-         if (element instanceof Artifact) {
-            return p.matcher(AssigneeColumn.instance.getAssigneeStr(element)).find();
+         if (element instanceof IAtsWorkItem) {
+            return p.matcher(AtsAssigneeService.get().getAssigneeStr((IAtsWorkItem) element)).find();
          }
       } catch (Exception ex) {
          OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);

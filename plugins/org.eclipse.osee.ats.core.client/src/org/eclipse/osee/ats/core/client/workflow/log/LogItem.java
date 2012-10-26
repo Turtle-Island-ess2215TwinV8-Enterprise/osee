@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import org.eclipse.osee.ats.api.user.IAtsUser;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.DateUtil;
 
@@ -41,7 +41,7 @@ public class LogItem {
       this.msg = msg;
       this.state = intern(state);
       this.userId = intern(userId);
-      this.user = AtsUsers.getUser(userId);
+      this.user = AtsUserService.get().getUser(userId);
       this.type = type;
    }
 

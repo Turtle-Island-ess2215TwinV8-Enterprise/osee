@@ -8,11 +8,15 @@ package org.eclipse.osee.ats.core.client.workdef;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.eclipse.osee.ats.api.IAtsWorkItem;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
+import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinitionStore;
 import org.eclipse.osee.ats.api.workdef.IAttributeResolver;
 import org.eclipse.osee.ats.api.workdef.IUserResolver;
+import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
+import org.eclipse.osee.ats.core.client.config.AtsObjectsClient;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.framework.core.enums.DeletionFlag;
 import org.eclipse.osee.framework.core.exception.ArtifactDoesNotExist;
@@ -105,6 +109,34 @@ public class AtsWorkDefinitionStore implements IAtsWorkDefinitionStore {
    private String loadWorkDefinitionFromArtifact(Artifact artifact) throws OseeCoreException {
       String modelText = artifact.getAttributesToString(AtsAttributeTypes.DslSheet);
       return modelText;
+   }
+
+   @Override
+   public String getWorkDefinitionAttribute(IAtsWorkItem workItem) throws OseeCoreException {
+      Artifact art = AtsObjectsClient.getSoleArtifact(workItem);
+      if (art != null) {
+         return art.getSoleAttributeValue(AtsAttributeTypes.WorkflowDefinition, null);
+      }
+      return null;
+   }
+
+   @Override
+   public String getRelatedTaskWorkDefinitionAttribute(IAtsWorkItem workItem) throws OseeCoreException {
+      Artifact art = AtsObjectsClient.getSoleArtifact(workItem);
+      if (art != null) {
+         return art.getSoleAttributeValue(AtsAttributeTypes.RelatedTaskWorkDefinition, null);
+      }
+      return null;
+   }
+
+   @Override
+   public WorkDefinitionMatch getWorkDefinitionFromTaskViaProviders(IAtsTeamWorkflow teamWf) throws OseeCoreException {
+      return WorkDefinitionFactoryClient.getWorkDefinitionFromTaskViaProviders(teamWf);
+   };
+
+   @Override
+   public WorkDefinitionMatch getWorkDefinitionFromProviders(IAtsWorkItem workItem) throws OseeCoreException {
+      return WorkDefinitionFactoryClient.getWorkDefinitionFromProviders(workItem);
    };
 
 }

@@ -281,7 +281,7 @@ public class ConvertAtsDslToWorkDefinition {
             Composite composite = (Composite) layoutItem;
             IAtsCompositeLayoutItem compStateItem = new CompositeLayoutItem(composite.getNumColumns());
             if (!composite.getLayoutItems().isEmpty()) {
-               processLayoutItems(SHEET_NAME, widgetDefs, compStateItem.getaLayoutItems(), composite.getLayoutItems());
+               processLayoutItems(SHEET_NAME, widgetDefs, compStateItem.getLayoutItems(), composite.getLayoutItems());
             }
             stateItems.add(compStateItem);
          }

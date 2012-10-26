@@ -18,14 +18,14 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
+import org.eclipse.osee.ats.api.notify.IAtsNotificationListener;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.workflow.WorkState;
+import org.eclipse.osee.ats.api.workflow.WorkStateFactory;
 import org.eclipse.osee.ats.api.workflow.WorkStateProvider;
 import org.eclipse.osee.ats.core.internal.Activator;
-import org.eclipse.osee.ats.core.model.WorkStateFactory;
-import org.eclipse.osee.ats.core.notify.IAtsNotificationListener;
-import org.eclipse.osee.ats.core.users.AtsUsers;
-import org.eclipse.osee.ats.core.util.AtsObjects;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
@@ -66,7 +66,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
     */
    @Override
    public boolean isUnAssigned() throws OseeCoreException {
-      return getAssignees().contains(AtsUsers.getUnAssigned());
+      return getAssignees().contains(AtsUserService.get().getUnAssigned());
    }
 
    @Override
@@ -76,7 +76,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
 
    @Override
    public String getAssigneesStr(String stateName) {
-      return AtsObjects.toString("; ", getAssignees(stateName));
+      return AtsLib.toString("; ", getAssignees(stateName));
    }
 
    @Override
@@ -109,7 +109,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
          return;
       }
       for (IAtsUser assignee : assignees) {
-         if (AtsUsers.isGuestUser(assignee)) {
+         if (AtsUserService.get().isGuestUser(assignee)) {
             throw new OseeArgumentException("Can not assign workflow to Guest");
          }
       }
@@ -126,8 +126,8 @@ public class WorkStateProviderImpl implements WorkStateProvider {
       if (listener != null) {
          listener.notifyAssigned(notifyAssignees);
       }
-      if (getAssignees().size() > 1 && getAssignees().contains(AtsUsers.getUnAssigned())) {
-         removeAssignee(getCurrentStateName(), AtsUsers.getUnAssigned());
+      if (getAssignees().size() > 1 && getAssignees().contains(AtsUserService.get().getUnAssigned())) {
+         removeAssignee(getCurrentStateName(), AtsUserService.get().getUnAssigned());
       }
    }
 
@@ -156,7 +156,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
          return;
       }
       for (IAtsUser assignee : assignees) {
-         if (AtsUsers.isGuestUser(assignee)) {
+         if (AtsUserService.get().isGuestUser(assignee)) {
             throw new OseeArgumentException("Can not assign workflow to Guest");
          }
       }
@@ -181,8 +181,8 @@ public class WorkStateProviderImpl implements WorkStateProvider {
       if (listener != null) {
          listener.notifyAssigned(notifyAssignees);
       }
-      if (getAssignees().size() > 1 && getAssignees().contains(AtsUsers.getUnAssigned())) {
-         removeAssignee(getCurrentStateName(), AtsUsers.getUnAssigned());
+      if (getAssignees().size() > 1 && getAssignees().contains(AtsUserService.get().getUnAssigned())) {
+         removeAssignee(getCurrentStateName(), AtsUserService.get().getUnAssigned());
       }
    }
 

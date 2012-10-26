@@ -11,6 +11,7 @@ import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.api.version.IAtsVersionService;
 import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
 import org.eclipse.osee.ats.impl.internal.AtsVersionStore;
+import org.eclipse.osee.ats.impl.internal.workitem.AtsWorkItemServiceImpl;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 public class AtsVersionServiceImpl implements IAtsVersionService {
@@ -28,7 +29,7 @@ public class AtsVersionServiceImpl implements IAtsVersionService {
    public IAtsVersion getTargetedVersion(Object object) throws OseeCoreException {
       IAtsVersion version = null;
       if (object instanceof IAtsWorkItem) {
-         IAtsTeamWorkflow teamArt = ((IAtsWorkItem) object).getParentTeamWorkflow();
+         IAtsTeamWorkflow teamArt = AtsWorkItemServiceImpl.get().getParentTeamWorkflow((IAtsWorkItem) object);
          if (teamArt != null) {
             version = getTargetedVersionByTeamWf(teamArt);
          }

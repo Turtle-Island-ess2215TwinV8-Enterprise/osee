@@ -15,10 +15,10 @@ import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
+import org.eclipse.osee.ats.api.workflow.ChangeType;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.core.client.workflow.ChangeType;
 import org.eclipse.osee.ats.core.client.workflow.ChangeTypeUtil;
-import org.eclipse.osee.ats.core.client.workflow.PriorityUtil;
+import org.eclipse.osee.ats.core.workflow.AtsWorkItemService;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
@@ -129,13 +129,13 @@ public class ActionArtifactRollup {
       String priorityType = null;
       Collection<TeamWorkFlowArtifact> teamArts = action.getTeams();
       if (teamArts.size() == 1) {
-         priorityType = PriorityUtil.getPriorityStr(teamArts.iterator().next());
+         priorityType = AtsWorkItemService.get().getPriorityStr(teamArts.iterator().next());
       } else {
          for (TeamWorkFlowArtifact team : teamArts) {
             if (!team.isCancelled()) {
                if (priorityType == null) {
-                  priorityType = PriorityUtil.getPriorityStr(team);
-               } else if (!priorityType.equals(PriorityUtil.getPriorityStr(team))) {
+                  priorityType = AtsWorkItemService.get().getPriorityStr(team);
+               } else if (!priorityType.equals(AtsWorkItemService.get().getPriorityStr(team))) {
                   return;
                }
             }

@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.core.client.config.IAtsProgram;
 import org.eclipse.osee.ats.core.client.config.VersionsClient;
@@ -42,7 +43,6 @@ import org.eclipse.osee.ats.core.client.task.TaskArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamState;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.workflow.PercentCompleteTotalUtil;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.XVersionList;
 import org.eclipse.osee.ats.util.widgets.XAtsProgramComboWidget;
@@ -473,7 +473,7 @@ public class DetailedTestStatusOld extends AbstractBlam {
          statusLine[Index.Category.ordinal()] = "I";
       }
 
-      statusLine[Index.TEST_POC.ordinal()] = AtsObjects.toString("; ", testPocs);
+      statusLine[Index.TEST_POC.ordinal()] = AtsLib.toString("; ", testPocs);
       statusLine[Index.PARTITION.ordinal()] = requirement.getAttributesToString(CoreAttributeTypes.Partition);
       statusLine[Index.SUBSYSTEM.ordinal()] = requirement.getSoleAttributeValue(CoreAttributeTypes.Subsystem, "");
       statusLine[Index.REQUIREMENT_NAME.ordinal()] = requirement.getName();

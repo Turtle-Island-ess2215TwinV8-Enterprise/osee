@@ -17,17 +17,17 @@ import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.core.client.internal.Activator;
 import org.eclipse.osee.ats.core.client.team.TeamState;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
+import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactoryClient;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionHelper;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionManager;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionOption;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionResults;
-import org.eclipse.osee.ats.core.workdef.WorkDefinitionMatch;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.logging.OseeLog;
@@ -105,8 +105,9 @@ public class TaskManager {
          }
 
          // Validate able to move tasks; WorkDefinitions must match
-         boolean taskOverridesItsWorkDefinition = WorkDefinitionFactory.isTaskOverridingItsWorkDefinition(taskArt);
-         WorkDefinitionMatch match = WorkDefinitionFactory.getWorkDefinitionForTaskNotYetCreated(newParent);
+         boolean taskOverridesItsWorkDefinition =
+            WorkDefinitionFactoryClient.isTaskOverridingItsWorkDefinition(taskArt);
+         WorkDefinitionMatch match = WorkDefinitionFactoryClient.getWorkDefinitionForTaskNotYetCreated(newParent);
          if (!taskOverridesItsWorkDefinition && !taskArt.getWorkDefinition().equals(match.getWorkDefinition())) {
             return new Result(
                "Desitination Task WorkDefinition does not match current Task WorkDefintion; Move Aborted");

@@ -19,6 +19,7 @@ import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
 import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.RuleDefinitionOption;
+import org.eclipse.osee.ats.api.workflow.ChangeType;
 import org.eclipse.osee.ats.column.CancelledDateColumn;
 import org.eclipse.osee.ats.column.CompletedDateColumn;
 import org.eclipse.osee.ats.column.CreatedDateColumn;
@@ -27,14 +28,13 @@ import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowManager;
 import org.eclipse.osee.ats.core.client.util.WorkflowManagerCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.core.client.workflow.ChangeType;
 import org.eclipse.osee.ats.core.client.workflow.ChangeTypeUtil;
 import org.eclipse.osee.ats.core.client.workflow.HoursSpentUtil;
-import org.eclipse.osee.ats.core.client.workflow.PriorityUtil;
 import org.eclipse.osee.ats.core.client.workflow.StateManager;
 import org.eclipse.osee.ats.core.client.workflow.log.LogItem;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
 import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
+import org.eclipse.osee.ats.core.workflow.AtsWorkItemService;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.workdef.StateXWidgetPage;
@@ -254,7 +254,7 @@ public class WorkflowManager {
       List<AbstractWorkflowArtifact> awas = new ArrayList<AbstractWorkflowArtifact>();
       for (AbstractWorkflowArtifact awa : artifacts) {
          TeamWorkFlowArtifact teamArt = awa.getParentTeamWorkflow();
-         if (priorityTypes.contains(PriorityUtil.getPriorityStr(teamArt))) {
+         if (priorityTypes.contains(AtsWorkItemService.get().getPriorityStr(teamArt))) {
             awas.add(awa);
          }
       }
@@ -317,7 +317,7 @@ public class WorkflowManager {
 
    public static List<StateXWidgetPage> getStatePagesOrderedByOrdinal(AbstractWorkflowArtifact awa) {
       List<StateXWidgetPage> statePages = new ArrayList<StateXWidgetPage>();
-      for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.getService().getStatesOrderedByOrdinal(
+      for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.get().getStatesOrderedByOrdinal(
          awa.getWorkDefinition())) {
          try {
             StateXWidgetPage statePage =
@@ -334,7 +334,7 @@ public class WorkflowManager {
 
    public static List<StateXWidgetPage> getStatePagesOrderedByDefaultToState(AbstractWorkflowArtifact awa) {
       List<StateXWidgetPage> statePages = new ArrayList<StateXWidgetPage>();
-      for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.getService().getStatesOrderedByDefaultToState(
+      for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.get().getStatesOrderedByDefaultToState(
          awa.getWorkDefinition())) {
          try {
             StateXWidgetPage statePage =

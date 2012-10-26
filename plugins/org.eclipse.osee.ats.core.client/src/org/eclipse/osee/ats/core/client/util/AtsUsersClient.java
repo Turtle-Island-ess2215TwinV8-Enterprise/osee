@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.osee.ats.api.user.IAtsUser;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.data.IUserToken;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.User;
@@ -25,9 +25,9 @@ public class AtsUsersClient {
 
    public static void start() throws OseeCoreException {
       //      ElapsedTime time = new ElapsedTime("Loading ATS Users");
-      AtsUsers.clearCache();
+      AtsUserService.get().clearCache();
       for (User user : UserManager.getUsersAll()) {
-         AtsUsers.addUser(getUserFromOseeUser(user));
+         AtsUserService.get().addUser(getUserFromOseeUser(user));
       }
       //      time.end();
    }
@@ -48,10 +48,10 @@ public class AtsUsersClient {
       if (userId == null) {
          return null;
       }
-      IAtsUser atsUser = AtsUsers.getUser(userId);
+      IAtsUser atsUser = AtsUserService.get().getUser(userId);
       if (atsUser == null) {
          atsUser = new AtsUser(UserManager.getUserByUserId(userId));
-         AtsUsers.addUser(atsUser);
+         AtsUserService.get().addUser(atsUser);
       }
       return atsUser;
    }
@@ -95,10 +95,10 @@ public class AtsUsersClient {
    public static Collection<IAtsUser> getAtsUsers(Collection<User> users) throws OseeCoreException {
       List<IAtsUser> results = new LinkedList<IAtsUser>();
       for (User user : users) {
-         IAtsUser userByUserId = AtsUsers.getUser(user.getUserId());
+         IAtsUser userByUserId = AtsUserService.get().getUser(user.getUserId());
          if (userByUserId == null) {
-            AtsUsers.addUser(getUserFromOseeUser(user));
-            userByUserId = AtsUsers.getUser(user.getUserId());
+            AtsUserService.get().addUser(getUserFromOseeUser(user));
+            userByUserId = AtsUserService.get().getUser(user.getUserId());
             if (userByUserId == null) {
                throw new OseeCoreException("Can not access IAtsUser from User [%s]", user.toStringWithId());
             }

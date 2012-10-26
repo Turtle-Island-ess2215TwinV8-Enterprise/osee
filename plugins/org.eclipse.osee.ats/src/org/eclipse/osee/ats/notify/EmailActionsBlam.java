@@ -24,8 +24,8 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
+import org.eclipse.osee.ats.core.workflow.AtsWorkItemService;
 import org.eclipse.osee.ats.internal.Activator;
-import org.eclipse.osee.ats.util.Overview.PreviewStyle;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
@@ -137,8 +137,8 @@ public class EmailActionsBlam extends AbstractBlam {
       }
 
       final OseeEmail emailMessage =
-         new OseeEmail(emailAddresses, AtsUsersClient.getUser().getEmail(), AtsUsersClient.getUser().getEmail(), data.getSubject(),
-            "", BodyType.Html);
+         new OseeEmail(emailAddresses, AtsUsersClient.getUser().getEmail(), AtsUsersClient.getUser().getEmail(),
+            data.getSubject(), "", BodyType.Html);
       emailMessage.setHTMLBody("<p>" + AHTML.textToHtml(data.getBody()) + "</p><p>--------------------------------------------------------</p>");
       emailMessage.addHTMLBody(getHtmlMessage(data, awa));
       String description = String.format("%s for %s", awa.toStringWithId(), emailAddresses);
@@ -146,7 +146,7 @@ public class EmailActionsBlam extends AbstractBlam {
    }
 
    private String getHtmlMessage(EmailActionsData data, AbstractWorkflowArtifact awa) throws OseeCoreException {
-      return AtsNotificationManagerUI.getPreviewHtml(awa, PreviewStyle.HYPEROPEN, PreviewStyle.NO_SUBSCRIBE_OR_FAVORITE);
+      return AtsWorkItemService.get().getOverviewHtml(awa);
    }
 
    @Override

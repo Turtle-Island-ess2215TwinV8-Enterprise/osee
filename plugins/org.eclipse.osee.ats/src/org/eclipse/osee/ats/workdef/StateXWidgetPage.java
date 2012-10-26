@@ -358,7 +358,7 @@ public class StateXWidgetPage implements IDynamicWidgetLayoutListener, IStateTok
 
    private void processComposite(IAtsCompositeLayoutItem compositeStateItem, AbstractWorkflowArtifact sma) {
       boolean firstWidget = true;
-      List<IAtsLayoutItem> stateItems = compositeStateItem.getaLayoutItems();
+      List<IAtsLayoutItem> stateItems = compositeStateItem.getLayoutItems();
       for (int x = 0; x < stateItems.size(); x++) {
          boolean lastWidget = x == stateItems.size() - 1;
          IAtsLayoutItem stateItem = stateItems.get(x);

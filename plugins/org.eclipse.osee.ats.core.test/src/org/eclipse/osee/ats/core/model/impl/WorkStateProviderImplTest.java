@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import junit.framework.Assert;
+import org.eclipse.osee.ats.api.notify.IAtsNotificationListener;
 import org.eclipse.osee.ats.api.user.IAtsUser;
-import org.eclipse.osee.ats.core.mock.MockAtsUser;
-import org.eclipse.osee.ats.core.mock.MockWorkStateFactory;
-import org.eclipse.osee.ats.core.notify.IAtsNotificationListener;
-import org.eclipse.osee.ats.core.users.Guest;
-import org.eclipse.osee.ats.core.users.UnAssigned;
+import org.eclipse.osee.ats.mocks.MockAtsUser;
+import org.eclipse.osee.ats.mocks.MockGuest;
+import org.eclipse.osee.ats.mocks.MockUnAssigned;
+import org.eclipse.osee.ats.mocks.MockWorkStateFactory;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
@@ -84,7 +84,7 @@ public class WorkStateProviderImplTest {
       provider.addState(new WorkStateImpl("endorse"));
       provider.setCurrentStateName("endorse");
 
-      provider.addAssignee(Guest.instance);
+      provider.addAssignee(MockGuest.instance);
    }
 
    @Test
@@ -118,11 +118,11 @@ public class WorkStateProviderImplTest {
       provider.addState(new WorkStateImpl("endorse"));
       provider.setCurrentStateName("endorse");
 
-      provider.setAssignee(UnAssigned.instance);
+      provider.setAssignee(MockUnAssigned.instance);
       Assert.assertEquals(1, provider.getAssignees().size());
-      Assert.assertEquals(UnAssigned.instance, provider.getAssignees().iterator().next());
+      Assert.assertEquals(MockUnAssigned.instance, provider.getAssignees().iterator().next());
 
-      provider.setAssignees(Arrays.asList(joe, UnAssigned.instance));
+      provider.setAssignees(Arrays.asList(joe, MockUnAssigned.instance));
       Assert.assertEquals(1, provider.getAssignees().size());
       Assert.assertEquals(joe, provider.getAssignees().iterator().next());
    }
@@ -146,7 +146,7 @@ public class WorkStateProviderImplTest {
       provider.addState(new WorkStateImpl("endorse"));
       provider.setCurrentStateName("endorse");
 
-      provider.setAssignee(Guest.instance);
+      provider.setAssignee(MockGuest.instance);
    }
 
    @Test
@@ -154,7 +154,7 @@ public class WorkStateProviderImplTest {
       provider.addState(new WorkStateImpl("endorse"));
       provider.setCurrentStateName("endorse");
       Assert.assertFalse(provider.isUnAssigned());
-      provider.addAssignee(UnAssigned.instance);
+      provider.addAssignee(MockUnAssigned.instance);
       Assert.assertTrue(provider.isUnAssigned());
    }
 
@@ -163,11 +163,11 @@ public class WorkStateProviderImplTest {
       provider.addState(new WorkStateImpl("endorse"));
       provider.setCurrentStateName("endorse");
       Assert.assertFalse(provider.isUnAssignedSolely());
-      provider.addAssignee(UnAssigned.instance);
+      provider.addAssignee(MockUnAssigned.instance);
       Assert.assertTrue(provider.isUnAssignedSolely());
       provider.addAssignee(joe);
       Assert.assertFalse(provider.isUnAssignedSolely());
-      provider.removeAssignee(UnAssigned.instance);
+      provider.removeAssignee(MockUnAssigned.instance);
       Assert.assertFalse(provider.isUnAssignedSolely());
    }
 

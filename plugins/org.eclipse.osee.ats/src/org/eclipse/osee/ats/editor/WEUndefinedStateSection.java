@@ -85,7 +85,7 @@ public class WEUndefinedStateSection extends SectionPart {
    public static List<String> getUndefinedStateNames(AbstractWorkflowArtifact awa) throws OseeCoreException {
       // Display pages that are in data store, but not in Work Definition
       Collection<String> stateNamesDefined =
-         AtsWorkDefinitionService.getService().getStateNames(awa.getWorkDefinition());
+         AtsWorkDefinitionService.get().getStateNames(awa.getWorkDefinition());
       List<String> stateNamesUndefined = new ArrayList<String>();
       for (String pageName : awa.getAttributesToStringList(AtsAttributeTypes.State)) {
          String justPage = pageName.replaceFirst(";.*$", "");

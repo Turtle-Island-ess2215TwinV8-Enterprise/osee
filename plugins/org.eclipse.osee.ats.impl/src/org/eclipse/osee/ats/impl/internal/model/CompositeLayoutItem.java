@@ -43,7 +43,7 @@ public class CompositeLayoutItem extends LayoutItem implements IAtsCompositeLayo
    }
 
    @Override
-   public List<IAtsLayoutItem> getaLayoutItems() {
+   public List<IAtsLayoutItem> getLayoutItems() {
       return stateItems;
    }
 

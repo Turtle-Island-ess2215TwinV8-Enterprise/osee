@@ -25,7 +25,7 @@ import org.eclipse.osee.ats.core.client.review.role.UserRoleManager;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.util.SubscribeManager;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.Collections;
 import org.eclipse.osee.framework.jdk.core.util.DateUtil;
@@ -48,7 +48,8 @@ public class AtsNotifyUsers {
       if (types.contains(AtsNotifyType.Originator)) {
          IAtsUser originator = awa.getCreatedBy();
          if (originator.isActive()) {
-            if (!EmailUtil.isEmailValid(originator.getEmail()) && !AtsUsers.isGuestUser(originator) && !AtsUsers.isSystemUser(originator) && !AtsUsers.isUnAssignedUser(originator)) {
+            if (!EmailUtil.isEmailValid(originator.getEmail()) && !AtsUserService.get().isGuestUser(originator) && !AtsUserService.get().isSystemUser(
+               originator) && !AtsUserService.get().isUnAssignedUser(originator)) {
                OseeLog.logf(Activator.class, Level.INFO, "Email [%s] invalid for user [%s]", originator.getEmail(),
                   originator.getName());
             } else if (!AtsUsersClient.getUser().equals(originator)) {
@@ -68,8 +69,8 @@ public class AtsNotifyUsers {
             assignees.addAll(awa.getStateMgr().getAssignees());
          }
          assignees.remove(AtsUsersClient.getUser());
-         assignees = AtsUsers.getValidEmailUsers(assignees);
-         assignees = AtsUsers.getActiveEmailUsers(assignees);
+         assignees = AtsUserService.get().getValidEmailUsers(assignees);
+         assignees = AtsUserService.get().getActiveEmailUsers(assignees);
          if (assignees.size() > 0) {
             oseeNotificationManager.addNotificationEvent(new OseeNotificationEvent(
                AtsUsersClient.getOseeUsers(assignees), AtsNotificationManager.getIdString(awa),
@@ -81,8 +82,8 @@ public class AtsNotifyUsers {
       if (types.contains(AtsNotifyType.Subscribed)) {
          Collection<IAtsUser> subscribed = new HashSet<IAtsUser>();
          subscribed.addAll(SubscribeManager.getSubscribed(awa));
-         subscribed = AtsUsers.getValidEmailUsers(subscribed);
-         subscribed = AtsUsers.getActiveEmailUsers(subscribed);
+         subscribed = AtsUserService.get().getValidEmailUsers(subscribed);
+         subscribed = AtsUserService.get().getActiveEmailUsers(subscribed);
          if (subscribed.size() > 0) {
             oseeNotificationManager.addNotificationEvent(new OseeNotificationEvent(
                AtsUsersClient.getOseeUsers(subscribed), AtsNotificationManager.getIdString(awa),
@@ -124,8 +125,8 @@ public class AtsNotifyUsers {
                authorModerator.add(role.getUser());
             }
          }
-         authorModerator = AtsUsers.getValidEmailUsers(authorModerator);
-         authorModerator = AtsUsers.getActiveEmailUsers(authorModerator);
+         authorModerator = AtsUserService.get().getValidEmailUsers(authorModerator);
+         authorModerator = AtsUserService.get().getActiveEmailUsers(authorModerator);
          if (authorModerator.size() > 0) {
             oseeNotificationManager.addNotificationEvent(new OseeNotificationEvent(
                AtsUsersClient.getOseeUsers(authorModerator), AtsNotificationManager.getIdString(awa),

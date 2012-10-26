@@ -12,8 +12,9 @@ package org.eclipse.osee.ats.column;
 
 import org.eclipse.nebula.widgets.xviewer.IXViewerValueColumn;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
-import org.eclipse.osee.ats.core.column.ImplementersColumn;
+import org.eclipse.osee.ats.api.IAtsWorkItem;
 import org.eclipse.osee.ats.util.xviewer.column.XViewerAtsColumn;
+import org.eclipse.osee.ats.workflow.AtsAssigneeService;
 import org.eclipse.osee.ats.world.WorldXViewerFactory;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.ui.skynet.util.LogUtil;
@@ -49,7 +50,7 @@ public class ImplementorColumnUI extends XViewerAtsColumn implements IXViewerVal
    @Override
    public String getColumnText(Object element, XViewerColumn column, int columnIndex) {
       try {
-         ImplementersColumn.instance.getImplementers(element);
+         AtsAssigneeService.get().getImplementers((IAtsWorkItem) element);
       } catch (OseeCoreException ex) {
          LogUtil.getCellExceptionString(ex);
       }

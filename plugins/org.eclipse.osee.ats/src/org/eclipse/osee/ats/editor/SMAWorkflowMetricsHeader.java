@@ -11,8 +11,8 @@
 package org.eclipse.osee.ats.editor;
 
 import java.util.logging.Level;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.column.RemainingHoursColumn;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.client.workflow.HoursSpentUtil;
 import org.eclipse.osee.ats.core.client.workflow.PercentCompleteTotalUtil;
@@ -46,14 +46,14 @@ public class SMAWorkflowMetricsHeader extends Composite {
       try {
 
          int numColumns = 8;
-         if (!AtsWorkDefinitionService.getService().isStateWeightingEnabled(awa.getWorkDefinition())) {
+         if (!AtsWorkDefinitionService.get().isStateWeightingEnabled(awa.getWorkDefinition())) {
             numColumns = 10;
          }
          toolkit.adapt(this);
          setLayout(ALayout.getZeroMarginLayout(numColumns, false));
          setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-         if (AtsWorkDefinitionService.getService().isStateWeightingEnabled(awa.getWorkDefinition())) {
+         if (AtsWorkDefinitionService.get().isStateWeightingEnabled(awa.getWorkDefinition())) {
             percentLabel =
                FormsUtil.createLabelValue(toolkit, this, "Total Percent: ", "",
                   "Calculation: Sum of percent for all states (including all tasks and reviews) / # statusable states (if configured)");
@@ -89,14 +89,14 @@ public class SMAWorkflowMetricsHeader extends Composite {
             estimatedHoursHeader.refresh();
          }
          if (hoursSpentLabel != null && !hoursSpentLabel.isDisposed()) {
-            hoursSpentLabel.setText(String.valueOf(AtsUtilCore.doubleToI18nString(HoursSpentUtil.getHoursSpentTotal(awa))));
+            hoursSpentLabel.setText(String.valueOf(AtsLib.doubleToI18nString(HoursSpentUtil.getHoursSpentTotal(awa))));
          }
          if (hoursSpentLabel != null && !hoursSpentLabel.isDisposed()) {
             Result result = RemainingHoursColumn.isRemainingHoursValid(awa);
             if (result.isFalse()) {
                remainHoursLabel.setText("Error" + result.getText());
             } else {
-               remainHoursLabel.setText(String.valueOf(AtsUtilCore.doubleToI18nString(RemainingHoursColumn.getRemainingHours(awa))));
+               remainHoursLabel.setText(String.valueOf(AtsLib.doubleToI18nString(RemainingHoursColumn.getRemainingHours(awa))));
             }
          }
       } catch (Exception ex) {

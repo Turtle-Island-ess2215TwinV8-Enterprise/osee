@@ -11,12 +11,15 @@
 package org.eclipse.osee.ats.client.integration.tests.ats.core.client;
 
 import junit.framework.Assert;
+import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
+import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
 import org.eclipse.osee.ats.api.workdef.ReviewBlockType;
 import org.eclipse.osee.ats.core.client.team.TeamState;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionOption;
+import org.eclipse.osee.ats.core.config.AtsConfigCache;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
@@ -57,6 +60,22 @@ public class AtsTestUtilTest extends AtsTestUtil {
 
       AtsTestUtil.cleanup();
 
+      AtsTestUtil.validateArtifactCache();
+   }
+
+   @org.junit.Test
+   public void testConfigObjectsAreCached() throws OseeCoreException {
+      AtsTestUtil.cleanupAndReset("AtsTestUtilTest");
+
+      Assert.assertNotNull(AtsTestUtil.getTeamWf());
+
+      TeamWorkFlowArtifact teamWf = AtsTestUtil.getTeamWf();
+      String guid = teamWf.getSoleAttributeValue(AtsAttributeTypes.TeamDefinition, null);
+      Assert.assertNotNull(guid);
+      IAtsTeamDefinition teamDef = AtsConfigCache.instance.getSoleByGuid(guid, IAtsTeamDefinition.class);
+      Assert.assertNotNull(teamDef);
+
+      AtsTestUtil.cleanup();
       AtsTestUtil.validateArtifactCache();
    }
 

@@ -6,19 +6,28 @@ Bundle-Version: 0.11.0.qualifier
 Bundle-Vendor: Eclipse Open System Engineering Environment
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.osee.ats.api,
+ org.eclipse.osee.ats.api.action,
  org.eclipse.osee.ats.api.ai,
  org.eclipse.osee.ats.api.commit,
  org.eclipse.osee.ats.api.data,
  org.eclipse.osee.ats.api.query,
+ org.eclipse.osee.ats.api.notify,
  org.eclipse.osee.ats.api.rule,
+ org.eclipse.osee.ats.api.task,
  org.eclipse.osee.ats.api.team,
  org.eclipse.osee.ats.api.user,
+ org.eclipse.osee.ats.api.util,
  org.eclipse.osee.ats.api.version,
  org.eclipse.osee.ats.api.workdef,
- org.eclipse.osee.ats.api.workflow
+ org.eclipse.osee.ats.api.workflow,
+ org.eclipse.osee.ats.api.workflow.assignee,
+ org.eclipse.osee.ats.api.workflow.metrics,
+ org.eclipse.osee.ats.api.workflow.notes
 Require-Bundle: org.eclipse.core.runtime
 Import-Package: org.eclipse.osee.framework.core.data,
  org.eclipse.osee.framework.core.enums,
  org.eclipse.osee.framework.core.exception,
  org.eclipse.osee.framework.core.util,
- org.eclipse.osee.framework.jdk.core.type
+ org.eclipse.osee.framework.jdk.core.type,
+ org.eclipse.osee.framework.jdk.core.util,
+ org.eclipse.osee.framework.jdk.core.util.xml

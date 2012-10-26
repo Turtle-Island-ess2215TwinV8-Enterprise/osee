@@ -35,7 +35,7 @@ import org.eclipse.osee.ats.core.client.validator.AtsXWidgetValidateManagerClien
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.client.workflow.log.LogType;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.ats.core.workflow.transition.TransitionResult;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
@@ -142,7 +142,7 @@ public class TransitionManager {
                // Validate Editable
                boolean stateIsEditable =
                   WorkflowManagerCore.isEditable(awa, awa.getStateDefinition(), helper.isPrivilegedEditEnabled());
-               boolean currentlyUnAssigned = awa.getStateMgr().getAssignees().contains(AtsUsers.getUnAssigned());
+               boolean currentlyUnAssigned = awa.getStateMgr().getAssignees().contains(AtsUserService.get().getUnAssigned());
                awa.getStateMgr().validateNoBootstrapUser();
                boolean overrideAssigneeCheck = helper.isOverrideAssigneeCheck();
                // Allow anyone to transition any task to completed/cancelled/working if parent is working
@@ -288,6 +288,20 @@ public class TransitionManager {
 
                   // Get transition to assignees, do some checking to ensure someone is assigneed and UnAssigned
                   List<? extends IAtsUser> updatedAssigees = getToAssignees(awa, toState);
+                  // Get transition to assignees
+                  List<IAtsUser> toAssignees = new LinkedList<IAtsUser>();
+                  if (!toState.getStateType().isCompletedOrCancelledState()) {
+                     if (helper.getToAssignees() != null) {
+                        toAssignees.addAll(helper.getToAssignees());
+                     }
+                     if (toAssignees.contains(AtsUserService.get().getUnAssigned())) {
+                        toAssignees.remove(AtsUserService.get().getUnAssigned());
+                        toAssignees.add(AtsUsersClient.getUser());
+                     }
+                     if (toAssignees.isEmpty()) {
+                        toAssignees.add(AtsUsersClient.getUser());
+                     }
+                  }
 
                   awa.getStateMgr().transitionHelper(updatedAssigees, fromState, toState, completedCancellationReason);
 

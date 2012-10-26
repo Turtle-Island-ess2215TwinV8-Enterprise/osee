@@ -22,10 +22,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.api.workdef.IStateToken;
 import org.eclipse.osee.ats.core.client.task.TaskArtifact;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
 import org.eclipse.osee.ats.internal.Activator;
@@ -388,7 +388,7 @@ public class TaskEditor extends AbstractArtifactEditor implements IAtsMetricsPro
    @Override
    public double getManHoursPerDayPreference() throws OseeCoreException {
       if (tasks.isEmpty()) {
-         return AtsUtilCore.DEFAULT_HOURS_PER_WORK_DAY;
+         return AtsLib.DEFAULT_HOURS_PER_WORK_DAY;
       }
       return tasks.iterator().next().getManHrsPerDayPreference();
    }

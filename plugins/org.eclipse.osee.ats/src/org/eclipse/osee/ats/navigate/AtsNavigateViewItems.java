@@ -190,6 +190,8 @@ public final class AtsNavigateViewItems implements XNavigateViewItems, IXNavigat
    private void createAdminItems(XNavigateItem parent, List<XNavigateItem> items) throws OseeCoreException, OseeArgumentException {
       if (AtsUtilCore.isAtsAdmin()) {
          XNavigateItem adminItems = new XNavigateItem(parent, "Admin", PluginUiImage.ADMIN);
+         new AtsServices(adminItems);
+         new WorkItemToOverviewItem(adminItems);
 
          XNavigateItem dbConvertItems = new XNavigateItem(adminItems, "Database Conversions", PluginUiImage.ADMIN);
          new ConvertAIsAndTeamDefinitions(dbConvertItems);

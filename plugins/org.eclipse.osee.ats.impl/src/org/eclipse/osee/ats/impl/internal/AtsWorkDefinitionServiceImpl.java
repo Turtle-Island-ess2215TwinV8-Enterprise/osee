@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.osee.ats.api.IAtsWorkItem;
+import org.eclipse.osee.ats.api.task.IAtsTask;
+import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.api.workdef.IAtsCompositeLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
@@ -19,10 +22,13 @@ import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinitionService;
 import org.eclipse.osee.ats.api.workdef.IAttributeResolver;
 import org.eclipse.osee.ats.api.workdef.IUserResolver;
+import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
 import org.eclipse.osee.ats.dsl.ModelUtil;
 import org.eclipse.osee.ats.dsl.atsDsl.AtsDsl;
 import org.eclipse.osee.ats.impl.internal.convert.ConvertAtsDslToWorkDefinition;
 import org.eclipse.osee.ats.impl.internal.convert.ConvertWorkDefinitionToAtsDsl;
+import org.eclipse.osee.ats.impl.internal.workdef.WorkDefinitionFactory;
+import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.XResultData;
 import org.eclipse.osee.framework.jdk.core.type.Pair;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
@@ -36,6 +42,11 @@ import org.eclipse.osee.framework.jdk.core.util.Strings;
 public class AtsWorkDefinitionServiceImpl implements IAtsWorkDefinitionService {
 
    Map<String, IAtsWorkDefinition> workDefIdToWorkDef;
+   public static AtsWorkDefinitionServiceImpl instance;
+
+   public AtsWorkDefinitionServiceImpl() {
+      instance = this;
+   }
 
    @Override
    public IAtsWorkDefinition copyWorkDefinition(String newName, IAtsWorkDefinition workDef, XResultData resultData, IAttributeResolver attrResolver, IUserResolver userResolver) {
@@ -198,7 +209,7 @@ public class AtsWorkDefinitionServiceImpl implements IAtsWorkDefinitionService {
    private static void getWidgets(IAtsStateDefinition stateDef, List<IAtsWidgetDefinition> widgets, List<IAtsLayoutItem> stateItems) {
       for (IAtsLayoutItem stateItem : stateItems) {
          if (stateItem instanceof IAtsCompositeLayoutItem) {
-            getWidgets(stateDef, widgets, ((IAtsCompositeLayoutItem) stateItem).getaLayoutItems());
+            getWidgets(stateDef, widgets, ((IAtsCompositeLayoutItem) stateItem).getLayoutItems());
          } else if (stateItem instanceof IAtsWidgetDefinition) {
             widgets.add((IAtsWidgetDefinition) stateItem);
          }
@@ -230,7 +241,53 @@ public class AtsWorkDefinitionServiceImpl implements IAtsWorkDefinitionService {
    }
 
    @Override
-   public void clearCaches() {
-      workDefIdToWorkDef = null;
+   public WorkDefinitionMatch getWorkDefinitionMatch(String id) {
+      return WorkDefinitionFactory.getWorkDefinition(id);
    }
+
+   @Override
+   public WorkDefinitionMatch getWorkDefinition(IAtsWorkItem workItem) throws OseeCoreException {
+      return WorkDefinitionFactory.getWorkDefinition(workItem);
+   }
+
+   @Override
+   public WorkDefinitionMatch getWorkDefinitionForTask(IAtsTask taskToMove) throws OseeCoreException {
+      return WorkDefinitionFactory.getWorkDefinitionForTask(taskToMove);
+   }
+
+   @Override
+   public WorkDefinitionMatch getWorkDefinitionForTaskNotYetCreated(IAtsTeamWorkflow teamWf) throws OseeCoreException {
+      return WorkDefinitionFactory.getWorkDefinitionForTaskNotYetCreated(teamWf);
+   }
+
+   @Override
+   public IAtsWorkDefinition copyWorkDefinition(String name, IAtsWorkDefinition workDef, XResultData resultData) {
+      return WorkDefinitionFactory.copyWorkDefinition(name, workDef, resultData);
+   }
+
+   @Override
+   public boolean isTaskOverridingItsWorkDefinition(IAtsTask task) throws OseeCoreException {
+      return WorkDefinitionFactory.isTaskOverridingItsWorkDefinition(task);
+   }
+
+   @Override
+   public void clearCaches() {
+      WorkDefinitionFactory.clearCaches();
+   }
+
+   @Override
+   public void addWorkDefinition(IAtsWorkDefinition workDef) {
+      WorkDefinitionFactory.addWorkDefinition(workDef);
+   }
+
+   @Override
+   public void removeWorkDefinition(IAtsWorkDefinition workDef) {
+      WorkDefinitionFactory.removeWorkDefinition(workDef);
+   }
+
+   @Override
+   public Collection<IAtsWorkDefinition> getLoadedWorkDefinitions() {
+      return WorkDefinitionFactory.getLoadedWorkDefinitions();
+   }
+
 }

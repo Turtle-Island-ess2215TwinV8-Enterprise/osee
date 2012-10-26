@@ -140,15 +140,15 @@ public class StateDefinitionTest {
       IAtsCompositeLayoutItem stateItem2 = new CompositeLayoutItem(2);
       def.getLayoutItems().add(stateItem2);
       IAtsWidgetDefinition widget2 = new WidgetDefinition("item 2");
-      stateItem2.getaLayoutItems().add(widget2);
+      stateItem2.getLayoutItems().add(widget2);
       IAtsWidgetDefinition widget3 = new WidgetDefinition("item 3");
-      stateItem2.getaLayoutItems().add(widget3);
+      stateItem2.getLayoutItems().add(widget3);
 
       CompositeLayoutItem stateItem3 = new CompositeLayoutItem(2);
-      stateItem2.getaLayoutItems().add(stateItem3);
+      stateItem2.getLayoutItems().add(stateItem3);
       // StateItem is an base class, so it's widgets won't be seen
       LayoutItem widget4 = new LayoutItem("item 4");
-      stateItem3.getaLayoutItems().add(widget4);
+      stateItem3.getLayoutItems().add(widget4);
 
       Assert.assertEquals(3, new AtsWorkDefinitionServiceImpl().getWidgetsFromLayoutItems(def).size());
    }
@@ -204,9 +204,9 @@ public class StateDefinitionTest {
       IAtsCompositeLayoutItem stateItem2 = new CompositeLayoutItem(2);
       def.getLayoutItems().add(stateItem2);
       IAtsWidgetDefinition widget2 = new WidgetDefinition("item 2");
-      stateItem2.getaLayoutItems().add(widget2);
+      stateItem2.getLayoutItems().add(widget2);
       IAtsWidgetDefinition widget3 = new WidgetDefinition("item 3");
-      stateItem2.getaLayoutItems().add(widget3);
+      stateItem2.getLayoutItems().add(widget3);
 
       Assert.assertFalse(new AtsWorkDefinitionServiceImpl().hasWidgetNamed(def, "item 45"));
       Assert.assertTrue(new AtsWorkDefinitionServiceImpl().hasWidgetNamed(def, "item 2"));

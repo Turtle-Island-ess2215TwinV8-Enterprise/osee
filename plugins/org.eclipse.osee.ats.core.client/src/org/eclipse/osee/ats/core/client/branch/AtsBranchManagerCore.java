@@ -39,7 +39,7 @@ import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowManager;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.data.TokenFactory;
 import org.eclipse.osee.framework.core.enums.BranchState;
@@ -627,7 +627,7 @@ public class AtsBranchManagerCore {
             SkynetTransaction transaction =
                TransactionManager.createTransaction(AtsUtilCore.getAtsBranch(), "Create Reviews upon Transition");
             createNecessaryBranchEventReviews(StateEventType.CreateBranch, teamArt, new Date(),
-               AtsUsers.getSystemUser(), transaction);
+               AtsUserService.get().getSystemUser(), transaction);
             transaction.execute();
             return Status.OK_STATUS;
          }

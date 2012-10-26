@@ -18,8 +18,8 @@ import java.util.logging.Level;
 import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.core.client.internal.Activator;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.logging.OseeLog;
@@ -55,7 +55,7 @@ public class ActionableItemManager {
    }
 
    public String getActionableItemsStr() throws OseeCoreException {
-      return AtsObjects.toString("; ", getActionableItems());
+      return AtsLib.toString("; ", getActionableItems());
    }
 
    public List<String> getActionableItemGuids() throws OseeCoreException {

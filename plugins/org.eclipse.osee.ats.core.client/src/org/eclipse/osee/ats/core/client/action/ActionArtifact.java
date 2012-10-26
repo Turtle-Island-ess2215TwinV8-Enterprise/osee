@@ -13,6 +13,7 @@ package org.eclipse.osee.ats.core.client.action;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.eclipse.osee.ats.api.action.IAtsAction;
 import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
@@ -25,7 +26,7 @@ import org.eclipse.osee.framework.skynet.core.artifact.ArtifactFactory;
 /**
  * @author Donald G. Dunne
  */
-public class ActionArtifact extends Artifact {
+public class ActionArtifact extends Artifact implements IAtsAction {
 
    public ActionArtifact(ArtifactFactory parentFactory, String guid, String humanReadableId, Branch branch, IArtifactType artifactType) throws OseeCoreException {
       super(parentFactory, guid, humanReadableId, branch, artifactType);

@@ -6,7 +6,14 @@ Bundle-Version: 0.11.0.qualifier
 Bundle-Vendor: Eclipse Open System Engineering Environment
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.core.runtime,
+ org.eclipse.osee.ats.api,
+ org.eclipse.osee.ats.api.action,
+ org.eclipse.osee.ats.api.notify,
+ org.eclipse.osee.ats.api.user,
+ org.eclipse.osee.ats.api.util,
  org.eclipse.osee.ats.api.workdef,
+ org.eclipse.osee.ats.api.workflow,
+ org.eclipse.osee.ats.api.workflow.assignee,
  org.eclipse.osee.framework.core.data,
  org.eclipse.osee.framework.core.exception,
  org.eclipse.osee.framework.core.model.cache,

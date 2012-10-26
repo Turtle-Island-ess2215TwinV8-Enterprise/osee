@@ -26,8 +26,7 @@ import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.core.client.config.VersionsClient;
 import org.eclipse.osee.ats.core.client.task.TaskArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.core.client.workflow.ChangeTypeUtil;
-import org.eclipse.osee.ats.core.client.workflow.PriorityUtil;
+import org.eclipse.osee.ats.core.workflow.AtsWorkItemService;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.AHTML;
@@ -161,14 +160,13 @@ public class VersionReportJob extends Job {
                if (monitor != null) {
                   monitor.subTask(str);
                }
-               sb.append(AHTML.addRowMultiColumnTable(
-                  new String[] {
-                     "Action",
-                     team.getTeamName(),
-                     PriorityUtil.getPriorityStr(team),
-                     ChangeTypeUtil.getChangeTypeStr(team),
-                     team.getName(),
-                     team.getHumanReadableId()}, null, (x % 2 == 0 ? null : "#cccccc")));
+               sb.append(AHTML.addRowMultiColumnTable(new String[] {
+                  "Action",
+                  team.getTeamName(),
+                  AtsWorkItemService.get().getPriorityStr(team),
+                  AtsWorkItemService.get().getChangeTypeStr(team),
+                  team.getName(),
+                  team.getHumanReadableId()}, null, (x % 2 == 0 ? null : "#cccccc")));
 
                for (TaskArtifact taskArt : team.getTaskArtifacts()) {
                   sb.append(AHTML.addRowMultiColumnTable(

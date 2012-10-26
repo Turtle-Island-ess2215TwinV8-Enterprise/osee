@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.client.demo.DemoArtifactTypes;
 import org.eclipse.osee.ats.client.demo.DemoSawBuilds;
@@ -36,7 +37,6 @@ import org.eclipse.osee.ats.core.client.task.TaskStates;
 import org.eclipse.osee.ats.core.client.team.TeamState;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -463,7 +463,7 @@ public class PopulateDemoActionsTest {
       Assert.assertEquals(title, revArt.getName());
       Assert.assertEquals(currentStateName, revArt.getCurrentStateName());
 
-      Collection<String> assigneeNames = AtsObjects.getNames(revArt.getStateMgr().getAssignees());
+      Collection<String> assigneeNames = AtsLib.getNames(revArt.getStateMgr().getAssignees());
 
       Assert.assertEquals(assigneeNames.size(), assigneeStrs.length);
       for (String assignee : assigneeStrs) {

@@ -13,7 +13,7 @@ package org.eclipse.osee.ats.column;
 import java.util.logging.Level;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.workflow.EstimatedHoursUtil;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.xviewer.column.XViewerAtsAttributeValueColumn;
@@ -52,7 +52,7 @@ public class EstimatedHoursColumn extends XViewerAtsAttributeValueColumn {
    @Override
    public String getColumnText(Object element, XViewerColumn column, int columnIndex) {
       try {
-         return AtsUtilCore.doubleToI18nString(EstimatedHoursUtil.getEstimatedHours(element));
+         return AtsLib.doubleToI18nString(EstimatedHoursUtil.getEstimatedHours(element));
       } catch (OseeCoreException ex) {
          OseeLog.log(Activator.class, Level.SEVERE, ex);
       }

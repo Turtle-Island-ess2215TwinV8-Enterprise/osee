@@ -24,10 +24,10 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.RuleDefinitionOption;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.client.workflow.transition.ITransitionHelper;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionHelperAdapter;
@@ -282,7 +282,7 @@ public class WETransitionComposite extends Composite {
    private boolean handlePopulateStateMetrics(IAtsStateDefinition fromStateDefinition, IAtsStateDefinition toStateDefinition) throws OseeCoreException {
       int percent = 0;
       // If state weighting, always 100 cause state is completed
-      if (AtsWorkDefinitionService.getService().isStateWeightingEnabled(awa.getWorkDefinition())) {
+      if (AtsWorkDefinitionService.get().isStateWeightingEnabled(awa.getWorkDefinition())) {
          percent = 100;
       } else {
          if (toStateDefinition.getStateType().isCompletedOrCancelledState()) {
@@ -298,7 +298,7 @@ public class WETransitionComposite extends Composite {
       if (isRequireStateHoursSpentPrompt(fromStateDefinition) && !toStateDefinition.getStateType().isCancelledState()) {
          // Otherwise, open dialog to ask for hours complete
          String msg =
-            awa.getStateMgr().getCurrentStateName() + " State\n\n" + AtsUtilCore.doubleToI18nString(hoursSpent) + " hours already spent on this state.\n" + "Enter the additional number of hours you spent on this state.";
+            awa.getStateMgr().getCurrentStateName() + " State\n\n" + AtsLib.doubleToI18nString(hoursSpent) + " hours already spent on this state.\n" + "Enter the additional number of hours you spent on this state.";
          // Remove after ATS Resolution options is removed 0.9.9_SR5ish
          TransitionStatusData data = new TransitionStatusData(Arrays.asList(awa), false);
          TransitionStatusDialog dialog = new TransitionStatusDialog("Enter Hours Spent", msg, data);

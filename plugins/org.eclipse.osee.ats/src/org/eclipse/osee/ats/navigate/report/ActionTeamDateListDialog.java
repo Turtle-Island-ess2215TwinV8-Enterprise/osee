@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
-import org.eclipse.osee.ats.core.client.workflow.ChangeType;
+import org.eclipse.osee.ats.api.workflow.ChangeType;
 import org.eclipse.osee.ats.core.config.TeamDefinitions;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsObjectLabelProvider;

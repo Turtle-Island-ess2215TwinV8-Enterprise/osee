@@ -70,7 +70,7 @@ public class AtsXWidgetValidateManagerClient implements AtsXWidgetValidatorProvi
    public Collection<WidgetResult> validateTransition(AbstractWorkflowArtifact awa, IAtsStateDefinition toStateDef) {
       ensureLoaded();
       List<WidgetResult> results = new ArrayList<WidgetResult>();
-      for (IAtsWidgetDefinition widgetDef : AtsWorkDefinitionService.getService().getWidgetsFromLayoutItems(
+      for (IAtsWidgetDefinition widgetDef : AtsWorkDefinitionService.get().getWidgetsFromLayoutItems(
          awa.getStateDefinition())) {
          ArtifactValueProvider provider = new ArtifactValueProvider(awa, widgetDef);
          AtsXWidgetValidateManager.instance.validateTransition(results, provider, widgetDef, awa.getStateDefinition(),

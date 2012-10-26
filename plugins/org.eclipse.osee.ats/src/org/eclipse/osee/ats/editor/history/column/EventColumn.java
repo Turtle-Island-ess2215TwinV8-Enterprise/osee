@@ -19,11 +19,10 @@ import org.eclipse.nebula.widgets.xviewer.XViewerValueColumn;
 import org.eclipse.osee.ats.AtsImage;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.workdef.StateType;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AtsWorkStateFactory;
 import org.eclipse.osee.ats.core.model.impl.WorkStateImpl;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.logging.OseeLog;
@@ -133,10 +132,10 @@ public class EventColumn extends XViewerValueColumn {
             }
          }
          if (unAssigned.size() > 0) {
-            return "UnAssigned [" + is.getName() + "] removed " + AtsObjects.toString("; ", unAssigned);
+            return "UnAssigned [" + is.getName() + "] removed " + AtsLib.toString("; ", unAssigned);
          }
          if (assigned.size() > 0) {
-            return "Assigned [" + is.getName() + "] to " + AtsObjects.toString("; ", assigned);
+            return "Assigned [" + is.getName() + "] to " + AtsLib.toString("; ", assigned);
          }
       } catch (Exception ex) {
          OseeLog.log(Activator.class, Level.SEVERE, ex);
@@ -149,7 +148,7 @@ public class EventColumn extends XViewerValueColumn {
    }
 
    public static String getHoursSpentStr(WorkStateImpl state) {
-      return AtsUtilCore.doubleToI18nString(state.getHoursSpent(), true);
+      return AtsLib.doubleToI18nString(state.getHoursSpent(), true);
    }
 
 }

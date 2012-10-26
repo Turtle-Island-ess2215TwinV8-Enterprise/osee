@@ -26,11 +26,11 @@ import org.eclipse.nebula.widgets.xviewer.customize.CustomizeData;
 import org.eclipse.osee.ats.actions.OpenNewAtsWorldEditorAction.IOpenNewAtsWorldEditorHandler;
 import org.eclipse.osee.ats.actions.OpenNewAtsWorldEditorSelectedAction.IOpenNewAtsWorldEditorSelectedHandler;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.action.ActionManager;
 import org.eclipse.osee.ats.core.client.actions.ISelectedAtsArtifacts;
 import org.eclipse.osee.ats.core.client.config.AtsBulkLoad;
 import org.eclipse.osee.ats.core.client.task.TaskArtifact;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
@@ -120,7 +120,7 @@ public class WorldComposite extends ScrolledComposite implements ISelectedAtsArt
          }
          return ((AbstractWorkflowArtifact) artifact).getManHrsPerDayPreference();
       }
-      return AtsUtilCore.DEFAULT_HOURS_PER_WORK_DAY;
+      return AtsLib.DEFAULT_HOURS_PER_WORK_DAY;
    }
 
    public void setCustomizeData(CustomizeData customizeData) {

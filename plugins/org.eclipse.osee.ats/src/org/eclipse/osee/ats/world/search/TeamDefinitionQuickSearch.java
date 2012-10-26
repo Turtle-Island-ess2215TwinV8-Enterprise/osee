@@ -13,7 +13,7 @@ package org.eclipse.osee.ats.world.search;
 import java.util.Collection;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
-import org.eclipse.osee.ats.core.util.AtsObjects;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 
@@ -25,7 +25,7 @@ import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 public class TeamDefinitionQuickSearch extends AttributeValueQuickSearch {
 
    public TeamDefinitionQuickSearch(Collection<? extends IAtsTeamDefinition> teamDefs) {
-      super(AtsAttributeTypes.TeamDefinition, AtsObjects.toGuids(teamDefs));
+      super(AtsAttributeTypes.TeamDefinition, AtsLib.toGuids(teamDefs));
    }
 
    @Override

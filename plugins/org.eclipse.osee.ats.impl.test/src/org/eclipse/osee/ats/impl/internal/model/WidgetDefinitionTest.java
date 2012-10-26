@@ -7,7 +7,6 @@ package org.eclipse.osee.ats.impl.internal.model;
 
 import junit.framework.Assert;
 import org.eclipse.osee.ats.api.workdef.WidgetOption;
-import org.eclipse.osee.ats.impl.internal.model.WidgetDefinition;
 import org.junit.Test;
 
 /**
@@ -66,7 +65,7 @@ public class WidgetDefinitionTest {
    @Test
    public void testGetSetHeight() {
       WidgetDefinition item = new WidgetDefinition("review");
-      Assert.assertEquals(0, item.getHeight());
+      Assert.assertEquals(9999, item.getHeight());
       item.setHeight(4);
       Assert.assertEquals(4, item.getHeight());
    }

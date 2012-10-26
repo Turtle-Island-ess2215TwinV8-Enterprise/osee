@@ -23,7 +23,7 @@ import org.eclipse.osee.ats.core.client.review.AbstractReviewArtifact;
 import org.eclipse.osee.ats.core.client.review.ReviewManager;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.ats.editor.stateItem.AtsStateItemManager;
 import org.eclipse.osee.ats.editor.stateItem.IAtsStateItem;
 import org.eclipse.osee.ats.internal.Activator;
@@ -123,7 +123,7 @@ public class AtsBranchCommitJob extends Job {
             SkynetTransaction transaction =
                TransactionManager.createTransaction(AtsUtil.getAtsBranch(), "Create Reviews upon Commit");
             AtsBranchManagerCore.createNecessaryBranchEventReviews(StateEventType.CommitBranch, teamArt, new Date(),
-               AtsUsers.getSystemUser(), transaction);
+               AtsUserService.get().getSystemUser(), transaction);
             transaction.execute();
          }
       } catch (OseeCoreException ex) {

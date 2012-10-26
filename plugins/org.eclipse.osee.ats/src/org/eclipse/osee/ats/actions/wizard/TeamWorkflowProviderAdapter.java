@@ -11,10 +11,11 @@
 package org.eclipse.osee.ats.actions.wizard;
 
 import java.util.Collection;
+import org.eclipse.osee.ats.api.IAtsWorkItem;
 import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.client.workflow.ITeamWorkflowProvider;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -46,13 +47,13 @@ public abstract class TeamWorkflowProviderAdapter implements ITeamWorkflowProvid
 
    @SuppressWarnings("unused")
    @Override
-   public String getWorkflowDefinitionId(AbstractWorkflowArtifact artifact) throws OseeCoreException {
+   public String getWorkflowDefinitionId(IAtsWorkItem workItem) throws OseeCoreException {
       return null;
    }
 
    @SuppressWarnings("unused")
    @Override
-   public String getRelatedTaskWorkflowDefinitionId(TeamWorkFlowArtifact teamArt) throws OseeCoreException {
+   public String getRelatedTaskWorkflowDefinitionId(IAtsTeamWorkflow teamWf) throws OseeCoreException {
       return null;
    }
 

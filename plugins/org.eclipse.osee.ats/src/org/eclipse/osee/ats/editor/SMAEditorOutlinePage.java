@@ -25,6 +25,7 @@ import org.eclipse.osee.ats.AtsImage;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.api.workdef.IAtsCompositeLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsDecisionReviewDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsDecisionReviewOption;
@@ -38,9 +39,8 @@ import org.eclipse.osee.ats.artifact.WorkflowManager;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
-import org.eclipse.osee.ats.core.workdef.WorkDefinitionMatch;
 import org.eclipse.osee.ats.editor.stateItem.AtsStateItemManager;
 import org.eclipse.osee.ats.editor.stateItem.IAtsStateItem;
 import org.eclipse.osee.ats.internal.Activator;
@@ -199,7 +199,7 @@ public class SMAEditorOutlinePage extends ContentOutlinePage {
          } else if (element instanceof IAtsStateDefinition) {
             getChildrenFromStateDefinition(element, items);
          } else if (element instanceof IAtsCompositeLayoutItem) {
-            items.addAll(((IAtsCompositeLayoutItem) element).getaLayoutItems());
+            items.addAll(((IAtsCompositeLayoutItem) element).getLayoutItems());
          } else if (element instanceof User) {
             items.add("Assignee: " + ((User) element).getName());
          } else if (element instanceof WrappedStateItems) {
@@ -271,7 +271,7 @@ public class SMAEditorOutlinePage extends ContentOutlinePage {
          } else if (element instanceof WrappedTransitions) {
             return true;
          } else if (element instanceof WrappedPercentWeight) {
-            return AtsWorkDefinitionService.getService().isStateWeightingEnabled(
+            return AtsWorkDefinitionService.get().isStateWeightingEnabled(
                ((WrappedPercentWeight) element).getWorkDef());
          } else if (element instanceof WrappedLayout) {
             return !((WrappedLayout) element).stateItems.isEmpty();
@@ -294,7 +294,7 @@ public class SMAEditorOutlinePage extends ContentOutlinePage {
       }
 
       private void getChildrenFromWrappedPercentDefinition(WrappedPercentWeight weightDef, List<Object> items) {
-         for (IAtsStateDefinition stateDef : AtsWorkDefinitionService.getService().getStatesOrderedByDefaultToState(
+         for (IAtsStateDefinition stateDef : AtsWorkDefinitionService.get().getStatesOrderedByDefaultToState(
             weightDef.getWorkDef())) {
             items.add(String.format("State [%s]: %d", stateDef.getName(), stateDef.getStateWeight()));
          }
@@ -384,7 +384,7 @@ public class SMAEditorOutlinePage extends ContentOutlinePage {
       }
 
       private void getChildrenFromWorkDefinitionMatch(Object element, List<Object> items) {
-         items.addAll(AtsWorkDefinitionService.getService().getStatesOrderedByOrdinal(
+         items.addAll(AtsWorkDefinitionService.get().getStatesOrderedByOrdinal(
             ((WorkDefinitionMatch) element).getWorkDefinition()));
          items.add(new WrappedPercentWeight(((WorkDefinitionMatch) element).getWorkDefinition()));
          items.add(new WrappedTrace(((WorkDefinitionMatch) element).getTrace()));
@@ -392,7 +392,7 @@ public class SMAEditorOutlinePage extends ContentOutlinePage {
 
       private void getUsersFromDecisionReviewOpt(IAtsDecisionReviewOption revOpt, List<Object> items) {
          for (String userId : revOpt.getUserIds()) {
-            IAtsUser user = AtsUsers.getUser(userId);
+            IAtsUser user = AtsUserService.get().getUser(userId);
             items.add(user);
          }
          for (String userName : revOpt.getUserNames()) {
@@ -497,7 +497,7 @@ public class SMAEditorOutlinePage extends ContentOutlinePage {
 
       @Override
       public String toString() {
-         if (AtsWorkDefinitionService.getService().isStateWeightingEnabled(workDef)) {
+         if (AtsWorkDefinitionService.get().isStateWeightingEnabled(workDef)) {
             return "Total Percent Weighting";
          } else {
             return "Total Percent Weighting: Single Percent";

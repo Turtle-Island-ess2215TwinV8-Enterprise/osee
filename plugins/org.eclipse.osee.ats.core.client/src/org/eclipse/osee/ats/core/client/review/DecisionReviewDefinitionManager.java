@@ -23,7 +23,7 @@ import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.client.workflow.log.LogType;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionAdapter;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
@@ -47,7 +47,7 @@ public class DecisionReviewDefinitionManager extends TransitionAdapter {
       }
       // Add current user if no valid users specified
       List<IAtsUser> users = new LinkedList<IAtsUser>();
-      users.addAll(AtsUsers.getUsersByUserIds(revDef.getAssignees()));
+      users.addAll(AtsUserService.get().getUsersByUserIds(revDef.getAssignees()));
       if (users.isEmpty()) {
          users.add(AtsUsersClient.getUser());
       }
@@ -81,7 +81,7 @@ public class DecisionReviewDefinitionManager extends TransitionAdapter {
          return;
       }
       Date createdDate = new Date();
-      IAtsUser createdBy = AtsUsers.getSystemUser();
+      IAtsUser createdBy = AtsUserService.get().getSystemUser();
       TeamWorkFlowArtifact teamArt = (TeamWorkFlowArtifact) sma;
 
       for (IAtsDecisionReviewDefinition decRevDef : teamArt.getStateDefinition().getDecisionReviews()) {

@@ -7,9 +7,7 @@ package org.eclipse.osee.ats.impl.internal.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.osee.ats.api.IAtsWorkItem;
 import org.eclipse.osee.ats.api.query.IAtsQuery;
@@ -19,26 +17,26 @@ import org.eclipse.osee.ats.api.workdef.StateType;
 import org.eclipse.osee.ats.api.workflow.IAtsWorkData;
 import org.eclipse.osee.ats.api.workflow.IAtsWorkItemService;
 import org.eclipse.osee.ats.impl.internal.team.AtsTeamDefinitionService;
-import org.eclipse.osee.ats.impl.internal.workflow.AtsWorkItemServiceImpl;
+import org.eclipse.osee.ats.impl.internal.workitem.AtsWorkItemServiceImpl;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 public class AtsQuery implements IAtsQuery {
 
-   private final Collection<? extends IAtsWorkItem> items;
+   private final Collection<IAtsWorkItem> items = new ArrayList<IAtsWorkItem>();
    private final IAtsWorkItemService workItemService;
    private final IAtsTeamDefinitionService teamDefService;
 
    public AtsQuery(Collection<? extends IAtsWorkItem> workItems, IAtsWorkItemService workItemService, IAtsTeamDefinitionService teamDefService) {
-      this.items = workItems;
+      items.addAll(workItems);
       this.workItemService = workItemService;
       this.teamDefService = teamDefService;
 
    }
 
    public AtsQuery(Collection<? extends IAtsWorkItem> workItems) {
-      this(workItems, AtsWorkItemServiceImpl.instance(), AtsTeamDefinitionService.getService());
+      this(workItems, AtsWorkItemServiceImpl.get(), AtsTeamDefinitionService.getService());
    }
 
    @Override
@@ -60,9 +58,10 @@ public class AtsQuery implements IAtsQuery {
 
    @Override
    public IAtsQuery union(IAtsQuery... atsQuery) throws OseeCoreException {
-      Set<IAtsWorkItem> items = new HashSet<IAtsWorkItem>();
       for (IAtsQuery query : atsQuery) {
-         items.addAll(query.getItems());
+         for (IAtsWorkItem workItem : query.getItems()) {
+            items.add(workItem);
+         }
       }
       return this;
    }
@@ -98,7 +97,7 @@ public class AtsQuery implements IAtsQuery {
    }
 
    @Override
-   public Collection<? extends IAtsWorkItem> getItems() {
+   public Collection<IAtsWorkItem> getItems() {
       return items;
    }
 

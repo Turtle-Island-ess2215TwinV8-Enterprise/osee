@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.osee.ats.api.workdef.WorkDefinitionDefault;
 import org.eclipse.osee.ats.core.client.internal.Activator;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
 import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
 import org.eclipse.osee.framework.core.operation.AbstractOperation;
 import org.eclipse.osee.framework.core.util.XResultData;
@@ -49,7 +49,7 @@ public class AtsLoadWorkDefinitionsOperation extends AbstractOperation {
       if (!loaded) {
          loaded = true;
          OseeLog.log(Activator.class, Level.INFO, NAME);
-         AtsWorkDefinitionService.getService().clearCaches();
+         AtsWorkDefinitionService.get().clearCaches();
          loadWorkDefinitions();
          loaded = true;
       }
@@ -64,8 +64,7 @@ public class AtsLoadWorkDefinitionsOperation extends AbstractOperation {
             //            ElapsedTime time = new ElapsedTime(NAME);
             try {
                XResultData resultData = new XResultData(false);
-               AtsWorkDefinitionService.getService().getWorkDef(WorkDefinitionFactory.TaskWorkflowDefinitionId,
-                  resultData);
+               AtsWorkDefinitionService.get().getWorkDef(WorkDefinitionDefault.TaskWorkflowDefinitionId, resultData);
                if (!resultData.isEmpty()) {
                   OseeLog.log(Activator.class, Level.SEVERE, "Error " + NAME + resultData.toString());
                }

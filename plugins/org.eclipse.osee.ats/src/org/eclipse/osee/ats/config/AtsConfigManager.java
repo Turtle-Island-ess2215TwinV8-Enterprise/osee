@@ -21,6 +21,7 @@ import org.eclipse.osee.ats.AtsOpenOption;
 import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.core.client.config.AtsArtifactToken;
@@ -30,12 +31,11 @@ import org.eclipse.osee.ats.core.client.config.store.VersionArtifactStore;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workdef.AtsWorkDefinitionStore;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
+import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactoryClient;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
 import org.eclipse.osee.ats.core.config.TeamDefinitions;
 import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
-import org.eclipse.osee.ats.core.workdef.WorkDefinitionMatch;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.workdef.AtsWorkDefinitionSheetProviders;
@@ -92,7 +92,7 @@ public class AtsConfigManager extends AbstractOperation {
    private void checkWorkItemNamespaceUnique() throws OseeCoreException {
       WorkDefinitionMatch match = null;
       try {
-         match = WorkDefinitionFactory.getWorkDefinition(name);
+         match = WorkDefinitionFactoryClient.getWorkDefinition(name);
       } catch (Exception ex) {
          return;
       }
@@ -186,13 +186,13 @@ public class AtsConfigManager extends AbstractOperation {
    }
 
    private IAtsWorkDefinition createWorkflow(SkynetTransaction transaction, XResultData resultData, IAtsTeamDefinition teamDef) throws OseeCoreException {
-      WorkDefinitionMatch workDefMatch = WorkDefinitionFactory.getWorkDefinition(name);
+      WorkDefinitionMatch workDefMatch = WorkDefinitionFactoryClient.getWorkDefinition(name);
       IAtsWorkDefinition workDef = null;
       // If can't be found, create a new one
       if (!workDefMatch.isMatched()) {
          workDef = generateDefaultWorkflow(name, resultData, transaction, teamDef);
          try {
-            String workDefXml = AtsWorkDefinitionService.getService().getStorageString(workDef, resultData);
+            String workDefXml = AtsWorkDefinitionService.get().getStorageString(workDef, resultData);
             Artifact workDefArt =
                AtsWorkDefinitionImporter.get().importWorkDefinitionToDb(workDefXml, workDef.getName(), name,
                   resultData, transaction);
@@ -213,12 +213,12 @@ public class AtsConfigManager extends AbstractOperation {
 
    private IAtsWorkDefinition generateDefaultWorkflow(String name, XResultData resultData, SkynetTransaction transaction, IAtsTeamDefinition teamDef) {
       IAtsWorkDefinition defaultWorkDef =
-         WorkDefinitionFactory.getWorkDefinition(AtsWorkDefinitionSheetProviders.WORK_DEF_TEAM_DEFAULT).getWorkDefinition();
+         WorkDefinitionFactoryClient.getWorkDefinition(AtsWorkDefinitionSheetProviders.WORK_DEF_TEAM_DEFAULT).getWorkDefinition();
 
       // Duplicate default team workflow definition w/ namespace changes
 
       IAtsWorkDefinition newWorkDef =
-         AtsWorkDefinitionService.getService().copyWorkDefinition(name, defaultWorkDef, resultData,
+         AtsWorkDefinitionService.get().copyWorkDefinition(name, defaultWorkDef, resultData,
             AtsWorkDefinitionStore.getInstance().getAttributeResolver(),
             AtsWorkDefinitionStore.getInstance().getUserResolver());
       return newWorkDef;

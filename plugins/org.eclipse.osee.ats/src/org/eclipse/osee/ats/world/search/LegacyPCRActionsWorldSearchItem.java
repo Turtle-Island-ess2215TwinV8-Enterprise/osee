@@ -18,10 +18,10 @@ import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.query.IAtsQuery;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.query.AtsQueryService;
 import org.eclipse.osee.ats.core.client.util.WorkItemUtil;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.Collections;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
@@ -74,7 +74,7 @@ public class LegacyPCRActionsWorldSearchItem extends WorldUISearchItem {
       if (isTeamDefsSet()) {
          TeamDefinitionQuickSearch srch = new TeamDefinitionQuickSearch(teamDefs);
          teamDefArts.addAll(srch.performSearch());
-         teamDefGuids = AtsObjects.toGuids(teamDefs);
+         teamDefGuids = AtsLib.toGuids(teamDefs);
       }
 
       // If both set, return intersection; else return just what was set

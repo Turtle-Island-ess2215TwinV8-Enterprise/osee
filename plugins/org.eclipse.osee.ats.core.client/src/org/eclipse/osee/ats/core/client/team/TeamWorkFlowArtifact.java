@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.version.IAtsVersion;
 import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
 import org.eclipse.osee.ats.core.client.action.ActionArtifact;
@@ -31,11 +32,9 @@ import org.eclipse.osee.ats.core.client.internal.Activator;
 import org.eclipse.osee.ats.core.client.review.AbstractReviewArtifact;
 import org.eclipse.osee.ats.core.client.review.ReviewManager;
 import org.eclipse.osee.ats.core.client.task.AbstractTaskableArtifact;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
-import org.eclipse.osee.ats.core.util.AtsUtilCoreCore;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -183,7 +182,7 @@ public class TeamWorkFlowArtifact extends AbstractTaskableArtifact implements IA
       if (arts.isEmpty()) {
          // Only show exception once in log
          if (!teamArtsWithNoAction.contains(getArtId())) {
-            if (!AtsUtilCore.isInTest()) {
+            if (!AtsLib.isInTest()) {
                OseeLog.log(Activator.class, Level.SEVERE,
                   String.format("Team Workflow has no parent Action [%s]", toStringWithId()));
             }
@@ -223,7 +222,7 @@ public class TeamWorkFlowArtifact extends AbstractTaskableArtifact implements IA
          if (manDayHours == 0 && teamDef.getParentTeamDef() != null) {
             return getHoursPerWorkDayFromItemAndChildren(teamDef.getParentTeamDef());
          }
-         return AtsUtilCoreCore.DEFAULT_HOURS_PER_WORK_DAY;
+         return AtsLib.DEFAULT_HOURS_PER_WORK_DAY;
       } catch (Exception ex) {
          OseeLog.log(Activator.class, Level.SEVERE, ex);
       }

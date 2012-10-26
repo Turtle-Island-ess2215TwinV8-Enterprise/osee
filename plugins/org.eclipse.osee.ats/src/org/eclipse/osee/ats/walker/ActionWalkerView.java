@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osee.ats.AtsOpenOption;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.artifact.GoalManager;
 import org.eclipse.osee.ats.core.client.action.ActionArtifact;
 import org.eclipse.osee.ats.core.client.review.PeerToPeerReviewManager;
@@ -28,7 +29,6 @@ import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.core.config.Versions;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.ats.editor.SMAEditor;
 import org.eclipse.osee.ats.help.ui.AtsHelpContext;
 import org.eclipse.osee.ats.internal.Activator;
@@ -369,7 +369,7 @@ public class ActionWalkerView extends GenericViewPart implements IPartListener, 
    public String getAssignee(Artifact artifact) {
       try {
          if (artifact instanceof AbstractWorkflowArtifact) {
-            return AtsObjects.toString("; ", ((AbstractWorkflowArtifact) artifact).getStateMgr().getAssignees());
+            return AtsLib.toString("; ", ((AbstractWorkflowArtifact) artifact).getStateMgr().getAssignees());
          }
       } catch (OseeCoreException ex) {
          OseeLog.log(Activator.class, Level.SEVERE, ex);

@@ -42,7 +42,7 @@ public class PercentCompleteTotalUtil {
          return 0;
       }
       AbstractWorkflowArtifact awa = (AbstractWorkflowArtifact) artifact;
-      if (AtsWorkDefinitionService.getService().isStateWeightingEnabled(awa.getWorkDefinition())) {
+      if (AtsWorkDefinitionService.get().isStateWeightingEnabled(awa.getWorkDefinition())) {
          // Calculate total percent using configured weighting
          int percent = 0;
          for (IAtsStateDefinition stateDef : awa.getWorkDefinition().getStates()) {

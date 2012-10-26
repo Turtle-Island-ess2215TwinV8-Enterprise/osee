@@ -13,10 +13,10 @@ package org.eclipse.osee.ats.core.client.review.role;
 import java.text.NumberFormat;
 import java.util.logging.Level;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.internal.Activator;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.AXml;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
@@ -126,7 +126,7 @@ public class UserRole {
    }
 
    public IAtsUser getUser() {
-      return AtsUsers.getUser(userId);
+      return AtsUserService.get().getUser(userId);
    }
 
    public void setUser(User user) throws OseeCoreException {
@@ -138,7 +138,7 @@ public class UserRole {
    }
 
    public String getHoursSpentStr() {
-      return hoursSpent == null ? "" : AtsUtilCore.doubleToI18nString(hoursSpent, true);
+      return hoursSpent == null ? "" : AtsLib.doubleToI18nString(hoursSpent, true);
    }
 
    public void setHoursSpent(Double hoursSpent) {

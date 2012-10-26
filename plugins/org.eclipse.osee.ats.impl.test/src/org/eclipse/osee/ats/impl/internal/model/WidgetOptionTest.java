@@ -11,14 +11,14 @@ import org.junit.Test;
 
 /**
  * Test case for {@link WidgetOption}
- *
+ * 
  * @author Donald G. Dunne
  */
 public class WidgetOptionTest {
 
    @Test
    public void testValues() {
-      Assert.assertEquals(31, WidgetOption.values().length);
+      Assert.assertEquals(35, WidgetOption.values().length);
    }
 
    @Test

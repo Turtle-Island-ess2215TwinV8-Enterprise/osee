@@ -11,6 +11,7 @@
 package org.eclipse.osee.ats.core.client.workflow;
 
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
+import org.eclipse.osee.ats.api.workflow.ChangeType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 
@@ -18,14 +19,6 @@ import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
  * @author Donald G. Dunne
  */
 public class ChangeTypeUtil {
-
-   public static String getChangeTypeStr(Artifact artifact) throws OseeCoreException {
-      ChangeType changeType = getChangeType(artifact);
-      if (changeType == ChangeType.None) {
-         return "";
-      }
-      return changeType.name();
-   }
 
    public static ChangeType getChangeType(Artifact artifact) throws OseeCoreException {
       return ChangeType.getChangeType(artifact.getSoleAttributeValue(AtsAttributeTypes.ChangeType, ""));

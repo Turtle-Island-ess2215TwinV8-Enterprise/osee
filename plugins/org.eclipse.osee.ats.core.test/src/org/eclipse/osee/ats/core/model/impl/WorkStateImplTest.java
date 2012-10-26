@@ -6,7 +6,7 @@
 package org.eclipse.osee.ats.core.model.impl;
 
 import java.util.Arrays;
-import org.eclipse.osee.ats.core.mock.MockAtsUser;
+import org.eclipse.osee.ats.mocks.MockAtsUser;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.internal.Activator;
 import org.eclipse.osee.framework.core.data.IArtifactToken;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
@@ -37,7 +38,6 @@ import org.eclipse.osee.framework.skynet.core.utility.DbUtil;
  * @author Donald G. Dunne
  */
 public class AtsUtilCore {
-   public final static double DEFAULT_HOURS_PER_WORK_DAY = 8;
    private static ArtifactTypeEventFilter atsObjectArtifactTypesFilter = new ArtifactTypeEventFilter(
       AtsArtifactTypes.TeamWorkflow, AtsArtifactTypes.Action, AtsArtifactTypes.Task, AtsArtifactTypes.Goal,
       AtsArtifactTypes.PeerToPeerReview, AtsArtifactTypes.DecisionReview);
@@ -52,12 +52,8 @@ public class AtsUtilCore {
       return emailEnabled;
    }
 
-   public static boolean isInTest() {
-      return Boolean.valueOf(System.getProperty("osee.isInTest"));
-   }
-
    public static void setEmailEnabled(boolean enabled) {
-      if (!DbUtil.isDbInit() && !AtsUtilCore.isInTest()) {
+      if (!DbUtil.isDbInit() && !AtsLib.isInTest()) {
          OseeLog.log(Activator.class, Level.INFO, "Email " + (enabled ? "Enabled" : "Disabled"));
       }
       emailEnabled = enabled;
@@ -65,7 +61,7 @@ public class AtsUtilCore {
 
    /**
     * TODO Remove duplicate Active flags, need to convert all ats.Active to Active in DB
-    *
+    * 
     * @param artifacts to iterate through
     * @param active state to validate against; Both will return all artifacts matching type
     * @param clazz type of artifacts to consider; null for all
@@ -99,22 +95,6 @@ public class AtsUtilCore {
       } catch (OseeCoreException ex) {
          OseeLog.log(Activator.class, Level.SEVERE, ex);
          return false;
-      }
-   }
-
-   public static String doubleToI18nString(double d) {
-      return doubleToI18nString(d, false);
-   }
-
-   public static String doubleToI18nString(double d, boolean blankIfZero) {
-      if (blankIfZero && d == 0) {
-         return "";
-      }
-      // This enables java to use same string for all 0 cases instead of creating new one
-      else if (d == 0) {
-         return "0.00";
-      } else {
-         return String.format("%4.2f", d);
       }
    }
 

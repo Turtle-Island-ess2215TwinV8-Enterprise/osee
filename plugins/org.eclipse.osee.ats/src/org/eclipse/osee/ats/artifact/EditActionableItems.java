@@ -23,7 +23,7 @@ import org.eclipse.osee.ats.core.client.action.ActionManager;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.config.TeamDefinitions;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.util.widgets.dialog.AICheckTreeDialog;
 import org.eclipse.osee.framework.core.enums.Active;
@@ -114,8 +114,8 @@ public class EditActionableItems {
          }
          if (!teamExists) {
             TeamWorkFlowArtifact teamArt =
-               ActionManager.createTeamWorkflow(actionArt, tda, Arrays.asList(aia), AtsUsers.toList(tda.getLeads()),
-                  transaction, createdDate, createdBy, null);
+               ActionManager.createTeamWorkflow(actionArt, tda, Arrays.asList(aia),
+                  AtsUserService.get().toList(tda.getLeads()), transaction, createdDate, createdBy, null);
             teamArt.persist(transaction);
             sb.append(aia.getName() + " => added team workflow \"" + tda.getName() + "\"\n");
          }

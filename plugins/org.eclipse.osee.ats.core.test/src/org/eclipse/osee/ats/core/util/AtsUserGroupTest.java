@@ -7,7 +7,8 @@ package org.eclipse.osee.ats.core.util;
 
 import java.util.Arrays;
 import junit.framework.Assert;
-import org.eclipse.osee.ats.core.mock.MockAtsUser;
+import org.eclipse.osee.ats.api.util.AtsUserGroup;
+import org.eclipse.osee.ats.mocks.MockAtsUser;
 import org.junit.Test;
 
 /**

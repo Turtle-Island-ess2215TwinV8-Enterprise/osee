@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.osee.ats.api.user.IAtsUser;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.AXml;
 import org.eclipse.osee.framework.jdk.core.util.DateUtil;
@@ -188,7 +188,7 @@ public class ReviewDefectItem {
    }
 
    public IAtsUser getUser() {
-      return AtsUsers.getUser(userId);
+      return AtsUserService.get().getUser(userId);
    }
 
    public String getUserId() {

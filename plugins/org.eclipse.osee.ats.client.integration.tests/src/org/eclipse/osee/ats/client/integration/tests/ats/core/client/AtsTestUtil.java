@@ -29,6 +29,7 @@ import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.api.workdef.IStateToken;
 import org.eclipse.osee.ats.api.workdef.ReviewBlockType;
 import org.eclipse.osee.ats.api.workdef.StateType;
+import org.eclipse.osee.ats.api.workflow.ChangeType;
 import org.eclipse.osee.ats.client.demo.DemoSawBuilds;
 import org.eclipse.osee.ats.core.client.action.ActionArtifact;
 import org.eclipse.osee.ats.core.client.action.ActionManager;
@@ -46,8 +47,7 @@ import org.eclipse.osee.ats.core.client.task.TaskArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
-import org.eclipse.osee.ats.core.client.workflow.ChangeType;
+import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactoryClient;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionHelper;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionManager;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionOption;
@@ -190,7 +190,7 @@ public class AtsTestUtil {
 
    private static void clearCaches() {
       if (workDef != null) {
-         WorkDefinitionFactory.removeWorkDefinition(workDef);
+         WorkDefinitionFactoryClient.removeWorkDefinition(workDef);
       }
       analyze = null;
       implement = null;
@@ -300,7 +300,7 @@ public class AtsTestUtil {
       workPackageWidgetDef.setAttributeName(AtsAttributeTypes.WorkPackage.getName());
       workPackageWidgetDef.setXWidgetName("XTextDam");
 
-      WorkDefinitionFactory.addWorkDefinition(workDef);
+      WorkDefinitionFactoryClient.addWorkDefinition(workDef);
 
       testAi =
          AtsConfigCache.instance.getActionableItemFactory().createActionableItem(GUID.create(),

@@ -20,16 +20,16 @@ import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.workflow.ChangeType;
 import org.eclipse.osee.ats.core.client.notify.AtsNotificationManager;
 import org.eclipse.osee.ats.core.client.team.CreateTeamOption;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowManager;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
-import org.eclipse.osee.ats.core.client.workflow.ChangeType;
 import org.eclipse.osee.ats.core.client.workflow.ChangeTypeUtil;
 import org.eclipse.osee.ats.core.client.workflow.ITeamWorkflowProvider;
 import org.eclipse.osee.ats.core.config.TeamDefinitions;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -71,7 +71,7 @@ public class ActionManager {
 
       // Create team workflow artifacts
       for (IAtsTeamDefinition teamDef : teamDefs) {
-         List<IAtsUser> leads = AtsUsers.toList(teamDef.getLeads(actionableItems));
+         List<IAtsUser> leads = AtsUserService.get().toList(teamDef.getLeads(actionableItems));
          TeamWorkFlowArtifact teamWf =
             createTeamWorkflow(actionArt, teamDef, actionableItems, leads, transaction, createdDate, createdBy,
                newActionListener);

@@ -12,9 +12,9 @@ package org.eclipse.osee.ats.column;
 
 import org.eclipse.nebula.widgets.xviewer.IXViewerValueColumn;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.review.DecisionReviewArtifact;
 import org.eclipse.osee.ats.core.client.review.DecisionReviewState;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.ats.util.xviewer.column.XViewerAtsColumn;
 import org.eclipse.osee.ats.world.WorldXViewerFactory;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -52,7 +52,7 @@ public class ReviewDeciderColumn extends XViewerAtsColumn implements IXViewerVal
    public String getColumnText(Object element, XViewerColumn column, int columnIndex) {
       try {
          if (element instanceof DecisionReviewArtifact) {
-            return AtsObjects.toString("; ",
+            return AtsLib.toString("; ",
                ((DecisionReviewArtifact) element).getStateMgr().getAssignees(DecisionReviewState.Decision));
          }
       } catch (OseeCoreException ex) {

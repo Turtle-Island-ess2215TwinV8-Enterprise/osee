@@ -40,6 +40,8 @@ import org.eclipse.osee.ats.actions.ShowChangeReportAction;
 import org.eclipse.osee.ats.actions.ShowMergeManagerAction;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
+import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
+import org.eclipse.osee.ats.api.workflow.notes.IAtsNoteItem;
 import org.eclipse.osee.ats.artifact.WorkflowManager;
 import org.eclipse.osee.ats.core.client.branch.AtsBranchManagerCore;
 import org.eclipse.osee.ats.core.client.config.AtsBulkLoad;
@@ -47,8 +49,7 @@ import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowManager;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.core.client.workflow.note.NoteItem;
-import org.eclipse.osee.ats.core.workdef.WorkDefinitionMatch;
+import org.eclipse.osee.ats.core.workflow.AtsNoteService;
 import org.eclipse.osee.ats.help.ui.AtsHelpContext;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.walker.action.OpenActionViewAction;
@@ -688,9 +689,9 @@ public class SMAWorkFlowTab extends FormPage implements IWorldViewerEventHandler
       }
    }
 
-   public static void createStateNotesHeader(Composite comp, XFormToolkit toolkit, AbstractWorkflowArtifact sma, int horizontalSpan, String forStateName) {
+   public static void createStateNotesHeader(Composite comp, XFormToolkit toolkit, AbstractWorkflowArtifact sma, int horizontalSpan, String forStateName) throws OseeCoreException {
       // Display global Notes
-      for (NoteItem noteItem : sma.getNotes().getNoteItems()) {
+      for (IAtsNoteItem noteItem : AtsNoteService.get().getNoteItems(sma)) {
          if (forStateName == null || noteItem.getState().equals(forStateName)) {
             FormsUtil.createLabelOrHyperlink(comp, toolkit, horizontalSpan, noteItem.toString());
          }

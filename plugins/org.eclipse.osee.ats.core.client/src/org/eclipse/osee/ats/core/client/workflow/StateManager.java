@@ -23,12 +23,15 @@ import java.util.Set;
 import java.util.logging.Level;
 import org.eclipse.osee.ats.api.data.AtsArtifactToken;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
+import org.eclipse.osee.ats.api.notify.IAtsNotificationListener;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.api.workdef.IStateToken;
 import org.eclipse.osee.ats.api.workdef.StateType;
 import org.eclipse.osee.ats.api.workflow.WorkState;
+import org.eclipse.osee.ats.api.workflow.WorkStateFactory;
 import org.eclipse.osee.ats.api.workflow.WorkStateProvider;
 import org.eclipse.osee.ats.core.client.internal.Activator;
 import org.eclipse.osee.ats.core.client.notify.AtsNotificationManager;
@@ -37,14 +40,12 @@ import org.eclipse.osee.ats.core.client.team.SimpleTeamState;
 import org.eclipse.osee.ats.core.client.team.TeamState;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
+import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactoryClient;
 import org.eclipse.osee.ats.core.client.workflow.log.LogItem;
 import org.eclipse.osee.ats.core.client.workflow.log.LogType;
-import org.eclipse.osee.ats.core.model.WorkStateFactory;
 import org.eclipse.osee.ats.core.model.impl.WorkStateImpl;
 import org.eclipse.osee.ats.core.model.impl.WorkStateProviderImpl;
-import org.eclipse.osee.ats.core.notify.IAtsNotificationListener;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.enums.SystemUser;
@@ -165,7 +166,7 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
          provider.setHoursSpent(state.getName(), remaining);
       }
 
-      if (AtsWorkDefinitionService.getService().isStateWeightingEnabled(awa.getWorkDefinition())) {
+      if (AtsWorkDefinitionService.get().isStateWeightingEnabled(awa.getWorkDefinition())) {
          provider.setPercentComplete(state.getName(), percentComplete);
       } else {
          awa.setSoleAttributeValue(AtsAttributeTypes.PercentComplete, percentComplete);
@@ -177,7 +178,7 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
    }
 
    protected void logMetrics(IStateToken state, IAtsUser user, Date date) throws OseeCoreException {
-      String hoursSpent = AtsUtilCore.doubleToI18nString(HoursSpentUtil.getHoursSpentTotal(awa));
+      String hoursSpent = AtsLib.doubleToI18nString(HoursSpentUtil.getHoursSpentTotal(awa));
       logMetrics(awa, PercentCompleteTotalUtil.getPercentCompleteTotal(awa) + "", hoursSpent, state, user, date);
    }
 
@@ -217,7 +218,7 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
    }
 
    public String getHoursSpentStr(String stateName) throws OseeCoreException {
-      return AtsUtilCore.doubleToI18nString(getHoursSpent(stateName), true);
+      return AtsLib.doubleToI18nString(getHoursSpent(stateName), true);
    }
 
    @Override
@@ -226,7 +227,7 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
    }
 
    public void setAssignees(Collection<? extends IAtsUser> assignees) throws OseeCoreException {
-      setAssignees(getCurrentStateName(), AtsUsers.toList(assignees));
+      setAssignees(getCurrentStateName(), AtsUserService.get().toList(assignees));
    }
 
    /**
@@ -239,7 +240,7 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
       } else if (getStateType().isCompletedOrCancelledState()) {
          throw new OseeStateException("Can't assign completed/cancelled states.");
       }
-      getStateProvider().setAssignees(stateName, AtsUsers.toList(assignees));
+      getStateProvider().setAssignees(stateName, AtsUserService.get().toList(assignees));
       writeToArtifact();
    }
 
@@ -370,8 +371,8 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
                   "ATS Valid State Names: Missing [%s] Artifact; Falling back to loadAddDefinitions",
                   AtsArtifactToken.WorkDef_State_Names.getName());
                try {
-                  for (IAtsWorkDefinition workDef : WorkDefinitionFactory.loadAllDefinitions()) {
-                     for (String stateName : AtsWorkDefinitionService.getService().getStateNames(workDef)) {
+                  for (IAtsWorkDefinition workDef : WorkDefinitionFactoryClient.loadAllDefinitions()) {
+                     for (String stateName : AtsWorkDefinitionService.get().getStateNames(workDef)) {
                         if (!allValidStateNames.contains(stateName)) {
                            allValidStateNames.add(stateName);
                         }

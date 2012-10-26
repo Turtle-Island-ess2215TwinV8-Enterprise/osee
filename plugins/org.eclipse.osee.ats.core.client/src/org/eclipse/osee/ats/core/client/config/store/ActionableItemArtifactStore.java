@@ -13,12 +13,12 @@ import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.config.AtsObjectsClient;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.core.config.ActionableItems;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
-import org.eclipse.osee.ats.core.util.AtsObjects;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.enums.CoreRelationTypes;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
@@ -79,7 +79,7 @@ public class ActionableItemArtifactStore extends ArtifactAtsObjectStore {
       }
 
       // set new children team defs if changed
-      List<String> newGuids = AtsObjects.toGuids(aia.getChildrenActionableItems());
+      List<String> newGuids = AtsLib.toGuids(aia.getChildrenActionableItems());
       List<String> currGuids = Artifacts.toGuids(aiArt.getChildren());
       // remove curr children that are not part of new children
       for (Artifact child : aiArt.getChildren()) {

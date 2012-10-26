@@ -19,15 +19,16 @@ import org.eclipse.nebula.widgets.xviewer.IMultiColumnEditProvider;
 import org.eclipse.nebula.widgets.xviewer.IXViewerValueColumn;
 import org.eclipse.nebula.widgets.xviewer.XViewer;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
+import org.eclipse.osee.ats.api.IAtsWorkItem;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.user.IAtsUser;
 import org.eclipse.osee.ats.core.client.action.ActionManager;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.core.column.AssigneeColumn;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.xviewer.column.XViewerAtsColumn;
+import org.eclipse.osee.ats.workflow.AtsAssigneeService;
 import org.eclipse.osee.ats.world.WorldXViewerFactory;
 import org.eclipse.osee.framework.core.enums.SystemUser;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -154,8 +155,8 @@ public class AssigneeColumnUI extends XViewerAtsColumn implements IXViewerValueC
    @Override
    public String getColumnText(Object element, XViewerColumn column, int columnIndex) {
       try {
-         if (element instanceof Artifact) {
-            return AssigneeColumn.instance.getAssigneeStr(element);
+         if (element instanceof IAtsWorkItem) {
+            return AtsAssigneeService.get().getAssigneeStr((IAtsWorkItem) element);
          }
       } catch (OseeCoreException ex) {
          return LogUtil.getCellExceptionString(ex);

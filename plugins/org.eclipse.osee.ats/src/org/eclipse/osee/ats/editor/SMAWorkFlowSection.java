@@ -264,7 +264,7 @@ public class SMAWorkFlowSection extends SectionPart {
          layout.marginLeft = 2;
          comp.setLayout(layout);
          comp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-         if (AtsWorkDefinitionService.getService().isStateWeightingEnabled(sma.getWorkDefinition())) {
+         if (AtsWorkDefinitionService.get().isStateWeightingEnabled(sma.getWorkDefinition())) {
             allXWidgets.add(new StatePercentCompleteXWidget(getManagedForm(), statePage, sma, comp, 2, xModListener,
                isCurrentState, editor));
          }

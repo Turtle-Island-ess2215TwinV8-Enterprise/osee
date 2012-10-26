@@ -15,11 +15,11 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
 import org.eclipse.nebula.widgets.xviewer.XViewerLabelProvider;
 import org.eclipse.osee.ats.AtsImage;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.review.defect.ReviewDefectItem.Severity;
 import org.eclipse.osee.ats.core.client.review.defect.ReviewDefectManager;
 import org.eclipse.osee.ats.core.client.review.role.UserRole;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.widgets.defect.DefectSeverityToImage;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -73,7 +73,7 @@ public class UserRoleLabelProvider extends XViewerLabelProvider {
       if (aCol.equals(UserRoleXViewerFactory.User_Col)) {
          return defectItem.getUser().getName();
       } else if (aCol.equals(UserRoleXViewerFactory.Hours_Spent_Col)) {
-         return defectItem.getHoursSpent() == null ? "" : AtsUtilCore.doubleToI18nString(defectItem.getHoursSpent(),
+         return defectItem.getHoursSpent() == null ? "" : AtsLib.doubleToI18nString(defectItem.getHoursSpent(),
             false);
       } else if (aCol.equals(UserRoleXViewerFactory.Role_Col)) {
          return defectItem.getRole().name();

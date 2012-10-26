@@ -19,13 +19,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osee.ats.AtsImage;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.util.AtsLib;
+import org.eclipse.osee.ats.api.workflow.ChangeType;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
-import org.eclipse.osee.ats.core.client.workflow.ChangeType;
 import org.eclipse.osee.ats.core.client.workflow.ChangeTypeUtil;
-import org.eclipse.osee.ats.core.client.workflow.PriorityUtil;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
 import org.eclipse.osee.ats.core.config.TeamDefinitions;
+import org.eclipse.osee.ats.core.workflow.AtsWorkItemService;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.widgets.dialog.TeamDefinitionDialog;
 import org.eclipse.osee.ats.version.VersionMetrics;
@@ -158,8 +158,8 @@ public class FirstTimeQualityMetricReportItem extends XNavigateItemAction {
             Collection<TeamWorkFlowArtifact> arts =
                teamMet.getWorkflowsOriginatedBetween(nextReleaseStartDate, nextReleaseEndDate);
             for (TeamWorkFlowArtifact team : arts) {
-               if (!team.isCancelled() && ChangeTypeUtil.getChangeType(team) == ChangeType.Problem && (PriorityUtil.getPriorityStr(
-                  team).equals("1") || PriorityUtil.getPriorityStr(team).equals("2"))) {
+               if (!team.isCancelled() && ChangeTypeUtil.getChangeType(team) == ChangeType.Problem && (AtsWorkItemService.get().getPriorityStr(
+                  team).equals("1") || AtsWorkItemService.get().getPriorityStr(team).equals("2"))) {
                   numOrigDurningNextReleaseCycle++;
                }
             }
@@ -179,7 +179,7 @@ public class FirstTimeQualityMetricReportItem extends XNavigateItemAction {
             DateUtil.getMMDDYY(thisReleaseEndDate),
             numOrigDurningNextReleaseCycle == 0 ? "N/A" : String.valueOf(numOrigDurningNextReleaseCycle),
             numNonSupportReleased == null ? "N/A" : String.valueOf(numNonSupportReleased),
-            numOrigDurningNextReleaseCycle == 0 || numNonSupportReleased == null || numNonSupportReleased == 0 ? "N/A" : AtsUtilCore.doubleToI18nString((double) numOrigDurningNextReleaseCycle / (double) numNonSupportReleased)}));
+            numOrigDurningNextReleaseCycle == 0 || numNonSupportReleased == null || numNonSupportReleased == 0 ? "N/A" : AtsLib.doubleToI18nString((double) numOrigDurningNextReleaseCycle / (double) numNonSupportReleased)}));
          monitor.worked(1);
       }
       sb.append(AHTML.endMultiColumnTable());

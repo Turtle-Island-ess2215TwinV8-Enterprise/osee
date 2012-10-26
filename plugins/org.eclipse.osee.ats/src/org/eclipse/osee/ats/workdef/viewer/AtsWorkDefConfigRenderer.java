@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osee.ats.AtsImage;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
-import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactory;
-import org.eclipse.osee.ats.core.workdef.WorkDefinitionMatch;
+import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
+import org.eclipse.osee.ats.core.client.workdef.WorkDefinitionFactoryClient;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.logging.OseeLevel;
@@ -87,7 +87,7 @@ public class AtsWorkDefConfigRenderer extends DefaultArtifactRenderer {
          public void run() {
             for (Artifact artifact : artifacts) {
                try {
-                  WorkDefinitionMatch match = WorkDefinitionFactory.getWorkDefinition(artifact.getName());
+                  WorkDefinitionMatch match = WorkDefinitionFactoryClient.getWorkDefinition(artifact.getName());
                   if (match.isMatched()) {
                      IEditorInput input = new AtsWorkDefConfigEditorInput(match.getWorkDefinition());
                      AWorkbench.getActivePage().openEditor(input, AtsWorkDefConfigEditor.EDITOR_ID);

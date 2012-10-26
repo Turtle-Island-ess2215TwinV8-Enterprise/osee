@@ -12,6 +12,10 @@ package org.eclipse.osee.ats.impl;
 
 import org.eclipse.osee.ats.impl.internal.convert.ConvertTestSuite;
 import org.eclipse.osee.ats.impl.internal.model.ModelTestSuite;
+import org.eclipse.osee.ats.impl.internal.query.QueryTestSuite;
+import org.eclipse.osee.ats.impl.internal.user.UserTestSuite;
+import org.eclipse.osee.ats.impl.internal.util.UtilTestSuite;
+import org.eclipse.osee.ats.impl.internal.workitem.WorkItemTestSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -19,7 +23,13 @@ import org.junit.runners.Suite;
  * @author Donald G. Dunne
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ConvertTestSuite.class, ModelTestSuite.class})
+@Suite.SuiteClasses({
+   ConvertTestSuite.class,
+   ModelTestSuite.class,
+   QueryTestSuite.class,
+   UserTestSuite.class,
+   UtilTestSuite.class,
+   WorkItemTestSuite.class})
 public class AllAtsImplTestSuite {
    // Test Suite
 }

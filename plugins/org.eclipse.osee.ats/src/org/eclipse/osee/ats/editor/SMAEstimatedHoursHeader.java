@@ -12,7 +12,7 @@ package org.eclipse.osee.ats.editor;
 
 import java.util.logging.Level;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
-import org.eclipse.osee.ats.core.client.util.AtsUtilCore;
+import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.PromptChangeUtil;
@@ -94,10 +94,10 @@ public class SMAEstimatedHoursHeader extends Composite {
       double awaEst = awa.getSoleAttributeValue(AtsAttributeTypes.EstimatedHours, 0.0);
       double totalEst = awa.getEstimatedHoursTotal();
       if (awaEst != totalEst) {
-         return String.format("%s | %s", AtsUtilCore.doubleToI18nString(awaEst),
-            AtsUtilCore.doubleToI18nString(totalEst));
+         return String.format("%s | %s", AtsLib.doubleToI18nString(awaEst),
+            AtsLib.doubleToI18nString(totalEst));
       } else {
-         return AtsUtilCore.doubleToI18nString(awaEst);
+         return AtsLib.doubleToI18nString(awaEst);
       }
    }
 

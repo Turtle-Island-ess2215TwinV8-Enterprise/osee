@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.osee.ats.editor;
 
+import java.util.List;
 import java.util.logging.Level;
+import org.eclipse.osee.ats.api.user.IAtsUser;
 import org.eclipse.osee.ats.column.AssigneeColumnUI;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.core.client.workflow.AbstractWorkflowArtifact;
-import org.eclipse.osee.ats.core.users.AtsUsers;
+import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
@@ -65,12 +67,14 @@ public class SMAAssigneesHeader extends Composite {
                      if (editor.isDirty()) {
                         editor.doSave(null);
                      }
-                     if (!isEditable && !sma.getStateMgr().getAssignees().contains(AtsUsers.getUnAssigned()) && !sma.getStateMgr().getAssignees().contains(
-                        AtsUsersClient.getUser())) {
-                        AWorkbench.popup(
-                           "ERROR",
-                           "You must be assigned to modify assignees.\nContact current Assignee or Select Privileged Edit for Authorized Overriders.");
-                        return;
+                     if (!isEditable) {
+                        List<IAtsUser> assignees = sma.getStateMgr().getAssignees();
+                        if (!assignees.contains(AtsUserService.get().getUnAssigned()) && !assignees.contains(AtsUsersClient.getUser())) {
+                           AWorkbench.popup(
+                              "ERROR",
+                              "You must be assigned to modify assignees.\nContact current Assignee or Select Privileged Edit for Authorized Overriders.");
+                           return;
+                        }
                      }
                      if (AssigneeColumnUI.promptChangeAssignees(sma, false)) {
                         editor.doSave(null);
