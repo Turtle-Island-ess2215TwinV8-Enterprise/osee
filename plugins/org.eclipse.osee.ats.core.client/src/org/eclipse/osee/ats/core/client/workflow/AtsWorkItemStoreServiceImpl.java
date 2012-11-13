@@ -1,8 +1,13 @@
-/*
- * Created on Aug 1, 2012
+/*******************************************************************************
+ * Copyright (c) 2011 Boeing.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * PLACE_YOUR_DISTRIBUTION_STATEMENT_RIGHT_HERE
- */
+ * Contributors:
+ *     Boeing - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.osee.ats.core.client.workflow;
 
 import java.util.Collection;
@@ -25,8 +30,8 @@ import org.eclipse.osee.ats.core.client.util.WorkItemUtil;
 import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IAttributeType;
-import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.skynet.core.attribute.AttributeTypeManager;
@@ -36,7 +41,7 @@ public class AtsWorkItemStoreServiceImpl implements IAtsWorkItemStore {
    @Override
    public ChangeType getChangeType(IAtsWorkItem workItem) throws OseeCoreException {
       Artifact artifact = WorkItemUtil.get(workItem);
-      if (artifact != null) {
+      if (Conditions.notNull(artifact)) {
          return ChangeTypeUtil.getChangeType(artifact);
       }
       return ChangeType.None;
@@ -45,154 +50,120 @@ public class AtsWorkItemStoreServiceImpl implements IAtsWorkItemStore {
    @Override
    public IAtsTeamWorkflow getParentTeamWorkflow(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getParentTeamWorkflow();
-      }
-      return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getParentTeamWorkflow();
    }
 
    @Override
    public String getTypeName(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getType();
-      }
-      return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getType();
    }
 
    @Override
    public String getPcrId(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return TeamWorkFlowManager.getPcrId(awa);
-      }
-      return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return TeamWorkFlowManager.getPcrId(awa);
    }
 
    @Override
    public String getPriorityStr(IAtsWorkItem workItem) throws OseeCoreException {
-      Artifact artifact = WorkItemUtil.get(workItem);
-      if (artifact != null) {
-         return artifact.getSoleAttributeValue(AtsAttributeTypes.PriorityType, "");
-      }
-      return "";
+      AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getSoleAttributeValue(AtsAttributeTypes.PriorityType, "");
    }
 
    @Override
    public String getNeedByDateStr(IAtsWorkItem workItem) throws OseeCoreException {
-      Artifact artifact = WorkItemUtil.get(workItem);
-      if (artifact != null) {
-         return artifact.getSoleAttributeValueAsString(AtsAttributeTypes.NeedBy, "");
-      }
-      return "";
+      AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getSoleAttributeValueAsString(AtsAttributeTypes.NeedBy, "");
    }
 
    @Override
    public String getCurrentStateName(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getCurrentStateName();
-      }
-      return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getCurrentStateName();
    }
 
    @Override
    public IAtsUser getCreatedBy(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getCreatedBy();
-      }
-      return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getCreatedBy();
    }
 
    @Override
    public Date getCreatedDate(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getCreatedDate();
-      }
-      return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getCreatedDate();
    }
 
    @Override
    public String getTeamName(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getParentTeamWorkflow().getTeamName();
-      }
-      return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getParentTeamWorkflow().getTeamName();
    }
 
    @Override
    public boolean isCancelled(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.isCancelled();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.isCancelled();
    }
 
    @Override
    public String getCancelledFromState(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getCancelledFromState();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getCancelledFromState();
    }
 
    @Override
    public String getCancelledReason(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getCancelledReason();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getCancelledReason();
    }
 
    @Override
    public IAtsWorkItem getParentWorkItem(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getParentAWA();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getParentAWA();
    }
 
    @Override
    public String getResolution(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getSoleAttributeValue(AtsAttributeTypes.Resolution, "");
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getSoleAttributeValue(AtsAttributeTypes.Resolution, "");
    }
 
    @Override
    public boolean isInState(IAtsWorkItem workItem, IAtsStateDefinition stateDef) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getStateMgr().getCurrentStateName().equals(stateDef.getName());
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getStateMgr().getCurrentStateName().equals(stateDef.getName());
    }
 
    @Override
    public boolean isStateVisited(IAtsWorkItem workItem, IAtsStateDefinition stateDef) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getStateMgr().isStateVisited(stateDef);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getStateMgr().isStateVisited(stateDef);
    }
 
    @Override
    public boolean isCompleted(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.isCompleted();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.isCompleted();
    }
 
    @Override
@@ -201,9 +172,7 @@ public class AtsWorkItemStoreServiceImpl implements IAtsWorkItemStore {
          return true;
       }
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa == null) {
-         throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
-      }
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
       if (class1.isInstance(awa)) {
          return true;
       }
@@ -213,218 +182,197 @@ public class AtsWorkItemStoreServiceImpl implements IAtsWorkItemStore {
    @Override
    public IAtsUser getCompletedBy(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         String userId = awa.getSoleAttributeValue(AtsAttributeTypes.CompletedBy, null);
-         if (Strings.isValid(userId)) {
-            return AtsUserService.get().getUser(userId);
-         }
-         return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      String userId = awa.getSoleAttributeValue(AtsAttributeTypes.CompletedBy, null);
+      if (Strings.isValid(userId)) {
+         return AtsUserService.get().getUser(userId);
       }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      return null;
    }
 
    @Override
    public Date getCompletedDate(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getSoleAttributeValue(AtsAttributeTypes.CompletedDate, null);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getSoleAttributeValue(AtsAttributeTypes.CompletedDate, null);
    }
 
    @Override
    public IAtsUser getCancelledBy(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         String userId = awa.getSoleAttributeValue(AtsAttributeTypes.CancelledBy, null);
-         if (Strings.isValid(userId)) {
-            return AtsUserService.get().getUser(userId);
-         }
-         return null;
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      String userId = awa.getSoleAttributeValue(AtsAttributeTypes.CancelledBy, null);
+      if (Strings.isValid(userId)) {
+         return AtsUserService.get().getUser(userId);
       }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      return null;
    }
 
    @Override
    public Date getCancelledDate(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getSoleAttributeValue(AtsAttributeTypes.CancelledDate, null);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getSoleAttributeValue(AtsAttributeTypes.CancelledDate, null);
    }
 
    @Override
    public boolean isCompletedOrCancelled(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.isCompletedOrCancelled();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.isCompletedOrCancelled();
    }
 
    @Override
    public boolean isInWork(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.isInWork();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.isInWork();
    }
 
    @Override
    public String getCompletedFromState(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getCompletedFromState();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getCompletedFromState();
    }
 
    @Override
    public void setCompletedFromState(IAtsWorkItem workItem, String stateName) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.setSoleAttributeValue(AtsAttributeTypes.CompletedFromState, stateName);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.setSoleAttributeValue(AtsAttributeTypes.CompletedFromState, stateName);
    }
 
    @Override
    public void setCancelledFromState(IAtsWorkItem workItem, String stateName) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.setSoleAttributeValue(AtsAttributeTypes.CancelledFromState, stateName);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.setSoleAttributeValue(AtsAttributeTypes.CancelledFromState, stateName);
    }
 
    @Override
    public void setStateType(IAtsWorkItem workItem, StateType stateType) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.setSoleAttributeValue(AtsAttributeTypes.CurrentStateType, stateType.name());
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.setSoleAttributeValue(AtsAttributeTypes.CurrentStateType, stateType.name());
    }
 
    @Override
    public void setCompletedDate(IAtsWorkItem workItem, Date completedDate) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.setSoleAttributeValue(AtsAttributeTypes.CompletedDate, completedDate);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.setSoleAttributeValue(AtsAttributeTypes.CompletedDate, completedDate);
    }
 
    @Override
    public void setCancelledDate(IAtsWorkItem workItem, Date cancelledDate) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.setSoleAttributeValue(AtsAttributeTypes.CancelledDate, cancelledDate);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.setSoleAttributeValue(AtsAttributeTypes.CancelledDate, cancelledDate);
    }
 
    @Override
    public void setCompletedBy(IAtsWorkItem workItem, IAtsUser completedBy) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.setSoleAttributeValue(AtsAttributeTypes.CompletedBy, completedBy);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.setSoleAttributeValue(AtsAttributeTypes.CompletedBy, completedBy);
    }
 
    @Override
    public void setCancelledBy(IAtsWorkItem workItem, IAtsUser cancelledBy) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.setSoleAttributeValue(AtsAttributeTypes.CancelledBy, cancelledBy);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.setSoleAttributeValue(AtsAttributeTypes.CancelledBy, cancelledBy);
    }
 
    @Override
    public WorkStateProvider getStateData(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getStateData();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getStateData();
    }
 
    @Override
    public WorkStateFactory getStateFactory(IAtsWorkItem workItem) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         return awa.getStateMgr();
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      return awa.getStateMgr();
    }
 
    @Override
    public void setAssignees(IAtsWorkItem workItem, List<IAtsUser> users) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.getStateMgr().setAssignees(users);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.getStateMgr().setAssignees(users);
    }
 
    @Override
    public void addState(IAtsWorkItem workItem, String stateName) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         awa.getStateMgr().createState(stateName);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      awa.getStateMgr().createState(stateName);
    }
 
    @Override
    public ChangeType setChangeType(IAtsWorkItem workItem, ChangeType changeType) throws OseeCoreException {
       AbstractWorkflowArtifact awa = WorkItemUtil.get(workItem, AbstractWorkflowArtifact.class);
-      if (awa != null) {
-         ChangeTypeUtil.setChangeType(awa, changeType);
-      }
-      throw new OseeArgumentException("Can't locate Work Item " + workItem.toStringWithId());
+      Conditions.checkNotNull(awa, "workItem", "Can't locate Work Item %s", awa.toStringWithId());
+      ChangeTypeUtil.setChangeType(awa, changeType);
+      return changeType;
    }
 
    @Override
    public String getAttributeStringValue(IAtsWorkItem workItem, String attributeName) throws OseeCoreException {
       Artifact artifact = WorkItemUtil.get(workItem);
-      if (artifact == null) {
-         return "Can't Find Artifact matching " + workItem.toStringWithId();
-      }
+      Conditions.checkNotNull(artifact, "workItem", "Can't locate Work Item %s", artifact.toStringWithId());
       IAttributeType attrType = AttributeTypeManager.getType(attributeName);
-      if (attrType != null) {
+      if (Conditions.notNull(attrType)) {
          return artifact.getAttributesToString(attrType);
       }
-      return String.format("Can't resolve Attribute Type Named [%s]", attributeName);
+      return String.format("Can't resolve Attribute Type Named [%s] for artifact [%s]", attributeName,
+         artifact.toStringWithId());
    }
 
    @Override
    public IAtsWorkData getWorkData(IAtsWorkItem workItem) throws OseeCoreException {
+      Artifact artifact = WorkItemUtil.get(workItem);
+      Conditions.checkNotNull(artifact, "workItem", "Can't locate Work Item %s", artifact.toStringWithId());
+      if (artifact instanceof AbstractWorkflowArtifact) {
+         return new AtsWorkData((AbstractWorkflowArtifact) artifact);
+      }
       return null;
    }
 
    @Override
    public String getChangeTypeStr(IAtsWorkItem workItem) throws OseeCoreException {
-      return null;
+      return getChangeType(workItem).name();
    }
 
    @Override
    public IArtifactType getArtifactType(IAtsWorkItem workItem) throws OseeCoreException {
-      return null;
+      Artifact artifact = WorkItemUtil.get(workItem);
+      Conditions.checkNotNull(artifact, "workItem", "Can't locate Work Item %s", artifact.toStringWithId());
+      return artifact.getArtifactTypeToken();
    }
 
    @Override
    public Collection<Object> getAttributeValues(IAtsWorkItem workItem, IAttributeType attributeType) throws OseeCoreException {
-      return null;
+      Artifact artifact = WorkItemUtil.get(workItem);
+      Conditions.checkNotNull(artifact, "workItem", "Can't Find Artifact matching " + workItem.toStringWithId());
+
+      IAttributeType attrType = AttributeTypeManager.getType(attributeType);
+      if (attrType == null) {
+         throw new OseeArgumentException(String.format("Can't resolve Attribute Type [%s]", attributeType));
+      }
+
+      return artifact.getAttributeValues(attributeType);
    }
 
    @Override
-   public boolean isOfType(IAtsWorkItem item, IArtifactType matchType) throws OseeCoreException {
-      return false;
+   public boolean isOfType(IAtsWorkItem workItem, IArtifactType matchType) throws OseeCoreException {
+      Artifact artifact = WorkItemUtil.get(workItem);
+      Conditions.checkNotNull(artifact, "workItem", "Can't Find Artifact matching " + workItem.toStringWithId());
+      return artifact.isOfType(matchType);
    }
 
 }
