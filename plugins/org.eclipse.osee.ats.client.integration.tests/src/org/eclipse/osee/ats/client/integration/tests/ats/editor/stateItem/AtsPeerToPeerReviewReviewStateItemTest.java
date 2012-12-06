@@ -23,6 +23,7 @@ import org.eclipse.osee.ats.core.client.review.role.UserRole;
 import org.eclipse.osee.ats.core.client.review.role.UserRoleManager;
 import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
 import org.eclipse.osee.ats.editor.stateItem.AtsPeerToPeerReviewReviewStateItem;
+import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.skynet.core.transaction.SkynetTransaction;
@@ -51,7 +52,10 @@ public class AtsPeerToPeerReviewReviewStateItemTest {
          // setup fake review artifact with decision options set
          SkynetTransaction transaction =
             TransactionManager.createTransaction(AtsUtil.getAtsBranch(), getClass().getSimpleName());
-         peerRevArt = PeerToPeerReviewManager.createNewPeerToPeerReview(null, getClass().getName(), "", transaction);
+         peerRevArt =
+            PeerToPeerReviewManager.createNewPeerToPeerReview(
+               AtsWorkDefinitionService.get().getDefaultPeerToPeerWorkflowDefinition(), null, getClass().getName(), "",
+               transaction);
          peerRevArt.setName(getClass().getSimpleName());
          peerRevArt.persist(transaction);
          transaction.execute();

@@ -1,107 +1,118 @@
-/*
- * Created on Jul 25, 2012
+/*******************************************************************************
+ * Copyright (c) 2011 Boeing.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * PLACE_YOUR_DISTRIBUTION_STATEMENT_RIGHT_HERE
- */
+ * Contributors:
+ *     Boeing - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.osee.ats.api.workflow;
 
+import java.util.Collection;
 import java.util.Date;
 import org.eclipse.osee.ats.api.IAtsObject;
-import java.util.Collection;
 import org.eclipse.osee.ats.api.IAtsWorkItem;
-import org.eclipse.osee.framework.core.data.IArtifactType;
-import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.ats.api.user.IAtsUser;
 import org.eclipse.osee.ats.api.workdef.StateType;
+import org.eclipse.osee.framework.core.data.IArtifactType;
+import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.XResultData;
 
+/**
+ * @author Donald G. Dunne
+ */
 public interface IAtsWorkItemService {
 
-   public abstract IAtsWorkData getWorkData(IAtsWorkItem workItem) throws OseeCoreException;
+   IAtsWorkData getWorkData(IAtsWorkItem workItem) throws OseeCoreException;
+
    // Change Type
-   public abstract ChangeType getChangeType(IAtsWorkItem workItem) throws OseeCoreException;
+   ChangeType getChangeType(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract IArtifactType getArtifactType(IAtsWorkItem workItem) throws OseeCoreException;
-   public abstract ChangeType setChangeType(IAtsWorkItem workItem, ChangeType changeType) throws OseeCoreException;
+   IArtifactType getArtifactType(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract Collection<Object> getAttributeValues(IAtsWorkItem workItem, IAttributeType attributeType) throws OseeCoreException;
-   public abstract String getChangeTypeStr(IAtsWorkItem workItem) throws OseeCoreException;
+   ChangeType setChangeType(IAtsWorkItem workItem, ChangeType changeType) throws OseeCoreException;
+
+   Collection<Object> getAttributeValues(IAtsObject atsObject, IAttributeType attributeType) throws OseeCoreException;
+
+   String getChangeTypeStr(IAtsWorkItem workItem) throws OseeCoreException;
 
    // Parent 
-   public abstract IAtsTeamWorkflow getParentTeamWorkflow(IAtsWorkItem workItem) throws OseeCoreException;
+   IAtsTeamWorkflow getParentTeamWorkflow(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract IAtsWorkItem getParentWorkItem(IAtsWorkItem workItem) throws OseeCoreException;
+   IAtsWorkItem getParentWorkItem(IAtsWorkItem workItem) throws OseeCoreException;
 
    // Misc
-   public abstract String getPriorityStr(IAtsWorkItem workItem) throws OseeCoreException;
+   String getPriorityStr(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getNeedByDateStr(IAtsWorkItem workItem) throws OseeCoreException;
+   String getNeedByDateStr(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getTypeName(IAtsWorkItem workItem) throws OseeCoreException;
+   String getTypeName(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getPcrId(IAtsWorkItem workItem) throws OseeCoreException;
+   String getPcrId(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getResolution(IAtsWorkItem workItem) throws OseeCoreException;
+   String getResolution(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getTeamName(IAtsWorkItem workItem) throws OseeCoreException;
+   String getTeamName(IAtsWorkItem workItem) throws OseeCoreException;
 
    // HTML Report
-   public abstract XResultData getPrintHtml(IAtsWorkItem workItem) throws OseeCoreException;
+   XResultData getPrintHtml(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getOverviewHtml(IAtsWorkItem workItem) throws OseeCoreException;
+   String getOverviewHtml(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract boolean isOfType(IAtsWorkItem workItem, Class<? extends IAtsObject> class1) throws OseeCoreException;
+   boolean isOfType(IAtsWorkItem workItem, Class<? extends IAtsObject> class1) throws OseeCoreException;
 
    // State
-   public abstract void setStateType(IAtsWorkItem workItem, StateType StateType) throws OseeCoreException;
+   void setStateType(IAtsWorkItem workItem, StateType StateType) throws OseeCoreException;
 
-   public abstract String getCurrentStateName(IAtsWorkItem workItem) throws OseeCoreException;
+   String getCurrentStateName(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract boolean isCompleted(IAtsWorkItem workItem) throws OseeCoreException;
+   boolean isCompleted(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract IAtsUser getCompletedBy(IAtsWorkItem workItem) throws OseeCoreException;
+   IAtsUser getCompletedBy(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract Date getCompletedDate(IAtsWorkItem workItem) throws OseeCoreException;
+   Date getCompletedDate(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract boolean isCancelled(IAtsWorkItem workItem) throws OseeCoreException;
+   boolean isCancelled(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract IAtsUser getCancelledBy(IAtsWorkItem workItem) throws OseeCoreException;
+   IAtsUser getCancelledBy(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract Date getCancelledDate(IAtsWorkItem workItem) throws OseeCoreException;
+   Date getCancelledDate(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getCancelledReason(IAtsWorkItem workItem) throws OseeCoreException;
+   String getCancelledReason(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract boolean isCompletedOrCancelled(IAtsWorkItem workItem) throws OseeCoreException;
+   boolean isCompletedOrCancelled(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract boolean isInWork(IAtsWorkItem workItem) throws OseeCoreException;
+   boolean isInWork(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getCompletedFromState(IAtsWorkItem workItem) throws OseeCoreException;
+   String getCompletedFromState(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract String getCancelledFromState(IAtsWorkItem workItem) throws OseeCoreException;
+   String getCancelledFromState(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract void setCompletedFromState(IAtsWorkItem workItem, String string) throws OseeCoreException;
+   void setCompletedFromState(IAtsWorkItem workItem, String string) throws OseeCoreException;
 
-   public abstract void setCancelledFromState(IAtsWorkItem workItem, String string) throws OseeCoreException;
+   void setCancelledFromState(IAtsWorkItem workItem, String string) throws OseeCoreException;
 
-   public abstract void setCompletedDate(IAtsWorkItem workItem, Date completedDate) throws OseeCoreException;
+   void setCompletedDate(IAtsWorkItem workItem, Date completedDate) throws OseeCoreException;
 
-   public abstract void setCancelledDate(IAtsWorkItem workItem, Date cancelledDate) throws OseeCoreException;
+   void setCancelledDate(IAtsWorkItem workItem, Date cancelledDate) throws OseeCoreException;
 
-   public abstract void setCompletedBy(IAtsWorkItem workItem, IAtsUser completedBy) throws OseeCoreException;
+   void setCompletedBy(IAtsWorkItem workItem, IAtsUser completedBy) throws OseeCoreException;
 
-   public abstract void setCancelledBy(IAtsWorkItem workItem, IAtsUser cancelledBy) throws OseeCoreException;
+   void setCancelledBy(IAtsWorkItem workItem, IAtsUser cancelledBy) throws OseeCoreException;
 
-   public abstract IAtsUser getCreatedBy(IAtsWorkItem workItem) throws OseeCoreException;
+   IAtsUser getCreatedBy(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract Date getCreatedDate(IAtsWorkItem workItem) throws OseeCoreException;
+   Date getCreatedDate(IAtsWorkItem workItem) throws OseeCoreException;
 
    // TODO Replace with methods in WorkItemService or AssigneeService or MetricsService
-   public abstract WorkStateProvider getStateData(IAtsWorkItem workItem) throws OseeCoreException;
+   WorkStateProvider getStateData(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract WorkStateFactory getStateFactory(IAtsWorkItem workItem) throws OseeCoreException;
+   WorkStateFactory getStateFactory(IAtsWorkItem workItem) throws OseeCoreException;
 
-   public abstract void addState(IAtsWorkItem workItem, String stateName) throws OseeCoreException;
+   void addState(IAtsWorkItem workItem, String stateName) throws OseeCoreException;
 
-   public abstract boolean isOfType(IAtsWorkItem item, IArtifactType matchType) throws OseeCoreException;
+   boolean isOfType(IAtsWorkItem item, IArtifactType matchType) throws OseeCoreException;
 }

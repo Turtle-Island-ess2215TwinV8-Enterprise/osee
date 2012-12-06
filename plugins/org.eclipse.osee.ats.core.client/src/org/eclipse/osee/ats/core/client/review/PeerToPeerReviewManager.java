@@ -14,10 +14,12 @@ package org.eclipse.osee.ats.core.client.review;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.data.AtsArtifactTypes;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.api.workdef.IStateToken;
 import org.eclipse.osee.ats.api.workdef.ReviewBlockType;
 import org.eclipse.osee.ats.api.workdef.StateType;
@@ -32,6 +34,7 @@ import org.eclipse.osee.ats.core.client.workflow.transition.TransitionHelper;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionManager;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionOption;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionResults;
+import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.skynet.core.artifact.ArtifactTypeManager;
@@ -145,18 +148,38 @@ public class PeerToPeerReviewManager {
          transaction);
    }
 
+   public static PeerToPeerReviewArtifact createNewPeerToPeerReview(IAtsWorkDefinition workDefinition, TeamWorkFlowArtifact teamArt, String reviewTitle, String againstState, SkynetTransaction transaction) throws OseeCoreException {
+      return createNewPeerToPeerReview(workDefinition, teamArt, reviewTitle, againstState, new Date(),
+         AtsUsersClient.getUser(), transaction);
+   }
+
    public static PeerToPeerReviewArtifact createNewPeerToPeerReview(TeamWorkFlowArtifact teamArt, String reviewTitle, String againstState, Date createdDate, IAtsUser createdBy, SkynetTransaction transaction) throws OseeCoreException {
+      return createNewPeerToPeerReview(
+         AtsWorkDefinitionService.get().getWorkDefinitionForPeerToPeerReviewNotYetCreated(teamArt).getWorkDefinition(),
+         teamArt, reviewTitle, againstState, createdDate, createdBy, transaction);
+   }
+
+   public static PeerToPeerReviewArtifact createNewPeerToPeerReview(IAtsActionableItem actionableItem, String reviewTitle, String againstState, Date createdDate, IAtsUser createdBy, SkynetTransaction transaction) throws OseeCoreException {
+      return createNewPeerToPeerReview(
+         AtsWorkDefinitionService.get().getWorkDefinitionForPeerToPeerReviewNotYetCreatedAndStandalone(actionableItem).getWorkDefinition(),
+         null, reviewTitle, againstState, createdDate, createdBy, transaction);
+   }
+
+   public static PeerToPeerReviewArtifact createNewPeerToPeerReview(IAtsWorkDefinition workDefinition, TeamWorkFlowArtifact teamArt, String reviewTitle, String againstState, Date createdDate, IAtsUser createdBy, SkynetTransaction transaction) throws OseeCoreException {
       PeerToPeerReviewArtifact peerToPeerRev =
          (PeerToPeerReviewArtifact) ArtifactTypeManager.addArtifact(AtsArtifactTypes.PeerToPeerReview,
             AtsUtilCore.getAtsBranch(), reviewTitle == null ? "Peer to Peer Review" : reviewTitle);
-      // Initialize state machine
-      peerToPeerRev.initializeNewStateMachine(null, new Date(), createdBy);
 
       if (teamArt != null) {
          teamArt.addRelation(AtsRelationTypes.TeamWorkflowToReview_Review, peerToPeerRev);
-         if (againstState != null) {
-            peerToPeerRev.setSoleAttributeValue(AtsAttributeTypes.RelatedToState, againstState);
-         }
+      }
+
+      // Initialize state machine
+      peerToPeerRev.setSoleAttributeValue(AtsAttributeTypes.WorkflowDefinition, workDefinition.getId());
+      peerToPeerRev.initializeNewStateMachine(workDefinition, null, new Date(), createdBy);
+
+      if (teamArt != null && againstState != null) {
+         peerToPeerRev.setSoleAttributeValue(AtsAttributeTypes.RelatedToState, againstState);
       }
       peerToPeerRev.setSoleAttributeValue(AtsAttributeTypes.ReviewBlocks, ReviewBlockType.None.name());
       peerToPeerRev.setSoleAttributeValue(AtsAttributeTypes.ReviewFormalType, ReviewFormalType.InFormal.name());

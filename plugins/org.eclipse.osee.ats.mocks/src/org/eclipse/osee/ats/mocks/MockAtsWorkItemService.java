@@ -268,13 +268,13 @@ public class MockAtsWorkItemService implements IAtsWorkItemService {
    }
 
    @Override
-   public Collection<Object> getAttributeValues(IAtsWorkItem workItem, IAttributeType attributeType) throws OseeCoreException {
-      return null;
+   public boolean isOfType(IAtsWorkItem item, IArtifactType matchType) throws OseeCoreException {
+      return false;
    }
 
    @Override
-   public boolean isOfType(IAtsWorkItem item, IArtifactType matchType) throws OseeCoreException {
-      return false;
+   public Collection<Object> getAttributeValues(IAtsObject atsObject, IAttributeType attributeType) throws OseeCoreException {
+      return null;
    }
 
 }

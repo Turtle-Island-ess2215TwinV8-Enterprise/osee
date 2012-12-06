@@ -275,6 +275,15 @@ attributeType "ats.Related Task Workflow Definition" extends StringAttribute {
    max 1
 }
 
+attributeType "ats.Related Peer Workflow Definition" extends StringAttribute {
+   guid "AOofT00toVUnUEIokZQA"
+   uuid 0x100000000000037B
+   dataProvider DefaultAttributeDataProvider
+   min 0
+   max 1
+}
+
+
 attributeType "ats.Active" extends BooleanAttribute {
    guid "AAMFEclQOVmzkIvzyWwA"
    uuid 0x10000000000000B1

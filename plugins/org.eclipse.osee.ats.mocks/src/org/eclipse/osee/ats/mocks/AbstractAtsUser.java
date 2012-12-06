@@ -118,4 +118,9 @@ public abstract class AbstractAtsUser implements IAtsUser {
       this.active = active;
    }
 
+   @Override
+   public String toStringWithId() {
+      return String.format("[%s][%s]", getName(), getHumanReadableId());
+   }
+
 }

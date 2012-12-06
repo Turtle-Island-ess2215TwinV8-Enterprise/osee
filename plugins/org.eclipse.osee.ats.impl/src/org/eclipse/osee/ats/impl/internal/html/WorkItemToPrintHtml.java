@@ -21,11 +21,11 @@ import org.eclipse.osee.ats.api.workdef.IAtsLayoutItem;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
+import org.eclipse.osee.ats.api.workflow.IAtsWorkItemStore;
 import org.eclipse.osee.ats.api.workflow.notes.IAtsNoteItem;
 import org.eclipse.osee.ats.impl.internal.AtsWorkDefinitionServiceImpl;
 import org.eclipse.osee.ats.impl.internal.task.AtsTaskServiceImpl;
 import org.eclipse.osee.ats.impl.internal.workitem.AtsWorkItemServiceImpl;
-import org.eclipse.osee.ats.impl.internal.workitem.AtsWorkItemStoreService;
 import org.eclipse.osee.ats.impl.internal.workitem.assignee.AtsAssigneeServiceImpl;
 import org.eclipse.osee.ats.impl.internal.workitem.metrics.AtsMetricsService;
 import org.eclipse.osee.ats.impl.internal.workitem.notes.AtsNoteServiceImpl;
@@ -42,10 +42,12 @@ public class WorkItemToPrintHtml {
 
    private final IAtsWorkItem workItem;
    boolean includeTaskList = true;
+   private final IAtsWorkItemStore workItemStore;
 
-   public WorkItemToPrintHtml(IAtsWorkItem workItem) {
+   public WorkItemToPrintHtml(IAtsWorkItem workItem, IAtsWorkItemStore workItemStore) {
       super();
       this.workItem = workItem;
+      this.workItemStore = workItemStore;
    }
 
    public XResultData getResultData() throws OseeCoreException {
@@ -61,7 +63,7 @@ public class WorkItemToPrintHtml {
             AtsWorkItemServiceImpl.get().getCurrentStateName(workItem)),
          //
          AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Team",
-            AtsWorkItemStoreService.get().getParentTeamWorkflow(workItem).getName()),
+            workItemStore.getParentTeamWorkflow(workItem).getName()),
          //
          AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Assignees",
             AtsAssigneeServiceImpl.get().getAssigneeStr(workItem)),
@@ -81,14 +83,12 @@ public class WorkItemToPrintHtml {
             AtsWorkItemServiceImpl.get().getChangeTypeStr(workItem)),
          AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Priority",
             AtsWorkItemServiceImpl.get().getPriorityStr(workItem)),
-         AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Need By",
-            AtsWorkItemStoreService.get().getNeedByDateStr(workItem))}));
+         AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Need By", workItemStore.getNeedByDateStr(workItem))}));
 
-      String pcrId = AtsWorkItemStoreService.get().getPcrId(workItem);
+      String pcrId = workItemStore.getPcrId(workItem);
       resultData.addRaw(AHTML.addRowMultiColumnTable(new String[] {
          //
-         AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Workflow",
-            AtsWorkItemStoreService.get().getTypeName(workItem)),
+         AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Workflow", workItemStore.getTypeName(workItem)),
          AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "HRID", workItem.getHumanReadableId()),
          (pcrId == null ? "" : AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, "Id", pcrId))}));
       resultData.addRaw(AHTML.endMultiColumnTable());
@@ -136,10 +136,12 @@ public class WorkItemToPrintHtml {
    }
 
    private void getWorkFlowHtml(XResultData rd) throws OseeCoreException {
+
+      AtsWorkDefinitionServiceImpl service = new AtsWorkDefinitionServiceImpl();
+
       // Only display current or past states
-      IAtsWorkDefinition workDef =
-         AtsWorkDefinitionServiceImpl.instance.getWorkDefinition(workItem).getWorkDefinition();
-      for (IAtsStateDefinition stateDef : AtsWorkDefinitionServiceImpl.instance.getStatesOrderedByOrdinal(workDef)) {
+      IAtsWorkDefinition workDef = service.getWorkDefinition(workItem).getWorkDefinition();
+      for (IAtsStateDefinition stateDef : service.getStatesOrderedByOrdinal(workDef)) {
          boolean inState = AtsWorkItemServiceImpl.get().isInState(workItem, stateDef);
          boolean stateVisited = AtsWorkItemServiceImpl.get().isStateVisited(workItem, stateDef);
          if (inState || stateVisited) {
@@ -207,7 +209,7 @@ public class WorkItemToPrintHtml {
    public String addLayoutItemForWidget(IAtsLayoutItem layoutItem) throws OseeCoreException {
       IAtsWidgetDefinition widget = (IAtsWidgetDefinition) layoutItem;
       String atrributeName = widget.getAtrributeName();
-      String value = AtsWorkItemStoreService.get().getAttributeStringValue(workItem, atrributeName);
+      String value = workItemStore.getAttributeStringValue(workItem, atrributeName);
       return AHTML.getLabelValueStr(AHTML.LABEL_FONT_WITH_COLOR, widget.getName(), value);
    }
 

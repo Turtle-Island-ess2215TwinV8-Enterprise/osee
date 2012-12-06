@@ -17,7 +17,9 @@ import org.eclipse.osee.framework.jdk.core.type.Pair;
  */
 public interface IAtsWorkDefinitionStore {
 
-   public abstract String loadWorkDefinitionString(String workDefId);
+   public abstract boolean isWorkDefinitionExists(String workDefId) throws OseeCoreException;
+
+   public abstract String loadWorkDefinitionString(String workDefId) throws OseeCoreException;
 
    public abstract IAttributeResolver getAttributeResolver();
 

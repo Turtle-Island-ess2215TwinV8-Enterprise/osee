@@ -1,13 +1,19 @@
-/*
- * Created on Aug 3, 2012
+/*******************************************************************************
+ * Copyright (c) 2011 Boeing.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * PLACE_YOUR_DISTRIBUTION_STATEMENT_RIGHT_HERE
- */
+ * Contributors:
+ *     Boeing - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.osee.ats.core.client.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.eclipse.osee.ats.api.IAtsObject;
 import org.eclipse.osee.ats.api.IAtsWorkItem;
 import org.eclipse.osee.framework.core.enums.DeletionFlag;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -15,14 +21,17 @@ import org.eclipse.osee.framework.jdk.core.util.Collections;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
 import org.eclipse.osee.framework.skynet.core.artifact.search.ArtifactQuery;
 
+/**
+ * @author Donald G. Dunne
+ */
 public class WorkItemUtil {
 
-   public static Artifact get(IAtsWorkItem workItem) throws OseeCoreException {
-      if (workItem instanceof Artifact) {
-         return (Artifact) workItem;
+   public static Artifact get(IAtsObject atsObject) throws OseeCoreException {
+      if (atsObject instanceof Artifact) {
+         return (Artifact) atsObject;
       }
       Artifact artifact =
-         ArtifactQuery.getArtifactFromId(workItem.getGuid(), AtsUtilCore.getAtsBranchToken(),
+         ArtifactQuery.getArtifactFromId(atsObject.getGuid(), AtsUtilCore.getAtsBranchToken(),
             DeletionFlag.EXCLUDE_DELETED);
       return artifact;
    }

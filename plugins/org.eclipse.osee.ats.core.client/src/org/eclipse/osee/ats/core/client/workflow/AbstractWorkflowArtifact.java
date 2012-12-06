@@ -94,7 +94,11 @@ public abstract class AbstractWorkflowArtifact extends AbstractAtsArtifact imple
    }
 
    public void initializeNewStateMachine(List<? extends IAtsUser> assignees, Date createdDate, IAtsUser createdBy) throws OseeCoreException {
-      IAtsStateDefinition startState = getWorkDefinition().getStartState();
+      initializeNewStateMachine(getWorkDefinition(), assignees, createdDate, createdBy);
+   }
+
+   public void initializeNewStateMachine(IAtsWorkDefinition workDefinition, List<? extends IAtsUser> assignees, Date createdDate, IAtsUser createdBy) throws OseeCoreException {
+      IAtsStateDefinition startState = workDefinition.getStartState();
       initializeNewStateMachine(startState, assignees, createdDate, createdBy);
    }
 

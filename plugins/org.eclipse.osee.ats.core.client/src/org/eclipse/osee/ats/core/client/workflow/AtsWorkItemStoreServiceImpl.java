@@ -11,6 +11,7 @@
 package org.eclipse.osee.ats.core.client.workflow;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.eclipse.osee.ats.api.IAtsObject;
@@ -30,6 +31,7 @@ import org.eclipse.osee.ats.core.client.util.WorkItemUtil;
 import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IAttributeType;
+import org.eclipse.osee.framework.core.exception.ArtifactDoesNotExist;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
@@ -356,15 +358,15 @@ public class AtsWorkItemStoreServiceImpl implements IAtsWorkItemStore {
    }
 
    @Override
-   public Collection<Object> getAttributeValues(IAtsWorkItem workItem, IAttributeType attributeType) throws OseeCoreException {
-      Artifact artifact = WorkItemUtil.get(workItem);
-      Conditions.checkNotNull(artifact, "workItem", "Can't Find Artifact matching " + workItem.toStringWithId());
-
-      IAttributeType attrType = AttributeTypeManager.getType(attributeType);
-      if (attrType == null) {
-         throw new OseeArgumentException(String.format("Can't resolve Attribute Type [%s]", attributeType));
+   public Collection<Object> getAttributeValues(IAtsObject atsObject, IAttributeType attributeType) throws OseeCoreException {
+      Artifact artifact = null;
+      try {
+         artifact = WorkItemUtil.get(atsObject);
+      } catch (ArtifactDoesNotExist ex) {
+         // if atsObject not represented as persisted artifact, return empty set
+         return Collections.emptyList();
       }
-
+      Conditions.checkNotNull(artifact, "workItem", "Can't Find Artifact matching " + atsObject.toStringWithId());
       return artifact.getAttributeValues(attributeType);
    }
 

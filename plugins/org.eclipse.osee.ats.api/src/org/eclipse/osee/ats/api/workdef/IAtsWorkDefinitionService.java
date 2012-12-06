@@ -8,6 +8,7 @@ package org.eclipse.osee.ats.api.workdef;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.osee.ats.api.IAtsWorkItem;
+import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.task.IAtsTask;
 import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
@@ -22,7 +23,7 @@ public interface IAtsWorkDefinitionService {
 
    WorkDefinitionMatch getWorkDefinitionMatch(String id);
 
-   IAtsWorkDefinition getWorkDef(String id, XResultData resultData) throws Exception;
+   IAtsWorkDefinition getWorkDef(String id, XResultData resultData) throws OseeCoreException;
 
    IAtsWorkDefinition copyWorkDefinition(String newName, IAtsWorkDefinition workDef, XResultData resultData, IAttributeResolver resolver, IUserResolver iUserResolver);
 
@@ -45,9 +46,9 @@ public interface IAtsWorkDefinitionService {
 
    boolean hasWidgetNamed(IAtsStateDefinition stateDef, String name);
 
-   IAtsWorkDefinition getWorkDefinition(String workDefinitionDsl) throws Exception;
+   IAtsWorkDefinition getWorkDefinition(String workDefinitionDsl) throws OseeCoreException;
 
-   String getStorageString(IAtsWorkDefinition workDef, XResultData resultData) throws Exception;
+   String getStorageString(IAtsWorkDefinition workDef, XResultData resultData) throws OseeCoreException;
 
    WorkDefinitionMatch getWorkDefinition(IAtsWorkItem workItem) throws OseeCoreException;
 
@@ -66,5 +67,19 @@ public interface IAtsWorkDefinitionService {
    Collection<IAtsWorkDefinition> getLoadedWorkDefinitions();
 
    void clearCaches();
+
+   public IAtsWorkDefinition getDefaultPeerToPeerWorkflowDefinition();
+
+   /**
+    * @return WorkDefinitionMatch for peer review off created teamWf. Will use configured value off team definitions
+    * with recurse or return default review work definition
+    */
+   public WorkDefinitionMatch getWorkDefinitionForPeerToPeerReviewNotYetCreated(IAtsTeamWorkflow teamWf) throws OseeCoreException;
+
+   /**
+    * @return WorkDefinitionMatch of peer review from team definition related to actionableItem or return default review
+    * work definition
+    */
+   public WorkDefinitionMatch getWorkDefinitionForPeerToPeerReviewNotYetCreatedAndStandalone(IAtsActionableItem actionableItem) throws OseeCoreException;
 
 }

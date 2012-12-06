@@ -56,12 +56,8 @@ public class AtsWorkDefinitionStore implements IAtsWorkDefinitionStore {
    }
 
    @Override
-   public String loadWorkDefinitionString(String workDefId) {
-      try {
-         return loadWorkDefinitionFromArtifact(workDefId);
-      } catch (Exception ex) {
-         throw new IllegalArgumentException(ex.getLocalizedMessage());
-      }
+   public String loadWorkDefinitionString(String workDefId) throws OseeCoreException {
+      return loadWorkDefinitionFromArtifact(workDefId);
    }
 
    @Override
@@ -92,6 +88,11 @@ public class AtsWorkDefinitionStore implements IAtsWorkDefinitionStore {
          ex.printStackTrace();
       }
       return null;
+   }
+
+   @Override
+   public boolean isWorkDefinitionExists(String workDefId) throws OseeCoreException {
+      return getWorkDefinitionArtifact(workDefId) != null;
    }
 
    private String loadWorkDefinitionFromArtifact(String name) throws OseeCoreException {

@@ -74,7 +74,7 @@ public class AtsWorkItemServiceImpl implements IAtsWorkItemService {
 
    @Override
    public XResultData getPrintHtml(IAtsWorkItem workItem) throws OseeCoreException {
-      return new WorkItemToPrintHtml(workItem).getResultData();
+      return new WorkItemToPrintHtml(workItem, AtsWorkItemStoreService.get()).getResultData();
    }
 
    @Override
@@ -247,8 +247,8 @@ public class AtsWorkItemServiceImpl implements IAtsWorkItemService {
    }
 
    @Override
-   public Collection<Object> getAttributeValues(IAtsWorkItem workItem, IAttributeType attributeType) throws OseeCoreException {
-      return AtsWorkItemStoreService.get().getAttributeValues(workItem, attributeType);
+   public Collection<Object> getAttributeValues(IAtsObject atsObject, IAttributeType attributeType) throws OseeCoreException {
+      return AtsWorkItemStoreService.get().getAttributeValues(atsObject, attributeType);
    }
 
    @Override

@@ -239,5 +239,10 @@ public class SystemUsersTest {
       public boolean matches(Identity<?>... identities) {
          return false;
       }
+
+      @Override
+      public String toStringWithId() {
+         return String.format("[%s][%s]", getName(), getHumanReadableId());
+      }
    };
 }

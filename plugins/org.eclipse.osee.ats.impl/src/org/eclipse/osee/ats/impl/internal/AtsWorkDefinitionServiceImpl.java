@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.osee.ats.api.IAtsWorkItem;
+import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
 import org.eclipse.osee.ats.api.task.IAtsTask;
 import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.api.workdef.IAtsCompositeLayoutItem;
@@ -27,8 +28,11 @@ import org.eclipse.osee.ats.dsl.ModelUtil;
 import org.eclipse.osee.ats.dsl.atsDsl.AtsDsl;
 import org.eclipse.osee.ats.impl.internal.convert.ConvertAtsDslToWorkDefinition;
 import org.eclipse.osee.ats.impl.internal.convert.ConvertWorkDefinitionToAtsDsl;
+import org.eclipse.osee.ats.impl.internal.team.AtsTeamDefinitionService;
 import org.eclipse.osee.ats.impl.internal.workdef.WorkDefinitionFactory;
+import org.eclipse.osee.ats.impl.internal.workitem.AtsWorkItemServiceImpl;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.exception.OseeWrappedException;
 import org.eclipse.osee.framework.core.util.XResultData;
 import org.eclipse.osee.framework.jdk.core.type.Pair;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
@@ -42,10 +46,18 @@ import org.eclipse.osee.framework.jdk.core.util.Strings;
 public class AtsWorkDefinitionServiceImpl implements IAtsWorkDefinitionService {
 
    Map<String, IAtsWorkDefinition> workDefIdToWorkDef;
-   public static AtsWorkDefinitionServiceImpl instance;
+   private WorkDefinitionFactory factory;
 
    public AtsWorkDefinitionServiceImpl() {
-      instance = this;
+   }
+
+   private WorkDefinitionFactory getFactory() {
+      if (factory == null) {
+         factory =
+            new WorkDefinitionFactory(AtsWorkItemServiceImpl.get(), this, AtsWorkDefinitionStore.getService(),
+               AtsTeamDefinitionService.getService());
+      }
+      return factory;
    }
 
    @Override
@@ -61,11 +73,15 @@ public class AtsWorkDefinitionServiceImpl implements IAtsWorkDefinitionService {
    }
 
    @Override
-   public String getStorageString(IAtsWorkDefinition workDef, XResultData resultData) throws Exception {
+   public String getStorageString(IAtsWorkDefinition workDef, XResultData resultData) throws OseeCoreException {
       ConvertWorkDefinitionToAtsDsl converter = new ConvertWorkDefinitionToAtsDsl(resultData);
       AtsDsl atsDsl = converter.convert(workDef.getName(), workDef);
       StringOutputStream writer = new StringOutputStream();
-      ModelUtil.saveModel(atsDsl, "ats:/mock" + Lib.getDateTimeString() + ".ats", writer);
+      try {
+         ModelUtil.saveModel(atsDsl, "ats:/mock" + Lib.getDateTimeString() + ".ats", writer);
+      } catch (Exception ex) {
+         throw new OseeWrappedException(ex);
+      }
       return writer.toString();
    }
 
@@ -83,35 +99,47 @@ public class AtsWorkDefinitionServiceImpl implements IAtsWorkDefinitionService {
       }
    };
 
-   private void ensureLoaded(XResultData resultData) throws Exception {
+   private void ensureLoaded(XResultData resultData) throws OseeCoreException {
       if (workDefIdToWorkDef == null) {
          workDefIdToWorkDef = new HashMap<String, IAtsWorkDefinition>(15);
          for (Pair<String, String> entry : AtsWorkDefinitionStore.getService().getWorkDefinitionStrings()) {
             String name = entry.getFirst();
             String workDefStr = entry.getSecond();
-            AtsDsl atsDsl = ModelUtil.loadModel(name + ".ats", workDefStr);
-            ConvertAtsDslToWorkDefinition convert =
-               new ConvertAtsDslToWorkDefinition(name, atsDsl, resultData,
-                  AtsWorkDefinitionStore.getService().getAttributeResolver(),
-                  AtsWorkDefinitionStore.getService().getUserResolver());
-            IAtsWorkDefinition workDef = convert.convert();
-            if (workDefIdToWorkDef != null) {
-               workDefIdToWorkDef.put(name, workDef);
+            try {
+               AtsDsl atsDsl = ModelUtil.loadModel(name + ".ats", workDefStr);
+               ConvertAtsDslToWorkDefinition convert =
+                  new ConvertAtsDslToWorkDefinition(name, atsDsl, resultData,
+                     AtsWorkDefinitionStore.getService().getAttributeResolver(),
+                     AtsWorkDefinitionStore.getService().getUserResolver());
+               IAtsWorkDefinition workDef = convert.convert();
+               if (workDefIdToWorkDef != null) {
+                  workDefIdToWorkDef.put(name, workDef);
+               }
+
+            } catch (Exception ex) {
+               throw new OseeWrappedException(ex);
             }
          }
       }
    }
 
    @Override
-   public IAtsWorkDefinition getWorkDef(String workDefId, XResultData resultData) throws Exception {
+   public IAtsWorkDefinition getWorkDef(String workDefId, XResultData resultData) throws OseeCoreException {
       ensureLoaded(resultData);
       String workDefStr = AtsWorkDefinitionStore.getService().loadWorkDefinitionString(workDefId);
-      AtsDsl atsDsl = ModelUtil.loadModel(workDefId + ".ats", workDefStr);
-      ConvertAtsDslToWorkDefinition convert =
-         new ConvertAtsDslToWorkDefinition(workDefId, atsDsl, resultData,
-            AtsWorkDefinitionStore.getService().getAttributeResolver(),
-            AtsWorkDefinitionStore.getService().getUserResolver());
-      return convert.convert();
+      if (!Strings.isValid(workDefStr)) {
+         return null;
+      }
+      try {
+         AtsDsl atsDsl = ModelUtil.loadModel(workDefId + ".ats", workDefStr);
+         ConvertAtsDslToWorkDefinition convert =
+            new ConvertAtsDslToWorkDefinition(workDefId, atsDsl, resultData,
+               AtsWorkDefinitionStore.getService().getAttributeResolver(),
+               AtsWorkDefinitionStore.getService().getUserResolver());
+         return convert.convert();
+      } catch (Exception ex) {
+         throw new OseeWrappedException(ex);
+      }
    }
 
    @Override
@@ -227,67 +255,86 @@ public class AtsWorkDefinitionServiceImpl implements IAtsWorkDefinitionService {
    }
 
    @Override
-   public IAtsWorkDefinition getWorkDefinition(String workDefinitionDsl) throws Exception {
-      AtsDsl atsDsl = ModelUtil.loadModel("model.ats", workDefinitionDsl);
-      XResultData result = new XResultData(false);
-      ConvertAtsDslToWorkDefinition convert =
-         new ConvertAtsDslToWorkDefinition(Strings.unquote(atsDsl.getWorkDef().getName()), atsDsl, result,
-            AtsWorkDefinitionStore.getService().getAttributeResolver(),
-            AtsWorkDefinitionStore.getService().getUserResolver());
-      if (!result.isEmpty()) {
-         throw new IllegalStateException(result.toString());
+   public IAtsWorkDefinition getWorkDefinition(String workDefinitionDsl) throws OseeCoreException {
+      try {
+         AtsDsl atsDsl = ModelUtil.loadModel("model.ats", workDefinitionDsl);
+         XResultData result = new XResultData(false);
+         ConvertAtsDslToWorkDefinition convert =
+            new ConvertAtsDslToWorkDefinition(Strings.unquote(atsDsl.getWorkDef().getName()), atsDsl, result,
+               AtsWorkDefinitionStore.getService().getAttributeResolver(),
+               AtsWorkDefinitionStore.getService().getUserResolver());
+         if (!result.isEmpty()) {
+            throw new IllegalStateException(result.toString());
+         }
+         return convert.convert();
+      } catch (Exception ex) {
+         throw new OseeWrappedException(ex);
       }
-      return convert.convert();
    }
 
    @Override
    public WorkDefinitionMatch getWorkDefinitionMatch(String id) {
-      return WorkDefinitionFactory.getWorkDefinition(id);
+      return getFactory().getWorkDefinition(id);
    }
 
    @Override
    public WorkDefinitionMatch getWorkDefinition(IAtsWorkItem workItem) throws OseeCoreException {
-      return WorkDefinitionFactory.getWorkDefinition(workItem);
+      return getFactory().getWorkDefinition(workItem);
    }
 
    @Override
    public WorkDefinitionMatch getWorkDefinitionForTask(IAtsTask taskToMove) throws OseeCoreException {
-      return WorkDefinitionFactory.getWorkDefinitionForTask(taskToMove);
+      return getFactory().getWorkDefinitionForTask(taskToMove);
    }
 
    @Override
    public WorkDefinitionMatch getWorkDefinitionForTaskNotYetCreated(IAtsTeamWorkflow teamWf) throws OseeCoreException {
-      return WorkDefinitionFactory.getWorkDefinitionForTaskNotYetCreated(teamWf);
+      return getFactory().getWorkDefinitionForTaskNotYetCreated(teamWf);
    }
 
    @Override
    public IAtsWorkDefinition copyWorkDefinition(String name, IAtsWorkDefinition workDef, XResultData resultData) {
-      return WorkDefinitionFactory.copyWorkDefinition(name, workDef, resultData);
+      return getFactory().copyWorkDefinition(name, workDef, resultData);
    }
 
    @Override
    public boolean isTaskOverridingItsWorkDefinition(IAtsTask task) throws OseeCoreException {
-      return WorkDefinitionFactory.isTaskOverridingItsWorkDefinition(task);
+      return getFactory().isTaskOverridingItsWorkDefinition(task);
    }
 
    @Override
    public void clearCaches() {
-      WorkDefinitionFactory.clearCaches();
+      getFactory().clearCaches();
    }
 
    @Override
    public void addWorkDefinition(IAtsWorkDefinition workDef) {
-      WorkDefinitionFactory.addWorkDefinition(workDef);
+      getFactory().addWorkDefinition(workDef);
    }
 
    @Override
    public void removeWorkDefinition(IAtsWorkDefinition workDef) {
-      WorkDefinitionFactory.removeWorkDefinition(workDef);
+      getFactory().removeWorkDefinition(workDef);
    }
 
    @Override
    public Collection<IAtsWorkDefinition> getLoadedWorkDefinitions() {
-      return WorkDefinitionFactory.getLoadedWorkDefinitions();
+      return getFactory().getLoadedWorkDefinitions();
+   }
+
+   @Override
+   public IAtsWorkDefinition getDefaultPeerToPeerWorkflowDefinition() {
+      return getFactory().getDefaultPeerToPeerWorkflowDefinitionMatch().getWorkDefinition();
+   }
+
+   @Override
+   public WorkDefinitionMatch getWorkDefinitionForPeerToPeerReviewNotYetCreated(IAtsTeamWorkflow teamWf) throws OseeCoreException {
+      return getFactory().getWorkDefinitionForPeerToPeerReviewNotYetCreated(teamWf);
+   }
+
+   @Override
+   public WorkDefinitionMatch getWorkDefinitionForPeerToPeerReviewNotYetCreatedAndStandalone(IAtsActionableItem actionableItem) throws OseeCoreException {
+      return getFactory().getWorkDefinitionForPeerToPeerReviewNotYetCreatedAndStandalone(actionableItem);
    }
 
 }

@@ -16,22 +16,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.osee.ats.api.IAtsWorkItem;
+import org.eclipse.osee.ats.api.ai.IAtsActionableItem;
+import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.task.IAtsTask;
 import org.eclipse.osee.ats.api.team.IAtsTeamDefinition;
+import org.eclipse.osee.ats.api.team.IAtsTeamDefinitionService;
 import org.eclipse.osee.ats.api.util.WorkDefinitionMatch;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinitionService;
+import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinitionStore;
 import org.eclipse.osee.ats.api.workdef.WorkDefinitionDefault;
 import org.eclipse.osee.ats.api.workflow.IAtsDecisionReview;
 import org.eclipse.osee.ats.api.workflow.IAtsGoal;
 import org.eclipse.osee.ats.api.workflow.IAtsPeerToPeerReview;
 import org.eclipse.osee.ats.api.workflow.IAtsTeamWorkflow;
-import org.eclipse.osee.ats.impl.internal.AtsWorkDefinitionServiceImpl;
-import org.eclipse.osee.ats.impl.internal.AtsWorkDefinitionStore;
-import org.eclipse.osee.ats.impl.internal.team.AtsTeamDefinitionService;
-import org.eclipse.osee.ats.impl.internal.workitem.AtsWorkItemServiceImpl;
+import org.eclipse.osee.ats.api.workflow.IAtsWorkItemService;
 import org.eclipse.osee.framework.core.exception.MultipleAttributesExist;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.exception.OseeStateException;
+import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.framework.core.util.XResultData;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 
@@ -40,53 +43,58 @@ import org.eclipse.osee.framework.jdk.core.util.Strings;
  */
 public class WorkDefinitionFactory {
 
+   private final IAtsWorkItemService workItemService;
+   private final IAtsWorkDefinitionService workDefinitionService;
+   private final IAtsWorkDefinitionStore workDefinitionStore;
+   private final IAtsTeamDefinitionService teamDefService;
+
+   public WorkDefinitionFactory(IAtsWorkItemService workItemService, IAtsWorkDefinitionService workDefinitionService, IAtsWorkDefinitionStore workDefinitionStore, IAtsTeamDefinitionService teamDefService) {
+      this.workItemService = workItemService;
+      this.workDefinitionService = workDefinitionService;
+      this.workDefinitionStore = workDefinitionStore;
+      this.teamDefService = teamDefService;
+   }
    // Cache the WorkDefinition object for each WorkDefinition id so don't have to reload
    // This grows as WorkDefinitions are requested/loaded
-   private static final Map<String, WorkDefinitionMatch> workDefIdToWorkDefintion =
-      new HashMap<String, WorkDefinitionMatch>();
+   private final Map<String, WorkDefinitionMatch> workDefIdToWorkDefintion = new HashMap<String, WorkDefinitionMatch>();
 
-   public static void clearCaches() {
+   public void clearCaches() {
       workDefIdToWorkDefintion.clear();
    }
 
-   public static WorkDefinitionMatch getWorkDefinition(String id) {
-      if (!workDefIdToWorkDefintion.containsKey(id)) {
-         WorkDefinitionMatch match = new WorkDefinitionMatch();
-         // Try to get from new DSL provider if configured to use it
-         if (!match.isMatched()) {
-            try {
-               XResultData resultData = new XResultData(false);
-               IAtsWorkDefinitionService service = AtsWorkDefinitionServiceImpl.instance;
-               if (service == null) {
-                  throw new IllegalStateException("ATS Work Definition Service is not found.");
-               }
-               IAtsWorkDefinition workDef = service.getWorkDef(id, resultData);
-               if (workDef != null) {
-                  match.setWorkDefinition(workDef);
-                  if (!resultData.isEmpty()) {
-                     match.addTrace((String.format("from DSL provider loaded id [%s] [%s]", id, resultData.toString())));
-                  } else {
-                     match.addTrace((String.format("from DSL provider loaded id [%s]", id)));
-                  }
-               }
-               if (match.isMatched()) {
-                  workDefIdToWorkDefintion.put(id, match);
-               } else {
-                  System.out.println(String.format("Unable to load Work Definition [%s]", id));
-               }
-            } catch (Exception ex) {
-               return new WorkDefinitionMatch(null, ex.getLocalizedMessage());
+   public WorkDefinitionMatch getWorkDefinition(String id) {
+      WorkDefinitionMatch workDefinitionMatch = workDefIdToWorkDefintion.get(id);
+      if (workDefinitionMatch != null) {
+         return workDefinitionMatch;
+      }
+      WorkDefinitionMatch match = new WorkDefinitionMatch();
+      // Try to get from new DSL provider if configured to use it
+      try {
+         XResultData resultData = new XResultData(false);
+         if (workDefinitionService == null) {
+            throw new OseeStateException("ATS Work Definition Service is not found.");
+         }
+         IAtsWorkDefinition workDef = workDefinitionService.getWorkDef(id, resultData);
+         if (workDef != null) {
+            match.setWorkDefinition(workDef);
+            if (!resultData.isEmpty()) {
+               match.addTrace((String.format("from DSL provider loaded id [%s] [%s]", id, resultData.toString())));
+            } else {
+               match.addTrace((String.format("from DSL provider loaded id [%s]", id)));
             }
          }
-      }
-      WorkDefinitionMatch match = workDefIdToWorkDefintion.get(id);
-      if (match == null) {
-         match = new WorkDefinitionMatch();
+         if (match.isMatched()) {
+            workDefIdToWorkDefintion.put(id, match);
+         } else {
+            System.out.println(String.format("Unable to load Work Definition [%s]", id));
+         }
+      } catch (OseeCoreException ex) {
+         return new WorkDefinitionMatch(null, ex.getLocalizedMessage());
       }
       return match;
    }
 
-   private static WorkDefinitionMatch getWorkDefinitionFromArtifactsAttributeValue(IAtsTeamDefinition teamDef) {
+   private WorkDefinitionMatch getWorkDefinitionFromArtifactsAttributeValue(IAtsTeamDefinition teamDef) {
       // If this artifact specifies it's own workflow definition, use it
       String workFlowDefId = teamDef.getWorkflowDefinition();
       if (Strings.isValid(workFlowDefId)) {
@@ -99,7 +107,7 @@ public class WorkDefinitionFactory {
       return new WorkDefinitionMatch();
    }
 
-   private static WorkDefinitionMatch getTaskWorkDefinitionFromArtifactsAttributeValue(IAtsTeamDefinition teamDef) {
+   private WorkDefinitionMatch getTaskWorkDefinitionFromArtifactsAttributeValue(IAtsTeamDefinition teamDef) {
       // If this artifact specifies it's own workflow definition, use it
       String workFlowDefId = teamDef.getRelatedTaskWorkDefinition();
       if (Strings.isValid(workFlowDefId)) {
@@ -112,9 +120,9 @@ public class WorkDefinitionFactory {
       return new WorkDefinitionMatch();
    }
 
-   private static WorkDefinitionMatch getWorkDefinitionFromArtifactsAttributeValue(IAtsWorkItem workItem) throws OseeCoreException {
+   private WorkDefinitionMatch getWorkDefinitionFromArtifactsAttributeValue(IAtsWorkItem workItem) throws OseeCoreException {
       // If this artifact specifies it's own workflow definition, use it
-      String workFlowDefId = AtsWorkDefinitionStore.getService().getWorkDefinitionAttribute(workItem);
+      String workFlowDefId = workDefinitionStore.getWorkDefinitionAttribute(workItem);
       if (Strings.isValid(workFlowDefId)) {
          WorkDefinitionMatch match = getWorkDefinition(workFlowDefId);
          if (match.isMatched()) {
@@ -125,9 +133,9 @@ public class WorkDefinitionFactory {
       return new WorkDefinitionMatch();
    }
 
-   private static WorkDefinitionMatch getTaskWorkDefinitionFromArtifactsAttributeValue(IAtsWorkItem workItem) throws OseeCoreException {
+   private WorkDefinitionMatch getTaskWorkDefinitionFromArtifactsAttributeValue(IAtsWorkItem workItem) throws OseeCoreException {
       // If this artifact specifies it's own workflow definition, use it
-      String workFlowDefId = AtsWorkDefinitionStore.getService().getRelatedTaskWorkDefinitionAttribute(workItem);
+      String workFlowDefId = workDefinitionStore.getRelatedTaskWorkDefinitionAttribute(workItem);
       if (Strings.isValid(workFlowDefId)) {
          WorkDefinitionMatch match = getWorkDefinition(workFlowDefId);
          if (match.isMatched()) {
@@ -141,7 +149,7 @@ public class WorkDefinitionFactory {
    /**
     * Look at team def's attribute for Work Definition setting, otherwise, walk up team tree for setting
     */
-   protected static WorkDefinitionMatch getWorkDefinitionFromTeamDefinitionAttributeInherited(IAtsTeamDefinition teamDef) throws OseeCoreException {
+   protected WorkDefinitionMatch getWorkDefinitionFromTeamDefinitionAttributeInherited(IAtsTeamDefinition teamDef) throws OseeCoreException {
       WorkDefinitionMatch match = getWorkDefinitionFromArtifactsAttributeValue(teamDef);
       if (match.isMatched()) {
          return match;
@@ -153,8 +161,8 @@ public class WorkDefinitionFactory {
       return new WorkDefinitionMatch();
    }
 
-   public static WorkDefinitionMatch getWorkDefinitionForTask(IAtsTask task) throws OseeCoreException {
-      IAtsTeamWorkflow teamWf = AtsWorkItemServiceImpl.get().getParentTeamWorkflow(task);
+   public WorkDefinitionMatch getWorkDefinitionForTask(IAtsTask task) throws OseeCoreException {
+      IAtsTeamWorkflow teamWf = workItemService.getParentTeamWorkflow(task);
       return getWorkDefinitionForTask(teamWf, task);
    }
 
@@ -162,7 +170,7 @@ public class WorkDefinitionFactory {
     * Return the WorkDefinition that would be assigned to a new Task. This is not necessarily the actual WorkDefinition
     * used because it can be overridden once the Task artifact is created.
     */
-   public static WorkDefinitionMatch getWorkDefinitionForTaskNotYetCreated(IAtsTeamWorkflow teamWf) throws OseeCoreException {
+   public WorkDefinitionMatch getWorkDefinitionForTaskNotYetCreated(IAtsTeamWorkflow teamWf) throws OseeCoreException {
       return getWorkDefinitionForTask(teamWf, null);
    }
 
@@ -170,8 +178,8 @@ public class WorkDefinitionFactory {
     * @param teamWf
     * @param task - if null, returned WorkDefinition will be proposed; else returned will be actual
     */
-   private static WorkDefinitionMatch getWorkDefinitionForTask(IAtsTeamWorkflow teamWf, IAtsTask task) throws OseeCoreException {
-      WorkDefinitionMatch match = AtsWorkDefinitionStore.getService().getWorkDefinitionFromTaskViaProviders(teamWf);
+   private WorkDefinitionMatch getWorkDefinitionForTask(IAtsTeamWorkflow teamWf, IAtsTask task) throws OseeCoreException {
+      WorkDefinitionMatch match = workDefinitionStore.getWorkDefinitionFromTaskViaProviders(teamWf);
       if (!match.isMatched() && task != null) {
          // If task specifies it's own workflow id, use it
          match = getWorkDefinitionFromArtifactsAttributeValue(task);
@@ -186,9 +194,7 @@ public class WorkDefinitionFactory {
       }
       if (!match.isMatched()) {
          // Else If parent TeamWorkflow's IAtsTeamDefinition has a related task definition workflow id, use it
-         match =
-            getTaskWorkDefinitionFromArtifactsAttributeValue(AtsTeamDefinitionService.getService().getTeamDefinition(
-               teamWf));
+         match = getTaskWorkDefinitionFromArtifactsAttributeValue(teamDefService.getTeamDefinition(teamWf));
       }
       if (!match.isMatched()) {
          match = getWorkDefinition(WorkDefinitionDefault.TaskWorkflowDefinitionId);
@@ -197,30 +203,96 @@ public class WorkDefinitionFactory {
       return match;
    }
 
-   public static WorkDefinitionMatch getWorkDefinition(IAtsWorkItem workItem) throws OseeCoreException {
-      WorkDefinitionMatch match = new WorkDefinitionMatch();
-      if (AtsWorkItemServiceImpl.get().isOfType(workItem, IAtsTask.class)) {
-         match = getWorkDefinitionForTask((IAtsTask) workItem);
+   /**
+    * @return WorkDefinitionMatch for Peer Review either from attribute value or default
+    */
+   protected WorkDefinitionMatch getWorkDefinitionForPeerToPeerReview(IAtsPeerToPeerReview review) throws OseeCoreException {
+      Conditions.notNull(review, getClass().getSimpleName());
+      WorkDefinitionMatch match = getWorkDefinitionFromArtifactsAttributeValue(review);
+      if (!match.isMatched()) {
+         match = getDefaultPeerToPeerWorkflowDefinitionMatch();
       }
-      if (!match.isMatched() && AtsWorkItemServiceImpl.get().isOfType(workItem, IAtsWorkItem.class)) {
+      return match;
+   }
+
+   public WorkDefinitionMatch getDefaultPeerToPeerWorkflowDefinitionMatch() {
+      WorkDefinitionMatch match = getWorkDefinition(WorkDefinitionDefault.PeerToPeerWorkflowDefinitionId);
+      match.addTrace("WorkDefinitionFactory - Default PeerToPeer");
+      return match;
+   }
+
+   /**
+    * @return WorkDefinitionMatch for peer review off created teamWf. Will use configured value off team definitions
+    * with recurse or return default review work definition
+    */
+   public WorkDefinitionMatch getWorkDefinitionForPeerToPeerReviewNotYetCreated(IAtsTeamWorkflow teamWf) throws OseeCoreException {
+      Conditions.notNull(teamWf, getClass().getSimpleName());
+      WorkDefinitionMatch match =
+         getPeerToPeerWorkDefinitionFromTeamDefinitionAttributeValueRecurse(teamDefService.getTeamDefinition(teamWf));
+      if (!match.isMatched()) {
+         match = getDefaultPeerToPeerWorkflowDefinitionMatch();
+      }
+      return match;
+   }
+
+   /**
+    * @return WorkDefinitionMatch of peer review from team definition related to actionableItem or return default review
+    * work definition
+    */
+   public WorkDefinitionMatch getWorkDefinitionForPeerToPeerReviewNotYetCreatedAndStandalone(IAtsActionableItem actionableItem) throws OseeCoreException {
+      Conditions.notNull(actionableItem, getClass().getSimpleName());
+      WorkDefinitionMatch match =
+         getPeerToPeerWorkDefinitionFromTeamDefinitionAttributeValueRecurse(actionableItem.getTeamDefinitionInherited());
+      if (!match.isMatched()) {
+         match = getDefaultPeerToPeerWorkflowDefinitionMatch();
+      }
+      return match;
+   }
+
+   /**
+    * @return WorkDefinitionMatch of teamDefinition configured with RelatedPeerWorkflowDefinition attribute with recurse
+    * up to top teamDefinition or will return no match
+    */
+   protected WorkDefinitionMatch getPeerToPeerWorkDefinitionFromTeamDefinitionAttributeValueRecurse(IAtsTeamDefinition teamDefinition) throws OseeCoreException {
+      Conditions.notNull(teamDefinition, getClass().getSimpleName());
+      WorkDefinitionMatch match = new WorkDefinitionMatch();
+      Collection<Object> attrs =
+         workItemService.getAttributeValues(teamDefinition, AtsAttributeTypes.RelatedPeerWorkflowDefinition);
+      if (attrs.isEmpty()) {
+         IAtsTeamDefinition parentTeamDef = teamDefinition.getParentTeamDef();
+         if (parentTeamDef != null) {
+            match = getPeerToPeerWorkDefinitionFromTeamDefinitionAttributeValueRecurse(parentTeamDef);
+         }
+      } else {
+         match = getWorkDefinition((String) attrs.iterator().next());
+         match.addTrace("PeerToPeer from Team Definition");
+      }
+      return match;
+   }
+
+   public WorkDefinitionMatch getWorkDefinition(IAtsWorkItem workItem) throws OseeCoreException {
+      WorkDefinitionMatch match = new WorkDefinitionMatch();
+      if (workItemService.isOfType(workItem, IAtsTask.class)) {
+         match = getWorkDefinitionForTask((IAtsTask) workItem);
+      } else if (workItemService.isOfType(workItem, IAtsPeerToPeerReview.class)) {
+         match = getWorkDefinitionForPeerToPeerReview((IAtsPeerToPeerReview) workItem);
+      }
+      if (!match.isMatched() && workItemService.isOfType(workItem, IAtsWorkItem.class)) {
          // Check extensions for definition handling
-         match = AtsWorkDefinitionStore.getService().getWorkDefinitionFromProviders(workItem);
+         match = workDefinitionStore.getWorkDefinitionFromProviders(workItem);
          if (!match.isMatched()) {
             // If this artifact specifies it's own workflow definition, use it
             match = getWorkDefinitionFromArtifactsAttributeValue(workItem);
             if (!match.isMatched()) {
                // Otherwise, use workflow defined by attribute of WorkflowDefinition
                // Note: This is new.  Old TeamDefs got workflow off relation
-               if (AtsWorkItemServiceImpl.get().isOfType(workItem, IAtsTeamWorkflow.class)) {
-                  IAtsTeamDefinition teamDef = AtsTeamDefinitionService.getService().getTeamDefinition(workItem);
+               if (workItemService.isOfType(workItem, IAtsTeamWorkflow.class)) {
+                  IAtsTeamDefinition teamDef = teamDefService.getTeamDefinition(workItem);
                   match = getWorkDefinitionFromTeamDefinitionAttributeInherited(teamDef);
-               } else if (AtsWorkItemServiceImpl.get().isOfType(workItem, IAtsGoal.class)) {
+               } else if (workItemService.isOfType(workItem, IAtsGoal.class)) {
                   match = getWorkDefinition(WorkDefinitionDefault.GoalWorkflowDefinitionId);
                   match.addTrace("WorkDefinitionFactory - GoalWorkflowDefinitionId");
-               } else if (AtsWorkItemServiceImpl.get().isOfType(workItem, IAtsPeerToPeerReview.class)) {
-                  match = getWorkDefinition(WorkDefinitionDefault.PeerToPeerWorkflowDefinitionId);
-                  match.addTrace("WorkDefinitionFactory - PeerToPeerWorkflowDefinitionId");
-               } else if (AtsWorkItemServiceImpl.get().isOfType(workItem, IAtsDecisionReview.class)) {
+               } else if (workItemService.isOfType(workItem, IAtsDecisionReview.class)) {
                   match = getWorkDefinition(WorkDefinitionDefault.DecisionWorkflowDefinitionId);
                   match.addTrace("WorkDefinitionFactory - DecisionWorkflowDefinitionId");
                }
@@ -230,28 +302,27 @@ public class WorkDefinitionFactory {
       return match;
    }
 
-   public static boolean isTaskOverridingItsWorkDefinition(IAtsTask task) throws MultipleAttributesExist, OseeCoreException {
-      return AtsWorkDefinitionStore.getService().getWorkDefinitionAttribute(task) != null;
+   public boolean isTaskOverridingItsWorkDefinition(IAtsTask task) throws MultipleAttributesExist, OseeCoreException {
+      return workDefinitionStore.getWorkDefinitionAttribute(task) != null;
    }
 
-   public static IAtsWorkDefinition copyWorkDefinition(String newName, IAtsWorkDefinition workDef, XResultData resultData) {
-      return AtsWorkDefinitionServiceImpl.instance.copyWorkDefinition(newName, workDef, resultData,
-         AtsWorkDefinitionStore.getService().getAttributeResolver(),
-         AtsWorkDefinitionStore.getService().getUserResolver());
+   public IAtsWorkDefinition copyWorkDefinition(String newName, IAtsWorkDefinition workDef, XResultData resultData) {
+      return workDefinitionService.copyWorkDefinition(newName, workDef, resultData,
+         workDefinitionStore.getAttributeResolver(), workDefinitionStore.getUserResolver());
    }
 
-   public static void addWorkDefinition(IAtsWorkDefinition workDef) {
+   public void addWorkDefinition(IAtsWorkDefinition workDef) {
       WorkDefinitionMatch match =
          new WorkDefinitionMatch(workDef.getId(), "programatically added via WorkDefinitionFactory.addWorkDefinition");
       match.setWorkDefinition(workDef);
       workDefIdToWorkDefintion.put(workDef.getName(), match);
    }
 
-   public static void removeWorkDefinition(IAtsWorkDefinition workDef) {
+   public void removeWorkDefinition(IAtsWorkDefinition workDef) {
       workDefIdToWorkDefintion.remove(workDef.getName());
    }
 
-   public static Collection<IAtsWorkDefinition> getLoadedWorkDefinitions() {
+   public Collection<IAtsWorkDefinition> getLoadedWorkDefinitions() {
       List<IAtsWorkDefinition> workDefs = new ArrayList<IAtsWorkDefinition>();
       for (WorkDefinitionMatch match : workDefIdToWorkDefintion.values()) {
          if (match.getWorkDefinition() != null) {

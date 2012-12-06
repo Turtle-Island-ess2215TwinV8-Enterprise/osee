@@ -29,7 +29,7 @@ public interface IAtsWorkItemStore {
 
    IAtsTeamWorkflow getParentTeamWorkflow(IAtsWorkItem workItem) throws OseeCoreException;
 
-   Collection<Object> getAttributeValues(IAtsWorkItem workItem, IAttributeType attributeType) throws OseeCoreException;
+   Collection<Object> getAttributeValues(IAtsObject atsObject, IAttributeType attributeType) throws OseeCoreException;
 
    String getTypeName(IAtsWorkItem workItem) throws OseeCoreException;
 

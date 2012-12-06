@@ -117,7 +117,7 @@ public class AtsConfigManager extends AbstractOperation {
       createVersions(transaction, teamDefinition);
 
       XResultData resultData = new XResultData();
-      IAtsWorkDefinition workDefinition = createWorkflow(transaction, resultData, teamDefinition);
+      IAtsWorkDefinition workDefinition = createWorkDefinition(transaction, resultData, teamDefinition);
 
       transaction.execute();
       monitor.worked(calculateWork(0.30));
@@ -185,7 +185,7 @@ public class AtsConfigManager extends AbstractOperation {
       }
    }
 
-   private IAtsWorkDefinition createWorkflow(SkynetTransaction transaction, XResultData resultData, IAtsTeamDefinition teamDef) throws OseeCoreException {
+   private IAtsWorkDefinition createWorkDefinition(SkynetTransaction transaction, XResultData resultData, IAtsTeamDefinition teamDef) throws OseeCoreException {
       WorkDefinitionMatch workDefMatch = WorkDefinitionFactoryClient.getWorkDefinition(name);
       IAtsWorkDefinition workDef = null;
       // If can't be found, create a new one
@@ -198,6 +198,8 @@ public class AtsConfigManager extends AbstractOperation {
                   resultData, transaction);
             Artifact folder = AtsUtilCore.getFromToken(AtsArtifactToken.WorkDefinitionsFolder);
             folder.addChild(workDefArt);
+            workDefArt.persist(transaction);
+            AtsWorkDefinitionService.get().clearCaches();
             folder.persist(transaction);
          } catch (Exception ex) {
             throw new OseeWrappedException(ex);

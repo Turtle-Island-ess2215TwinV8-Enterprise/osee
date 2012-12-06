@@ -54,6 +54,7 @@ import org.eclipse.osee.ats.core.client.workflow.transition.TransitionOption;
 import org.eclipse.osee.ats.core.client.workflow.transition.TransitionResults;
 import org.eclipse.osee.ats.core.config.AtsConfigCache;
 import org.eclipse.osee.ats.core.config.AtsVersionService;
+import org.eclipse.osee.ats.core.workdef.AtsWorkDefinitionService;
 import org.eclipse.osee.ats.core.workdef.SimpleDecisionReviewOption;
 import org.eclipse.osee.ats.core.workflow.StateTypeAdapter;
 import org.eclipse.osee.ats.mocks.MockStateDefinition;
@@ -61,6 +62,7 @@ import org.eclipse.osee.ats.mocks.MockWidgetDefinition;
 import org.eclipse.osee.ats.mocks.MockWorkDefinition;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
+import org.eclipse.osee.framework.core.exception.OseeWrappedException;
 import org.eclipse.osee.framework.core.operation.Operations;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
@@ -594,10 +596,15 @@ public class AtsTestUtil {
 
    public static PeerToPeerReviewArtifact getOrCreatePeerReview(ReviewBlockType reviewBlockType, AtsTestUtilState relatedToState, SkynetTransaction transaction) throws OseeCoreException {
       ensureLoaded();
-      if (peerRevArt == null) {
-         peerRevArt =
-            PeerToPeerReviewManager.createNewPeerToPeerReview(teamArt,
-               AtsTestUtil.class.getSimpleName() + " Test Peer Review", relatedToState.getName(), transaction);
+      try {
+         if (peerRevArt == null) {
+            peerRevArt =
+               PeerToPeerReviewManager.createNewPeerToPeerReview(
+                  AtsWorkDefinitionService.get().getDefaultPeerToPeerWorkflowDefinition(), teamArt,
+                  AtsTestUtil.class.getSimpleName() + " Test Peer Review", relatedToState.getName(), transaction);
+         }
+      } catch (OseeCoreException ex) {
+         throw new OseeWrappedException(ex);
       }
       return peerRevArt;
    }
