@@ -142,7 +142,8 @@ public class TransitionManager {
                // Validate Editable
                boolean stateIsEditable =
                   WorkflowManagerCore.isEditable(awa, awa.getStateDefinition(), helper.isPrivilegedEditEnabled());
-               boolean currentlyUnAssigned = awa.getStateMgr().getAssignees().contains(AtsUserService.get().getUnAssigned());
+               boolean currentlyUnAssigned =
+                  awa.getStateMgr().getAssignees().contains(AtsUserService.get().getUnAssigned());
                awa.getStateMgr().validateNoBootstrapUser();
                boolean overrideAssigneeCheck = helper.isOverrideAssigneeCheck();
                // Allow anyone to transition any task to completed/cancelled/working if parent is working
@@ -291,15 +292,18 @@ public class TransitionManager {
                   // Get transition to assignees
                   List<IAtsUser> toAssignees = new LinkedList<IAtsUser>();
                   if (!toState.getStateType().isCompletedOrCancelledState()) {
-                     if (helper.getToAssignees() != null) {
-                        toAssignees.addAll(helper.getToAssignees());
+                     if (helper.getToAssignees(awa) != null) {
+                        toAssignees.addAll(helper.getToAssignees(awa));
                      }
                      if (toAssignees.contains(AtsUserService.get().getUnAssigned())) {
                         toAssignees.remove(AtsUserService.get().getUnAssigned());
-                        toAssignees.add(AtsUsersClient.getUser());
                      }
                      if (toAssignees.isEmpty()) {
-                        toAssignees.add(AtsUsersClient.getUser());
+                        if (helper.isSystemUser()) {
+                           toAssignees.add(AtsUserService.get().getUnAssigned());
+                        } else {
+                           toAssignees.add(AtsUsersClient.getUser());
+                        }
                      }
                   }
 
