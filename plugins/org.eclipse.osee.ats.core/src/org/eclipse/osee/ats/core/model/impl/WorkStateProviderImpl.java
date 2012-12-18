@@ -151,7 +151,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
    }
 
    @Override
-   public void setAssignees(String stateName, List<? extends IAtsUser> assignees) throws OseeCoreException {
+   public void setAssignees(String nextStateName, List<? extends IAtsUser> assignees) throws OseeCoreException {
       if (assignees == null) {
          return;
       }
@@ -160,29 +160,37 @@ public class WorkStateProviderImpl implements WorkStateProvider {
             throw new OseeArgumentException("Can not assign workflow to Guest");
          }
       }
-      WorkState state = getState(stateName);
-      List<IAtsUser> currentAssignees = new LinkedList<IAtsUser>();
-      currentAssignees.addAll(state.getAssignees());
 
-      List<IAtsUser> notifyAssignees = new ArrayList<IAtsUser>();
-      // Add new assignees
-      for (IAtsUser user : assignees) {
-         if (!currentAssignees.contains(user)) {
-            state.addAssignee(user);
-            notifyAssignees.add(user);
+      WorkState nextState = getState(nextStateName);
+
+      //If assignees is updated and state is not changed.
+      if (nextStateName.equals(currentStateName)) {
+         updateStateAssignees(nextState, assignees);
+      } else {
+         List<IAtsUser> nextAssignees = nextState.getAssignees();
+         // If state was changed to a new, unvisited state (with no assignees yet)
+         if (nextAssignees.isEmpty()) {
+            updateStateAssignees(nextState, assignees);
          }
       }
-      // Delete removed assignees
-      for (IAtsUser user : currentAssignees) {
-         if (!assignees.contains(user)) {
-            state.removeAssignee(user);
-         }
+
+      if (getAssignees().size() > 1 && getAssignees().contains(userService.getUnAssigned())) {
+         removeAssignee(getCurrentStateName(), userService.getUnAssigned());
       }
+   }
+
+   private void updateStateAssignees(WorkState state, List<? extends IAtsUser> assignees) throws OseeCoreException {
+      //Gather list of 
+      List<IAtsUser> notifyAssignees = new ArrayList<IAtsUser>(assignees);
+      List<IAtsUser> curStateAssignees = state.getAssignees();
+      notifyAssignees.removeAll(curStateAssignees);
+
+      //Update assignees for state
+      state.setAssignees(assignees);
+
+      //Notify users who are being assigned to the state
       if (listener != null) {
          listener.notifyAssigned(notifyAssignees);
-      }
-      if (getAssignees().size() > 1 && getAssignees().contains(AtsUserService.get().getUnAssigned())) {
-         removeAssignee(getCurrentStateName(), AtsUserService.get().getUnAssigned());
       }
    }
 

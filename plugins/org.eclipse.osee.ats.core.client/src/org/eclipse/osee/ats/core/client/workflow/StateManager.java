@@ -237,8 +237,12 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
    public void setAssignees(String stateName, List<? extends IAtsUser> assignees) throws OseeCoreException {
       if (assignees == null || assignees.isEmpty()) {
          return;
-      } else if (getStateType().isCompletedOrCancelledState()) {
-         throw new OseeStateException("Can't assign completed/cancelled states.");
+      } else {
+         IAtsStateDefinition stateDef = awa.getStateDefinitionByName(stateName);
+         StateType stateType = stateDef.getStateType();
+         if (stateType.isCompletedOrCancelledState()) {
+            throw new OseeStateException("Can't assign completed/cancelled states.");
+         }
       }
       getStateProvider().setAssignees(stateName, AtsUserService.get().toList(assignees));
       writeToArtifact();
@@ -252,8 +256,8 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
 
    public void transitionHelper(List<? extends IAtsUser> toAssignees, String fromStateName, String toStateName, String cancelReason) throws OseeCoreException {
       createState(toStateName);
+      setAssignees(toStateName, toAssignees);
       setCurrentStateName(toStateName);
-      setAssignees(getCurrentStateName(), toAssignees);
       writeToArtifact();
    }
 
