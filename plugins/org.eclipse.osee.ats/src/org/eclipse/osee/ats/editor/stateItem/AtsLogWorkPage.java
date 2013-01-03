@@ -78,7 +78,7 @@ public class AtsLogWorkPage extends StateXWidgetPage {
    }
 
    public AtsLogWorkPage(String title) {
-      super(null, new EmptyWorkFlowDefinition(PAGE_ID), new IAtsStateDefinition() {
+      super(null, new IAtsStateDefinition() {
 
          @Override
          public String getDescription() {

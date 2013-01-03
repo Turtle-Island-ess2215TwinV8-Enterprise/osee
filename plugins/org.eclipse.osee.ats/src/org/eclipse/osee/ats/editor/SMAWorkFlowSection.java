@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.osee.ats.api.workdef.IAtsWidgetDefinition;
 import org.eclipse.osee.ats.api.workdef.IStateToken;
 import org.eclipse.osee.ats.api.workdef.StateType;
 import org.eclipse.osee.ats.core.client.task.AbstractTaskableArtifact;
@@ -32,6 +34,7 @@ import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.util.XCancellationReasonTextWidget;
 import org.eclipse.osee.ats.workdef.StateXWidgetPage;
+import org.eclipse.osee.framework.core.enums.WidgetOption;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.util.Result;
 import org.eclipse.osee.framework.jdk.core.util.DateUtil;
@@ -130,7 +133,7 @@ public class SMAWorkFlowSection extends SectionPart {
    /**
     * Override to apply different algorithm to current section expansion.
     */
-   public boolean isCurrentSectionExpanded(IStateToken state) {
+   private boolean isCurrentSectionExpanded(IStateToken state) {
       return sma.isInState(state);
    }
 
@@ -203,7 +206,7 @@ public class SMAWorkFlowSection extends SectionPart {
       }
 
       // Create dynamic XWidgets
-      statePage.createBody(getManagedForm(), workComp, sma, xModListener, isEditable || isGlobalEditable);
+      statePage.createBody(getManagedForm(), workComp, xModListener, isEditable || isGlobalEditable);
       for (XWidget xWidget : statePage.getXWidgets()) {
          allXWidgets.add(xWidget);
          allXWidgets.addAll(xWidget.getChildrenXWidgets());
@@ -231,6 +234,8 @@ public class SMAWorkFlowSection extends SectionPart {
       for (Label label : statePage.getLabels()) {
          SMAEditor.setLabelFonts(label, FontManager.getDefaultLabelFont());
       }
+
+      addRequiredForCompletionWarnings();
 
       return workComp;
    }
@@ -451,8 +456,25 @@ public class SMAWorkFlowSection extends SectionPart {
          for (XWidget xWidget : allXWidgets) {
             xWidget.refresh();
          }
+         addRequiredForCompletionWarnings();
       } catch (OseeCoreException ex) {
          OseeLog.log(Activator.class, Level.SEVERE, ex);
+      }
+   }
+
+   private void addRequiredForCompletionWarnings() {
+      for (XWidget xWidget : allXWidgets) {
+         // Remove existing error messages
+         xWidget.removeControlCausedMessage("reqForComp");
+         // Add new message if necessary
+         if (xWidget.getObject() != null) {
+            IAtsWidgetDefinition widget = (IAtsWidgetDefinition) xWidget.getObject();
+            if (widget.is(WidgetOption.REQUIRED_FOR_COMPLETION) && xWidget.isEmpty()) {
+               xWidget.setControlCausedMessage("reqForComp",
+                  String.format("[%s] is required for transition to a completed state", widget.getName()),
+                  IMessageProvider.WARNING);
+            }
+         }
       }
    }
 
@@ -479,22 +501,8 @@ public class SMAWorkFlowSection extends SectionPart {
       return mainComp;
    }
 
-   public List<XWidget> getXWidgets(Class<?> clazz) {
-      List<XWidget> widgets = new ArrayList<XWidget>();
-      for (XWidget widget : allXWidgets) {
-         if (clazz.isInstance(widget)) {
-            widgets.add(widget);
-         }
-      }
-      return widgets;
-   }
-
    public boolean isEditable() {
       return isEditable;
-   }
-
-   public StateXWidgetPage getStatePage() {
-      return statePage;
    }
 
    public SMAEditor getEditor() {

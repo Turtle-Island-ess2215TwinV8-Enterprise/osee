@@ -319,7 +319,7 @@ public class WorkflowManager {
       for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.get().getStatesOrderedByOrdinal(
          awa.getWorkDefinition())) {
          try {
-            StateXWidgetPage statePage = new StateXWidgetPage(awa, awa.getWorkDefinition(), stateDefinition, null);
+            StateXWidgetPage statePage = new StateXWidgetPage(awa, stateDefinition, null);
             statePages.add(statePage);
          } catch (Exception ex) {
             OseeLog.log(Activator.class, Level.SEVERE, ex);
@@ -334,7 +334,7 @@ public class WorkflowManager {
       for (IAtsStateDefinition stateDefinition : AtsWorkDefinitionService.get().getStatesOrderedByDefaultToState(
          awa.getWorkDefinition())) {
          try {
-            StateXWidgetPage statePage = new StateXWidgetPage(awa, awa.getWorkDefinition(), stateDefinition, null);
+            StateXWidgetPage statePage = new StateXWidgetPage(awa, stateDefinition, null);
             statePages.add(statePage);
          } catch (Exception ex) {
             OseeLog.log(Activator.class, Level.SEVERE, ex);
