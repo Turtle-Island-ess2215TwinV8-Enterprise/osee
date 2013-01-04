@@ -212,9 +212,14 @@ public class PortController {
       }
    }
 
-   public void portSourceWorkflow(TeamWorkFlowArtifact artToPort) {
-      // TODO: implement the single apply action
-      System.out.println("tried porting: " + artToPort);
+   public void portSourceWorkflow(TeamWorkFlowArtifact artToPort) throws OseeCoreException {
+      // TODO: implement the single apply action - 
+      // work in progress - do we need to check for some conditions?
+      // if the port fails, is this the correct action to take?
+      Branch branch = workflow.getWorkingBranch();
+      if (!PortUtil.portWorkflowToWorkingBranch(artToPort, branch)) {
+         throw new OseeCoreException(String.format("Porting %s failed.", artToPort.getName()), artToPort);
+      }
    }
 
    public void storeSourceWorkflows() throws OseeCoreException {

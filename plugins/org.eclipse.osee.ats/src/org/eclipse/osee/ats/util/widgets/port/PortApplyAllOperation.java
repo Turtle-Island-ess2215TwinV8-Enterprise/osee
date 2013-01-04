@@ -11,13 +11,7 @@ import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
 import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
 import org.eclipse.osee.framework.core.model.Branch;
-import org.eclipse.osee.framework.core.model.TransactionRecord;
 import org.eclipse.osee.framework.core.operation.AbstractOperation;
-import org.eclipse.osee.framework.logging.OseeLevel;
-import org.eclipse.osee.framework.logging.OseeLog;
-import org.eclipse.osee.framework.skynet.core.artifact.BranchManager;
-import org.eclipse.osee.framework.skynet.core.conflict.ConflictManagerExternal;
-import org.eclipse.osee.framework.ui.skynet.commandHandlers.branch.commit.CommitHandler;
 
 public class PortApplyAllOperation extends AbstractOperation {
 
@@ -50,41 +44,12 @@ public class PortApplyAllOperation extends AbstractOperation {
       if (destTeamArt.getWorkingBranch() == null) {
          AtsBranchManagerCore.createWorkingBranch_Create(destTeamArt);
       }
-
-      PortBranches portBranches = new PortBranches(destTeamArt);
+      Branch branch = destTeamArt.getWorkingBranch();
 
       TeamWorkFlowArtifact nextTeamWfToPort = PortUtil.getNextTeamWfToPort(destTeamArt);
-      while (nextTeamWfToPort != null) {
-
-         PortBranch portFromBranch = portBranches.getPortBranch(nextTeamWfToPort);
-         if (portFromBranch == null) {
-            TransactionRecord transRecord = AtsBranchManagerCore.getEarliestTransactionId(nextTeamWfToPort);
-
-            // Expand branch from commit tx
-            Branch workingBranch =
-               BranchManager.createWorkingBranchFromTx(
-                  transRecord,
-                  String.format("Port [%s] to [%s]", nextTeamWfToPort.getHumanReadableId(),
-                     destTeamArt.getHumanReadableId()));
-
-            portBranches.addPort(nextTeamWfToPort, workingBranch);
-            portBranches.saveToArtifact();
-            destTeamArt.persist(getName());
-         }
-         boolean committed = PortUtil.isPortedToWorkingBranch(destTeamArt, nextTeamWfToPort);
-         if (!committed) {
-            // Commit into current working branch
-            ConflictManagerExternal conflictManager =
-               new ConflictManagerExternal(destTeamArt.getWorkingBranch(), nextTeamWfToPort.getWorkingBranch());
-
-            boolean branchCommitted = CommitHandler.commitBranch(conflictManager, false, false);
-            if (!branchCommitted) {
-               OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, "Error: Branch not committed");
-            }
-         }
-
-         // kick events to update porting table
-
+      boolean success = true;
+      while (nextTeamWfToPort != null && success) {
+         success = PortUtil.portWorkflowToWorkingBranch(nextTeamWfToPort, branch);
          // loop to do all rest
          nextTeamWfToPort = PortUtil.getNextTeamWfToPort(destTeamArt);
       }

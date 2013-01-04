@@ -18,7 +18,11 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.nebula.widgets.xviewer.XViewer;
 import org.eclipse.nebula.widgets.xviewer.XViewerColumn;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
+import org.eclipse.osee.ats.internal.Activator;
 import org.eclipse.osee.ats.util.AtsUtil;
+import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.logging.OseeLevel;
+import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -87,7 +91,12 @@ public class PortXViewer extends XViewer {
       if (xCol.equals(PortXManagerFactory.Action_Col)) {
          Object teamArtToApplyAction = treeItem.getData();
          if (teamArtToApplyAction instanceof TeamWorkFlowArtifact) {
-            portController.portSourceWorkflow((TeamWorkFlowArtifact) teamArtToApplyAction);
+
+            try {
+               portController.portSourceWorkflow((TeamWorkFlowArtifact) teamArtToApplyAction);
+            } catch (OseeCoreException ex) {
+               OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, ex);
+            }
          }
       }
       return false;
