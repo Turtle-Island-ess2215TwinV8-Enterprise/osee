@@ -89,7 +89,7 @@ public abstract class AbstractWorkflowArtifact extends AbstractAtsArtifact imple
 
    public AbstractWorkflowArtifact(ArtifactFactory parentFactory, String guid, String humanReadableId, Branch branch, IArtifactType artifactType) throws OseeCoreException {
       super(parentFactory, guid, humanReadableId, branch, artifactType);
-      stateMgr = new StateManager(this);
+      stateMgr = new StateManager(AtsUserService.get(), this);
       atsLog = new AtsLog(new ArtifactLog(this));
    }
 

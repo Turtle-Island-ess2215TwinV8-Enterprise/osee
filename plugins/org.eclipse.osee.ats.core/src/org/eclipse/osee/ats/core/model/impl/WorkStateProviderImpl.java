@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.logging.Level;
 import org.eclipse.osee.ats.api.notify.IAtsNotificationListener;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.user.IAtsUserService;
 import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.workflow.WorkState;
 import org.eclipse.osee.ats.api.workflow.WorkStateFactory;
 import org.eclipse.osee.ats.api.workflow.WorkStateProvider;
 import org.eclipse.osee.ats.core.internal.Activator;
-import org.eclipse.osee.ats.core.users.AtsUserService;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeStateException;
@@ -37,6 +37,7 @@ import org.eclipse.osee.framework.logging.OseeLog;
 public class WorkStateProviderImpl implements WorkStateProvider {
 
    private final WorkStateFactory factory;
+   private final IAtsUserService userService;
    private final List<WorkState> states = new LinkedList<WorkState>();
 
    private IAtsNotificationListener listener;
@@ -45,12 +46,13 @@ public class WorkStateProviderImpl implements WorkStateProvider {
    /**
     * Creates a new StateData initialized with currentStateName as current state and sets assignees
     */
-   public WorkStateProviderImpl(WorkStateFactory factory) {
-      this(factory, null);
+   public WorkStateProviderImpl(WorkStateFactory factory, IAtsUserService userService) {
+      this(factory, userService, null);
    }
 
-   public WorkStateProviderImpl(WorkStateFactory factory, WorkState workState) {
+   public WorkStateProviderImpl(WorkStateFactory factory, IAtsUserService userService, WorkState workState) {
       this.factory = factory;
+      this.userService = userService;
       if (workState != null) {
          this.currentStateName = workState.getName();
          states.add(workState);
@@ -66,7 +68,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
     */
    @Override
    public boolean isUnAssigned() throws OseeCoreException {
-      return getAssignees().contains(AtsUserService.get().getUnAssigned());
+      return getAssignees().contains(userService.getUnAssigned());
    }
 
    @Override
@@ -109,7 +111,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
          return;
       }
       for (IAtsUser assignee : assignees) {
-         if (AtsUserService.get().isGuestUser(assignee)) {
+         if (userService.isGuestUser(assignee)) {
             throw new OseeArgumentException("Can not assign workflow to Guest");
          }
       }
@@ -126,8 +128,8 @@ public class WorkStateProviderImpl implements WorkStateProvider {
       if (listener != null) {
          listener.notifyAssigned(notifyAssignees);
       }
-      if (getAssignees().size() > 1 && getAssignees().contains(AtsUserService.get().getUnAssigned())) {
-         removeAssignee(getCurrentStateName(), AtsUserService.get().getUnAssigned());
+      if (getAssignees().size() > 1 && getAssignees().contains(userService.getUnAssigned())) {
+         removeAssignee(getCurrentStateName(), userService.getUnAssigned());
       }
    }
 
@@ -156,7 +158,7 @@ public class WorkStateProviderImpl implements WorkStateProvider {
          return;
       }
       for (IAtsUser assignee : assignees) {
-         if (AtsUserService.get().isGuestUser(assignee)) {
+         if (userService.isGuestUser(assignee)) {
             throw new OseeArgumentException("Can not assign workflow to Guest");
          }
       }

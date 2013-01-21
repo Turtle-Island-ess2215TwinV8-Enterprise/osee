@@ -25,6 +25,7 @@ import org.eclipse.osee.ats.api.data.AtsArtifactToken;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.notify.IAtsNotificationListener;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.user.IAtsUserService;
 import org.eclipse.osee.ats.api.util.AtsLib;
 import org.eclipse.osee.ats.api.workdef.IAtsStateDefinition;
 import org.eclipse.osee.ats.api.workdef.IAtsWorkDefinition;
@@ -67,12 +68,14 @@ import org.eclipse.osee.framework.skynet.core.artifact.search.QueryOptions;
 public class StateManager implements IAtsNotificationListener, WorkStateProvider, WorkStateFactory {
 
    private final AbstractWorkflowArtifact awa;
+   private final IAtsUserService userService;
 
    private static List<String> allValidStateNames = null;
    private WorkStateProvider stateProvider = null;
    private int loadTransactionNumber;
 
-   public StateManager(AbstractWorkflowArtifact awa) {
+   public StateManager(IAtsUserService userService, AbstractWorkflowArtifact awa) {
+      this.userService = userService;
       this.awa = awa;
    }
 
@@ -92,7 +95,7 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
       String currentStateXml = awa.getSoleAttributeValue(AtsAttributeTypes.CurrentState, "");
       if (Strings.isValid(currentStateXml)) {
          WorkStateImpl currentState = AtsWorkStateFactory.getFromXml(currentStateXml);
-         stateProvider = new WorkStateProviderImpl(this, currentState);
+         stateProvider = new WorkStateProviderImpl(this, userService, currentState);
          for (String stateXml : awa.getAttributesToStringList(AtsAttributeTypes.State)) {
             WorkStateImpl state = AtsWorkStateFactory.getFromXml(stateXml);
             if (!state.getName().equals(currentState.getName())) {
@@ -102,7 +105,7 @@ public class StateManager implements IAtsNotificationListener, WorkStateProvider
             }
          }
       } else {
-         stateProvider = new WorkStateProviderImpl(this);
+         stateProvider = new WorkStateProviderImpl(this, userService);
       }
       ((WorkStateProviderImpl) stateProvider).setNotificationListener(this);
       loadTransactionNumber = awa.getTransactionNumber();

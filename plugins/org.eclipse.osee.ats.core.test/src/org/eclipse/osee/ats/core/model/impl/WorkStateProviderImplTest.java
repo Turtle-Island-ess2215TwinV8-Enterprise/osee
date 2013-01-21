@@ -12,7 +12,9 @@ import java.util.List;
 import junit.framework.Assert;
 import org.eclipse.osee.ats.api.notify.IAtsNotificationListener;
 import org.eclipse.osee.ats.api.user.IAtsUser;
+import org.eclipse.osee.ats.api.user.IAtsUserService;
 import org.eclipse.osee.ats.mocks.MockAtsUser;
+import org.eclipse.osee.ats.mocks.MockAtsUserService;
 import org.eclipse.osee.ats.mocks.MockGuest;
 import org.eclipse.osee.ats.mocks.MockUnAssigned;
 import org.eclipse.osee.ats.mocks.MockWorkStateFactory;
@@ -27,6 +29,8 @@ import org.junit.Test;
  */
 public class WorkStateProviderImplTest {
 
+   private IAtsUserService userService;
+
    private final MockAtsUser joe = new MockAtsUser("joe");
    private final MockAtsUser steve = new MockAtsUser("steve");
    private final MockAtsUser alice = new MockAtsUser("alice");
@@ -35,7 +39,8 @@ public class WorkStateProviderImplTest {
 
    @Before
    public void setup() {
-      provider = new WorkStateProviderImpl(new MockWorkStateFactory());
+      userService = new MockAtsUserService();
+      provider = new WorkStateProviderImpl(new MockWorkStateFactory(), userService);
    }
 
    @Test
