@@ -277,7 +277,9 @@ attributeType "Checksum" extends StringAttribute {
    uuid 0x100000000000014B
    dataProvider DefaultAttributeDataProvider
    min 0
-   max 1 description "Test Case Checksum"
+   max 1 
+   taggerId DefaultAttributeTaggerProvider
+   description "Test Case Checksum"
 }
 
 attributeType "Disposition" extends StringAttribute {
