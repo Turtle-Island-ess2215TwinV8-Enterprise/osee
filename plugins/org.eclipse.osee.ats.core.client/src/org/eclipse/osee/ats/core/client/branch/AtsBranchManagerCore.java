@@ -120,10 +120,48 @@ public class AtsBranchManagerCore {
    }
 
    /**
+    * @return the branch associated with a port.
+    */
+   public static Branch getPortBranch(TeamWorkFlowArtifact teamArt) throws OseeCoreException {
+      BranchFilter branchFilter = new BranchFilter(BranchType.PORT);
+      branchFilter.setNegatedBranchStates(BranchState.DELETED);
+      branchFilter.setAssociatedArtifact(teamArt);
+      Branch branch = null;
+
+      List<Branch> branches = BranchManager.getBranches(branchFilter);
+
+      if (branches.isEmpty()) {
+         // create the port branch if it doesn't exist
+         TransactionRecord transRecord = getEarliestTransactionId(teamArt);
+
+         // Expand branch from commit tx
+         branch =
+            BranchManager.createPortBranchFromTx(transRecord,
+               String.format("Porting [%s] branch", teamArt.getHumanReadableId()), teamArt);
+
+      } else if (branches.size() > 1) {
+         throw new MultipleBranchesExist(
+            "Unexpected multiple associated un-deleted working branches found for port branch [%s]",
+            teamArt.getHumanReadableId());
+      } else {
+         branch = branches.get(0);
+      }
+      return branch;
+   }
+
+   /**
     * @return whether there is a working branch that is not committed
     */
    public static boolean isWorkingBranchInWork(TeamWorkFlowArtifact teamArt) throws OseeCoreException {
       Branch branch = getWorkingBranch(teamArt);
+      return branch != null && !branch.getBranchState().isCommitted();
+   }
+
+   /**
+    * @return whether there is a port branch that is not committed
+    */
+   public static boolean isPortBranchInWork(TeamWorkFlowArtifact teamArt) throws OseeCoreException {
+      Branch branch = getPortBranch(teamArt);
       return branch != null && !branch.getBranchState().isCommitted();
    }
 
