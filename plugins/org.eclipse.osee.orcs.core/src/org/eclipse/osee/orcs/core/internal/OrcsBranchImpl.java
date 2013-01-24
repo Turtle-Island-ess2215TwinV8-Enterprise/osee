@@ -155,4 +155,10 @@ public class OrcsBranchImpl implements OrcsBranch {
       return createBranch(branchData);
    }
 
+   @Override
+   public Callable<ReadableBranch> createPortBranch(IOseeBranch branch, ArtifactReadable author, int fromTransaction, ArtifactReadable associatedArtifact) throws OseeCoreException {
+      CreateBranchData branchData =
+         branchDataFactory.createPortBranchData(branch, author, fromTransaction, associatedArtifact);
+      return createBranch(branchData);
+   }
 }
