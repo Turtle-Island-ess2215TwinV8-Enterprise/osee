@@ -17,6 +17,7 @@ import org.eclipse.osee.framework.core.enums.CoreArtifactTypes;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.enums.CoreBranches;
 import org.eclipse.osee.framework.core.enums.SystemUser;
+import org.eclipse.osee.framework.core.exception.OseeStateException;
 import org.eclipse.osee.framework.core.model.TransactionRecord;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.orcs.ApplicationContext;
@@ -31,14 +32,18 @@ import org.eclipse.osee.orcs.search.QueryFactory;
 import org.eclipse.osee.orcs.transaction.OrcsTransaction;
 import org.eclipse.osee.orcs.transaction.TransactionFactory;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author David W. Miller
  */
 public class OrcsPortingTest {
+
+   @Rule
+   public ExpectedException thrown = ExpectedException.none();
 
    @Rule
    public OrcsIntegrationRule osgi = new OrcsIntegrationRule(this);
@@ -52,10 +57,11 @@ public class OrcsPortingTest {
    private OrcsBranch branchApi;
    private QueryFactory query;
    private TransactionFactory txFactory;
+   private final String branchString = "CopiedTxBranch";
 
    private ArtifactReadable author;
 
-   @Before
+   @BeforeClass
    public void setUp() throws Exception {
       ApplicationContext context = null; // TODO use real application context
 
@@ -71,10 +77,13 @@ public class OrcsPortingTest {
 
       String artifactGuid = GUID.create();
 
+      String assocArtifactGuid = GUID.create();
+      setupAssociatedArtifact(assocArtifactGuid);
+
       IOseeBranch mainBranch = createBaselineBranchAndArtifacts(artifactGuid);
       TransactionRecord transactionToCopy = createWorkingBranchChanges(mainBranch, artifactGuid);
 
-      IOseeBranch copyTxBranch = createCopyFromTransactionBranch(transactionToCopy);
+      IOseeBranch copyTxBranch = createCopyFromTransactionBranch(transactionToCopy, assocArtifactGuid);
       TransactionRecord finalTx = commitToDestinationBranch(copyTxBranch);
 
       // now check to make sure everything is as expected
@@ -100,6 +109,11 @@ public class OrcsPortingTest {
             Assert.assertTrue(false);
          }
       }
+      // last part of the test
+      // There should only be one Port Branch per associated artifact. Expecting an exception
+      thrown.expect(OseeStateException.class);
+      thrown.expectMessage(String.format("Existing port branch creation detected for [%s]", branchString));
+      createCopyFromTransactionBranch(transactionToCopy, assocArtifactGuid);
 
    }
 
@@ -123,6 +137,12 @@ public class OrcsPortingTest {
 
       tx2.commit();
       return branch;
+   }
+
+   private void setupAssociatedArtifact(String associatedArtifactGuid) throws Exception {
+      OrcsTransaction tx = txFactory.createTransaction(CoreBranches.COMMON, author, "setup associated artifact");
+      tx.createArtifact(CoreArtifactTypes.Requirement, "AssociatedArtifact");
+      tx.commit();
    }
 
    private TransactionRecord createWorkingBranchChanges(IOseeBranch parentBranch, String artifactToModifyGuid) throws Exception {
@@ -161,11 +181,18 @@ public class OrcsPortingTest {
       return transactionToCopy;
    }
 
-   private IOseeBranch createCopyFromTransactionBranch(TransactionRecord transactionToCopy) throws Exception {
+   private IOseeBranch createCopyFromTransactionBranch(TransactionRecord transactionToCopy, String assocArtifactGuid) throws Exception {
       // create the branch with the copied transaction
-      IOseeBranch branch = TokenFactory.createBranch(GUID.create(), "CopiedTxBranch");
+      IOseeBranch branch = TokenFactory.createBranch(GUID.create(), branchString);
+
+      // get the setup associated artifact - this is for a later test to make sure the branch is not duplicated
+      // there should only be one port branch per associated artifact
+      ArtifactReadable readableReq =
+         query.fromBranch(CoreBranches.COMMON).andGuidsOrHrids(assocArtifactGuid).getResults().getExactlyOne();
+
+      Assert.assertNotNull(readableReq);
       // the new branch will contain two transactions -
-      return branchApi.createCopyTxBranch(branch, author, transactionToCopy.getId(), null).call();
+      return branchApi.createPortBranch(branch, author, transactionToCopy.getId(), readableReq).call();
    }
 
    private TransactionRecord commitToDestinationBranch(IOseeBranch copyTxBranch) throws Exception {
