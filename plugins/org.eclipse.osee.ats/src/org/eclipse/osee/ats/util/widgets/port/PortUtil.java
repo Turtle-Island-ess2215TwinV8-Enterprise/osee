@@ -20,7 +20,6 @@ import org.eclipse.osee.framework.core.model.TransactionRecord;
 import org.eclipse.osee.framework.logging.OseeLevel;
 import org.eclipse.osee.framework.logging.OseeLog;
 import org.eclipse.osee.framework.skynet.core.artifact.Artifact;
-import org.eclipse.osee.framework.skynet.core.artifact.BranchManager;
 import org.eclipse.osee.framework.skynet.core.conflict.ConflictManagerExternal;
 import org.eclipse.osee.framework.skynet.core.transaction.TransactionManager;
 import org.eclipse.osee.framework.ui.skynet.commandHandlers.branch.commit.CommitHandler;
@@ -31,7 +30,7 @@ public class PortUtil {
       PortStatus toReturn = PortStatus.NONE;
       // if there is already a branch and it is not committed
       if (AtsBranchManagerCore.isPortBranchInWork(sourceWorkflow)) {
-         toReturn = PortStatus.ERROR_PORT_BRANCH_EXISTS;
+         toReturn = PortStatus.MERGING_PORT;
       } else if (!AtsBranchManagerCore.isCommittedBranchExists(sourceWorkflow)) {
          // TODO from parallel dev meeting - what is the difference between committed and completed - should be reflected here
          toReturn = PortStatus.ERROR_NO_COMMIT_TRANSACTION_FOUND;
@@ -74,14 +73,20 @@ public class PortUtil {
 
    public static PortAction getPortAction(TeamWorkFlowArtifact destTeamArt, TeamWorkFlowArtifact portFromTeamArt) throws OseeCoreException {
       PortStatus status = getPortStatus(destTeamArt, portFromTeamArt);
+      PortAction toReturn = PortAction.NONE;
+
       if (status.isError()) {
-         return PortAction.RESOLVE_ERROR;
+         toReturn = PortAction.RESOLVE_ERROR;
+      } else if (status == PortStatus.MERGING_PORT) {
+         toReturn = PortAction.MERGE;
+      } else {
+
+         TeamWorkFlowArtifact nextTeamArt = getNextTeamWfToPort(destTeamArt);
+         if (nextTeamArt != null && nextTeamArt.equals(portFromTeamArt)) {
+            toReturn = PortAction.APPLY_NEXT;
+         }
       }
-      TeamWorkFlowArtifact nextTeamArt = getNextTeamWfToPort(destTeamArt);
-      if (nextTeamArt != null && nextTeamArt.equals(portFromTeamArt)) {
-         return PortAction.APPLY_NEXT;
-      }
-      return PortAction.NONE;
+      return toReturn;
    }
 
    public static TeamWorkFlowArtifact getNextTeamWfToPort(TeamWorkFlowArtifact destTeamArt) throws OseeCoreException {
@@ -120,13 +125,7 @@ public class PortUtil {
       boolean branchCommitted = false;
       boolean committed = PortUtil.isPortedToWorkingBranch(portFromTeamArt, branch);
       if (!committed) {
-         TransactionRecord transRecord = AtsBranchManagerCore.getEarliestTransactionId(portFromTeamArt);
-
-         // Expand branch from commit tx
-         Branch workingBranch =
-            BranchManager.createPortBranchFromTx(transRecord,
-               String.format("Port [%s] to [%s]", portFromTeamArt.getHumanReadableId(), branch.getShortName()),
-               portFromTeamArt);
+         Branch workingBranch = AtsBranchManagerCore.getPortBranch(portFromTeamArt);
 
          // when the branch is committed, the portFromTeamArt will be set as the
          // committing artifact for the working branch, used in the isPortedToWorkingBranch to determine if 
@@ -137,14 +136,17 @@ public class PortUtil {
 
          branchCommitted = CommitHandler.commitBranch(conflictManager, false, false);
          if (!branchCommitted) {
-            OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP, "Error: Branch not committed");
+            if (conflictManager.remainingConflictsExist()) {
+               // TODO find some way to open the merge manager;
+               OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP,
+                  "Use the Merge Manager to resolve all remaining conflicts");
+            }
          }
       } else {
          OseeLog.log(Activator.class, OseeLevel.SEVERE_POPUP,
             String.format("Error: Branch Already Ported To Working Branch %s", branch.getShortName()));
       }
 
-      // kick events to update porting table
       //TODO cleanup working branch???
 
       return branchCommitted;

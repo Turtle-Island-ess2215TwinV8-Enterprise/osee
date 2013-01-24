@@ -219,6 +219,9 @@ public class PortController {
       Branch branch = workflow.getWorkingBranch();
       if (!PortUtil.portWorkflowToWorkingBranch(artToPort, branch)) {
          throw new OseeCoreException(String.format("Porting %s failed.", artToPort.getName()), artToPort);
+      } else {
+         // redraw the table
+         updatePortDataDisplay();
       }
    }
 
@@ -261,13 +264,14 @@ public class PortController {
 
       @Override
       public void handleBranchEvent(Sender sender, BranchEvent branchEvent) {
-         display.redrawComposite();
+         //display.redrawComposite();
       }
    }
 
    public void doRevertAll() {
       // PORT_TODO Add a filter
-      display.setApplyAllEnabled(true);
+      //display.setApplyAllEnabled(true);
+      updatePortDataDisplay();
       // TODO: add code as a job to undo the apply operation
       System.out.println("revert all button pressed");
    }

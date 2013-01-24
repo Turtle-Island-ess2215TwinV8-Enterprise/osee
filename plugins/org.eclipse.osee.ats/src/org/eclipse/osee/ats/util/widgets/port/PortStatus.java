@@ -13,6 +13,7 @@ public enum PortStatus {
    ERROR_TARGET_VERSION_NOT_SET("The Target Version must be set"),
    //PORT_FROM_BRANCH_CREATED("Port From Branch Created"),
    NONE(""),
+   MERGING_PORT("Merge conflicts using merge manager"),
    PORTED("Ported");
 
    private final String displayName;

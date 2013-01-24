@@ -51,6 +51,9 @@ public class XPortLabelProvider extends XViewerLabelProvider {
                if (action == PortAction.APPLY_NEXT) {
                   image = ImageManager.getImage(AtsImage.RIGHT_ARROW_SM);
                }
+               if (action == PortAction.MERGE) {
+                  image = ImageManager.getImage(FrameworkImage.BRANCH_MERGE);
+               }
             }
          } else if (xCol.equals(PortXManagerFactory.Remove_Col)) {
             image = ImageManager.getImage(FrameworkImage.REMOVE);

@@ -9,6 +9,7 @@ public enum PortAction {
 
    APPLY_NEXT("Apply"),
    RESOLVE_ERROR("Resolve Error"),
+   MERGE("Merge"),
    NONE("");
 
    private final String displayName;
