@@ -487,11 +487,16 @@
       </Operation>
    </extension>
    <extension
-         id="CreateActionFromTaskBlam"
-         name="CreateActionFromTaskBlam"
          point="org.eclipse.osee.framework.ui.skynet.BlamOperation">
       <Operation
-            className="org.eclipse.osee.ats.operation.CreateActionFromTaskBlam">
+            className="org.eclipse.osee.ats.PortBlam">
+      </Operation>
+   </extension>   <extension
+         point="org.eclipse.osee.framework.ui.skynet.BlamOperation">
+      <Operation
+            className="org.eclipse.osee.ats.PortPairsBlam">
+      </Operation>
+   </extension>
       </Operation>
    </extension>
    <extension
