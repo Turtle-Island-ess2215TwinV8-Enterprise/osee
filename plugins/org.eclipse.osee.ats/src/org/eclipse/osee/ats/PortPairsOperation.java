@@ -13,7 +13,6 @@ package org.eclipse.osee.ats;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osee.ats.api.data.AtsAttributeTypes;
 import org.eclipse.osee.ats.api.data.AtsRelationTypes;
@@ -91,6 +90,11 @@ public final class PortPairsOperation extends AbstractOperation {
 
       return (TeamWorkFlowArtifact) ArtifactQuery.getArtifactFromTypeAndAttribute(LbaReqTeamWorkflow,
          AtsAttributeTypes.LegacyPcrId, workflowId, CoreBranches.COMMON);
+   }
+
+   private TeamWorkFlowArtifact getWorkflowFromHRID(String HRID) throws OseeCoreException {
+
+      return (TeamWorkFlowArtifact) ArtifactQuery.getArtifactFromId(HRID, CoreBranches.COMMON);
    }
 
    private void doPortWork(TeamWorkFlowArtifact sourceWorkflow, TeamWorkFlowArtifact destinationWorkflow) throws OseeCoreException {
