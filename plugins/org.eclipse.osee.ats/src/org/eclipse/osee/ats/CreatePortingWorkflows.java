@@ -23,7 +23,7 @@ import org.eclipse.osee.ats.api.user.IAtsUser;
 import org.eclipse.osee.ats.core.client.action.ActionManager;
 import org.eclipse.osee.ats.core.client.team.CreateTeamOption;
 import org.eclipse.osee.ats.core.client.team.TeamWorkFlowArtifact;
-import org.eclipse.osee.ats.core.client.util.AtsUsersClient;
+import org.eclipse.osee.ats.internal.AtsClientService;
 import org.eclipse.osee.ats.util.AtsUtil;
 import org.eclipse.osee.ats.world.AtsWorldEditorRenderer;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
@@ -63,7 +63,7 @@ public class CreatePortingWorkflows extends AbstractBlam {
    private List<Artifact> createDestinationWorkflows(SkynetTransaction transaction, List<IAtsActionableItem> actionableItems) throws OseeCoreException {
       IAtsTeamDefinition teamDefinition = actionableItems.get(0).getTeamDefinition();
       List<Artifact> destinationWorkflows = new ArrayList<Artifact>();
-      IAtsUser createdBy = AtsUsersClient.getUser();
+      IAtsUser createdBy = AtsClientService.get().getUserAdmin().getCurrentUser();
       Date createdDate = new Date();
 
       for (TeamWorkFlowArtifact sourceWorkflow : sourceWorkflows) {

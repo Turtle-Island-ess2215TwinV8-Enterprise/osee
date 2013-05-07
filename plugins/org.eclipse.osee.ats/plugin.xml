@@ -491,12 +491,11 @@
       <Operation
             className="org.eclipse.osee.ats.PortBlam">
       </Operation>
-   </extension>   <extension
+   </extension>   
+   <extension
          point="org.eclipse.osee.framework.ui.skynet.BlamOperation">
       <Operation
             className="org.eclipse.osee.ats.PortPairsBlam">
-      </Operation>
-   </extension>
       </Operation>
    </extension>
    <extension
