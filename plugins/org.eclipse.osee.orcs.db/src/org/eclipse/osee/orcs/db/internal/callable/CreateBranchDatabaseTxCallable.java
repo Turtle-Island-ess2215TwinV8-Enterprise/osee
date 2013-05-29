@@ -39,6 +39,7 @@ import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.framework.jdk.core.util.time.GlobalTime;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.data.CreateBranchData;
+import org.eclipse.osee.orcs.db.internal.loader.RelationalConstants;
 
 /**
  * @author Roberto E. Escobar
@@ -137,10 +138,29 @@ public class CreateBranchDatabaseTxCallable extends DatabaseTxCallable<Branch> {
       }
    }
 
+   private int getSourceTransactionId(CreateBranchData newBranchData) throws OseeCoreException {
+      int sourceTransactionId = RelationalConstants.TRANSACTION_SENTINEL;
+
+      if (BranchType.SYSTEM_ROOT != newBranchData.getBranchType()) {
+         TransactionRecord sourceTx = txCache.getOrLoad(newBranchData.getFromTransaction().getGuid());
+         sourceTransactionId = sourceTx.getId();
+      }
+      return sourceTransactionId;
+   }
+
+   private int getParentBranchId(CreateBranchData newBranchData) throws OseeCoreException {
+      int parentBranchId = RelationalConstants.BRANCH_SENTINEL;
+      if (BranchType.SYSTEM_ROOT != newBranchData.getBranchType()) {
+         TransactionRecord sourceTx = txCache.getOrLoad(newBranchData.getFromTransaction().getGuid());
+         parentBranchId = sourceTx.getBranchId();
+      }
+      return parentBranchId;
+   }
+
    @SuppressWarnings("unchecked")
    @Override
    protected Branch handleTxWork(OseeConnection connection) throws OseeCoreException {
-      Branch parentBranch = branchCache.getById(newBranchData.getParentBranchId(txCache));
+      Branch parentBranch = branchCache.getById(getParentBranchId(newBranchData));
       Branch destinationBranch = branchCache.getById(newBranchData.getMergeDestinationBranchId());
 
       passedPreConditions = false;
@@ -169,7 +189,7 @@ public class CreateBranchDatabaseTxCallable extends DatabaseTxCallable<Branch> {
                newBranchData.getUserArtifactId(), -1, TransactionDetailsType.Baselined, branchCache);
          branch.setSourceTransaction(systemTx);
       } else {
-         int srcTx = newBranchData.getSourceTransactionId(txCache);
+         int srcTx = getSourceTransactionId(newBranchData);
 
          branch.setSourceTransaction(txCache.getOrLoad(srcTx));
       }
