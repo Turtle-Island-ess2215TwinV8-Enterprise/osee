@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
+import org.eclipse.osee.framework.core.data.ITransaction;
 import org.eclipse.osee.framework.core.data.TokenFactory;
 import org.eclipse.osee.framework.core.enums.CoreArtifactTypes;
 import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
@@ -76,7 +77,8 @@ public class OrcsBranchTest {
 
       ArtifactReadable author = getSystemUser();
 
-      Callable<ReadableBranch> callable = branchInterface.createCopyTxBranch(branch, author, SOURCE_TX_ID, null);
+      ITransaction tx = TokenFactory.createTransaction(SOURCE_TX_ID);
+      Callable<ReadableBranch> callable = branchInterface.createCopyTxBranch(branch, author, tx, null);
 
       Assert.assertNotNull(callable);
       ReadableBranch priorBranch = callable.call();
@@ -99,8 +101,8 @@ public class OrcsBranchTest {
       // create the branch with the copied transaction
       IOseeBranch postbranch = TokenFactory.createBranch(GUID.create(), "PostBranch");
 
-      Callable<ReadableBranch> postCallable =
-         branchInterface.createCopyTxBranch(postbranch, author, CHANGED_TX_ID, null);
+      ITransaction tx1 = TokenFactory.createTransaction(CHANGED_TX_ID);
+      Callable<ReadableBranch> postCallable = branchInterface.createCopyTxBranch(postbranch, author, tx1, null);
 
       Assert.assertNotNull(postCallable);
       ReadableBranch postBranch = postCallable.call();
@@ -128,7 +130,8 @@ public class OrcsBranchTest {
 
       ArtifactReadable author = getSystemUser();
 
-      Callable<ReadableBranch> callableBranch = branchInterface.createCopyTxBranch(branch, author, SOURCE_TX_ID, null);
+      ITransaction tx = TokenFactory.createTransaction(SOURCE_TX_ID);
+      Callable<ReadableBranch> callableBranch = branchInterface.createCopyTxBranch(branch, author, tx, null);
 
       // the new branch will contain two transactions - these should have the same change report as the original branch
       ReadableBranch postBranch = callableBranch.call();
