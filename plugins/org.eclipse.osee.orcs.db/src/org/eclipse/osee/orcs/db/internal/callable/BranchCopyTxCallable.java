@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
 import org.eclipse.osee.database.schema.DatabaseTxCallable;
+import org.eclipse.osee.framework.core.enums.BranchType;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.enums.TransactionDetailsType;
 import org.eclipse.osee.framework.core.enums.TxChange;
@@ -77,12 +78,22 @@ public final class BranchCopyTxCallable extends DatabaseTxCallable<Branch> {
       return branchCache;
    }
 
+   private int getSourceTransactionId(CreateBranchData branchData) throws OseeCoreException {
+      int sourceTransactionId = RelationalConstants.TRANSACTION_SENTINEL;
+
+      if (BranchType.SYSTEM_ROOT != branchData.getBranchType()) {
+         TransactionRecord sourceTx = txCache.getOrLoad(branchData.getFromTransaction().getGuid());
+         sourceTransactionId = sourceTx.getId();
+      }
+      return sourceTransactionId;
+   }
+
    @SuppressWarnings("unchecked")
    @Override
    public Branch handleTxWork(OseeConnection connection) throws OseeCoreException {
       // get the previous transaction, if there is one
       // TODO figure out what happens when there isn't one
-      TransactionRecord savedTx = txCache.getOrLoad(branchData.getSourceTransactionId(txCache));
+      TransactionRecord savedTx = txCache.getOrLoad(getSourceTransactionId(branchData));
 
       TransactionRecord priorTx = txCache.getPriorTransaction(savedTx);
       // copy the branch up to the prior transaction - the goal is to have the provided
