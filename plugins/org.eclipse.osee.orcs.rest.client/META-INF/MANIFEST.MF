@@ -6,7 +6,8 @@ Bundle-Version: 0.11.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: Eclipse Open System Engineering Environment
 Service-Component: OSGI-INF/*.xml
-Import-Package: javax.ws.rs,
+Import-Package: javax.inject,
+ javax.ws.rs,
  javax.ws.rs.core,
  org.apache.commons.lang.time,
  org.eclipse.core.net.proxy,
@@ -22,4 +23,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.osee.orcs.rest.model,
  com.sun.jersey;bundle-version="1.8.0",
  com.sun.jersey.client.apache;bundle-version="1.8.0",
- javax.servlet
+ javax.servlet,
+ com.google.inject
