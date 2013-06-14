@@ -12,8 +12,6 @@ package org.eclipse.osee.framework.core.message.internal;
 
 import org.eclipse.osee.framework.core.enums.CoreTranslatorId;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.message.internal.translation.ArtifactTypeCacheUpdateResponseTranslator;
-import org.eclipse.osee.framework.core.message.internal.translation.AttributeTypeCacheUpdateResponseTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.BranchCacheStoreRequestTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.BranchCacheUpdateResponseTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.BranchChangeArchivedStateRequestTranslator;
@@ -27,11 +25,9 @@ import org.eclipse.osee.framework.core.message.internal.translation.CacheUpdateR
 import org.eclipse.osee.framework.core.message.internal.translation.ChangeReportRequestTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.ChangeReportResponseTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.DatastoreInitRequestTranslator;
-import org.eclipse.osee.framework.core.message.internal.translation.OseeEnumTypeCacheUpdateResponseTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.OseeImportModelRequestTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.OseeImportModelResponseTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.PurgeBranchRequestTranslator;
-import org.eclipse.osee.framework.core.message.internal.translation.RelationTypeCacheUpdateResponseTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.SearchRequestTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.SearchResponseTranslator;
 import org.eclipse.osee.framework.core.message.internal.translation.TableDataTranslator;
@@ -40,7 +36,6 @@ import org.eclipse.osee.framework.core.message.internal.translation.TransactionR
 import org.eclipse.osee.framework.core.model.TransactionRecordFactory;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.type.AttributeTypeFactory;
-import org.eclipse.osee.framework.core.services.IOseeCachingService;
 import org.eclipse.osee.framework.core.translation.IDataTranslationService;
 
 /**
@@ -53,8 +48,7 @@ public class DataTranslationServiceFactory {
       //
    }
 
-   public void configureService(IDataTranslationService service, TransactionRecordFactory txRecordFactory, AttributeTypeFactory attributeTypeFactory, IOseeCachingService cachingService) throws OseeCoreException {
-      BranchCache branchCache = cachingService.getBranchCache();
+   public void configureService(IDataTranslationService service, TransactionRecordFactory txRecordFactory, AttributeTypeFactory attributeTypeFactory, BranchCache branchCache) throws OseeCoreException {
       service.addTranslator(new TransactionRecordTranslator(txRecordFactory, branchCache),
          CoreTranslatorId.TRANSACTION_RECORD);
 
@@ -79,18 +73,6 @@ public class DataTranslationServiceFactory {
       service.addTranslator(new BranchCacheStoreRequestTranslator(), CoreTranslatorId.BRANCH_CACHE_STORE_REQUEST);
       service.addTranslator(new TransactionCacheUpdateResponseTranslator(txRecordFactory, branchCache),
          CoreTranslatorId.TX_CACHE_UPDATE_RESPONSE);
-
-      service.addTranslator(new ArtifactTypeCacheUpdateResponseTranslator(),
-         CoreTranslatorId.ARTIFACT_TYPE_CACHE_UPDATE_RESPONSE);
-
-      service.addTranslator(new AttributeTypeCacheUpdateResponseTranslator(attributeTypeFactory),
-         CoreTranslatorId.ATTRIBUTE_TYPE_CACHE_UPDATE_RESPONSE);
-
-      service.addTranslator(new RelationTypeCacheUpdateResponseTranslator(),
-         CoreTranslatorId.RELATION_TYPE_CACHE_UPDATE_RESPONSE);
-
-      service.addTranslator(new OseeEnumTypeCacheUpdateResponseTranslator(),
-         CoreTranslatorId.OSEE_ENUM_TYPE_CACHE_UPDATE_RESPONSE);
 
       service.addTranslator(new OseeImportModelRequestTranslator(), CoreTranslatorId.OSEE_IMPORT_MODEL_REQUEST);
       service.addTranslator(new OseeImportModelResponseTranslator(service), CoreTranslatorId.OSEE_IMPORT_MODEL_RESPONSE);

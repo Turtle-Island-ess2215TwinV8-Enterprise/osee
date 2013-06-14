@@ -13,23 +13,25 @@ package org.eclipse.osee.framework.skynet.core.internal;
 import java.util.Collection;
 import org.eclipse.osee.framework.core.enums.OseeCacheEnum;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
+import org.eclipse.osee.framework.core.model.AbstractOseeType;
 import org.eclipse.osee.framework.core.model.OseeCachingService;
 import org.eclipse.osee.framework.core.model.TransactionRecordFactory;
 import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
 import org.eclipse.osee.framework.core.model.cache.AttributeTypeCache;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.cache.IOseeCache;
+import org.eclipse.osee.framework.core.model.cache.IOseeDataAccessor;
 import org.eclipse.osee.framework.core.model.cache.OseeEnumTypeCache;
 import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
 import org.eclipse.osee.framework.core.model.cache.TransactionCache;
+import org.eclipse.osee.framework.core.model.type.ArtifactType;
+import org.eclipse.osee.framework.core.model.type.AttributeType;
+import org.eclipse.osee.framework.core.model.type.OseeEnumType;
+import org.eclipse.osee.framework.core.model.type.RelationType;
 import org.eclipse.osee.framework.core.services.IOseeCachingService;
 import org.eclipse.osee.framework.core.services.IOseeModelFactoryService;
 import org.eclipse.osee.framework.core.services.IdentityService;
-import org.eclipse.osee.framework.skynet.core.internal.accessors.ClientArtifactTypeAccessor;
-import org.eclipse.osee.framework.skynet.core.internal.accessors.ClientAttributeTypeAccessor;
 import org.eclipse.osee.framework.skynet.core.internal.accessors.ClientBranchAccessor;
-import org.eclipse.osee.framework.skynet.core.internal.accessors.ClientOseeEnumTypeAccessor;
-import org.eclipse.osee.framework.skynet.core.internal.accessors.ClientRelationTypeAccessor;
 import org.eclipse.osee.framework.skynet.core.internal.accessors.ClientTransactionAccessor;
 
 /**
@@ -129,20 +131,27 @@ public class ClientCachingServiceProxy implements IOseeCachingService {
       TransactionRecordFactory txFactory = factory.getTransactionFactory();
 
       transactionCache.setAccessor(new ClientTransactionAccessor(txFactory, branchCache));
-      OseeEnumTypeCache oseeEnumTypeCache =
-         new OseeEnumTypeCache(new ClientOseeEnumTypeAccessor(factory.getOseeEnumTypeFactory()));
 
-      AttributeTypeCache attributeTypeCache =
-         new AttributeTypeCache(new ClientAttributeTypeAccessor(factory.getAttributeTypeFactory(), oseeEnumTypeCache));
-
-      ArtifactTypeCache artifactTypeCache =
-         new ArtifactTypeCache(new ClientArtifactTypeAccessor(factory.getArtifactTypeFactory(), attributeTypeCache,
-            branchCache));
-
-      RelationTypeCache relationTypeCache =
-         new RelationTypeCache(new ClientRelationTypeAccessor(factory.getRelationTypeFactory(), artifactTypeCache));
+      OseeEnumTypeCache oseeEnumTypeCache = new OseeEnumTypeCache(new AdapterAccessor<OseeEnumType>());
+      AttributeTypeCache attributeTypeCache = new AttributeTypeCache(new AdapterAccessor<AttributeType>());
+      ArtifactTypeCache artifactTypeCache = new ArtifactTypeCache(new AdapterAccessor<ArtifactType>());
+      RelationTypeCache relationTypeCache = new RelationTypeCache(new AdapterAccessor<RelationType>());
 
       return new OseeCachingService(branchCache, transactionCache, artifactTypeCache, attributeTypeCache,
          relationTypeCache, oseeEnumTypeCache, identityService);
    }
+
+   private class AdapterAccessor<T extends AbstractOseeType<Long>> implements IOseeDataAccessor<Long, T> {
+
+      @Override
+      public void load(IOseeCache<Long, T> cache) throws OseeCoreException {
+      }
+
+      @Override
+      public void store(Collection<T> types) throws OseeCoreException {
+         // Do nothing
+      }
+
+   }
+
 }

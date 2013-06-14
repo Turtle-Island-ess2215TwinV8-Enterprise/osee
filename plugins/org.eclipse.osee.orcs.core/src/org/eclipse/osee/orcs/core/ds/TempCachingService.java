@@ -13,16 +13,14 @@ package org.eclipse.osee.orcs.core.ds;
 import java.util.Collection;
 import org.eclipse.osee.framework.core.enums.OseeCacheEnum;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.cache.IOseeCache;
 import org.eclipse.osee.framework.core.model.cache.TransactionCache;
+import org.eclipse.osee.framework.core.services.IBranchCacheService;
 
 /**
  * @author Roberto E. Escobar
  */
-public interface TempCachingService {
-
-   BranchCache getBranchCache();
+public interface TempCachingService extends IBranchCacheService {
 
    TransactionCache getTransactionCache();
 

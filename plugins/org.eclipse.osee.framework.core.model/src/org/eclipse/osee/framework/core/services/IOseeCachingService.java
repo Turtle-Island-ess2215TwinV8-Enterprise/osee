@@ -15,7 +15,6 @@ import org.eclipse.osee.framework.core.enums.OseeCacheEnum;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
 import org.eclipse.osee.framework.core.model.cache.AttributeTypeCache;
-import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.model.cache.IOseeCache;
 import org.eclipse.osee.framework.core.model.cache.OseeEnumTypeCache;
 import org.eclipse.osee.framework.core.model.cache.RelationTypeCache;
@@ -24,9 +23,7 @@ import org.eclipse.osee.framework.core.model.cache.TransactionCache;
 /**
  * @author Roberto E. Escobar
  */
-public interface IOseeCachingService {
-
-   BranchCache getBranchCache();
+public interface IOseeCachingService extends IBranchCacheService {
 
    TransactionCache getTransactionCache();
 
