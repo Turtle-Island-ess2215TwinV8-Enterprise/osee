@@ -33,7 +33,6 @@ import org.eclipse.osee.framework.core.data.IOseeBranch;
 import org.eclipse.osee.framework.core.enums.CoreArtifactTypes;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.TransactionRecord;
-import org.eclipse.osee.framework.core.model.type.AttributeType;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
@@ -189,7 +188,7 @@ public class OrcsTransactionImplTest {
    @Test
    public void testDuplicateArtifact() throws OseeCoreException {
       ArtifactReadable source = mock(ArtifactReadable.class);
-      final Collection<AttributeType> types = mock(Collection.class);
+      final Collection<IAttributeType> types = mock(Collection.class);
       when(source.getGuid()).thenReturn(guid);
       when(source.getExistingAttributeTypes()).thenAnswer(new Answer<Collection<? extends IAttributeType>>() {
 

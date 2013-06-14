@@ -23,7 +23,7 @@ import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
-import org.eclipse.osee.orcs.core.internal.transaction.handler.CollectAndCopyDirtyData;
+import org.eclipse.osee.orcs.data.AttributeTypes;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -45,6 +45,7 @@ public class CollectAndCopyDirtyDataTest {
    @Mock AttributeData attrSourceData;
    @Mock ArtifactData artCopyData;
    @Mock AttributeData attrCopyData;
+   @Mock AttributeTypes types;
    // @formatter:on
 
    private List<ArtifactTransactionData> data;
@@ -55,7 +56,7 @@ public class CollectAndCopyDirtyDataTest {
       MockitoAnnotations.initMocks(this);
 
       data = new ArrayList<ArtifactTransactionData>();
-      handler = new CollectAndCopyDirtyData(dataFactory, data);
+      handler = new CollectAndCopyDirtyData(types, dataFactory, data);
 
       when(artifact.getOrcsData()).thenReturn(artSourceData);
       when(attribute.getOrcsData()).thenReturn(attrSourceData);

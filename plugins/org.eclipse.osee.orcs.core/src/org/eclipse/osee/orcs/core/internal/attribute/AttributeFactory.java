@@ -39,8 +39,17 @@ public class AttributeFactory {
       this.cache = cache;
    }
 
+   private String getTypeMetadata(long uuid) throws OseeCoreException {
+      IAttributeType attributeType = cache.getByUuid(uuid);
+      return getTypeMetadata(attributeType);
+   }
+
+   private String getTypeMetadata(IAttributeType attributeType) throws OseeCoreException {
+      return cache.getAttributeProviderId(attributeType);
+   }
+
    public <T> Attribute<T> createAttributeWithDefaults(AttributeManager container, ArtifactData artifactData, IAttributeType attributeType) throws OseeCoreException {
-      AttributeData data = dataFactory.create(artifactData, attributeType);
+      AttributeData data = dataFactory.create(artifactData, attributeType, getTypeMetadata(attributeType.getGuid()));
       return createAttribute(container, data, true, true);
    }
 
@@ -67,13 +76,13 @@ public class AttributeFactory {
    }
 
    public <T> Attribute<T> copyAttribute(AttributeData source, IOseeBranch ontoBranch, AttributeManager destinationContainer) throws OseeCoreException {
-      AttributeData attributeData = dataFactory.copy(ontoBranch, source);
+      AttributeData attributeData = dataFactory.copy(ontoBranch, source, getTypeMetadata(source.getTypeUuid()));
       Attribute<T> destinationAttribute = createAttribute(destinationContainer, attributeData, true, false);
       return destinationAttribute;
    }
 
    public <T> Attribute<T> cloneAttribute(AttributeData source, AttributeManager destinationContainer) throws OseeCoreException {
-      AttributeData attributeData = dataFactory.clone(source);
+      AttributeData attributeData = dataFactory.clone(source, getTypeMetadata(source.getTypeUuid()));
       Attribute<T> destinationAttribute = createAttribute(destinationContainer, attributeData, false, false);
       return destinationAttribute;
    }
@@ -82,7 +91,7 @@ public class AttributeFactory {
       Attribute<T> introducedAttribute = null;
       // In order to reflect attributes they must exist in the data store
       if (source.getVersion().isInStorage()) {
-         AttributeData attributeData = dataFactory.introduce(ontoBranch, source);
+         AttributeData attributeData = dataFactory.introduce(ontoBranch, source, getTypeMetadata(source.getTypeUuid()));
          introducedAttribute = createAttribute(destination, attributeData, true, false);
       }
       return introducedAttribute;

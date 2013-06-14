@@ -21,6 +21,7 @@ import org.eclipse.osee.orcs.core.ds.DataFactory;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
+import org.eclipse.osee.orcs.data.AttributeTypes;
 
 /**
  * Takes a snapshot of all the dirty internal OrcsData
@@ -28,12 +29,15 @@ import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
  * @author Roberto E. Escobar
  */
 public class CollectAndCopyDirtyData implements ArtifactVisitor {
+
+   private final AttributeTypes attributeTypes;
    private final DataFactory dataFactory;
    private final List<ArtifactTransactionData> data;
 
    private ArtifactTransactionData txData;
 
-   public CollectAndCopyDirtyData(DataFactory dataFactory, List<ArtifactTransactionData> data) {
+   public CollectAndCopyDirtyData(AttributeTypes attributeTypes, DataFactory dataFactory, List<ArtifactTransactionData> data) {
+      this.attributeTypes = attributeTypes;
       this.dataFactory = dataFactory;
       this.data = data;
    }
@@ -51,7 +55,8 @@ public class CollectAndCopyDirtyData implements ArtifactVisitor {
    @Override
    public void visit(Attribute<?> attribute) throws OseeCoreException {
       if (attribute.isDirty()) {
-         AttributeData copy = dataFactory.clone(attribute.getOrcsData());
+         String providerId = attributeTypes.getAttributeProviderId(attribute.getAttributeType());
+         AttributeData copy = dataFactory.clone(attribute.getOrcsData(), providerId);
          txData.getAttributeData().add(copy);
       }
    }

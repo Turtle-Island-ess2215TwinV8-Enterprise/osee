@@ -18,6 +18,7 @@ import org.eclipse.osee.orcs.core.ds.OrcsVisitor;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.transaction.TxDataManagerImpl.TxDataHandlerFactory;
 import org.eclipse.osee.orcs.data.ArtifactWriteable;
+import org.eclipse.osee.orcs.data.AttributeTypes;
 
 /**
  * @author Roberto E. Escobar
@@ -25,15 +26,17 @@ import org.eclipse.osee.orcs.data.ArtifactWriteable;
 public class TxDataHandlerFactoryImpl implements TxDataHandlerFactory {
 
    private final DataFactory dataFactory;
+   private final AttributeTypes attributeTypes;
 
-   public TxDataHandlerFactoryImpl(DataFactory dataFactory) {
+   public TxDataHandlerFactoryImpl(DataFactory dataFactory, AttributeTypes attributeTypes) {
       super();
       this.dataFactory = dataFactory;
+      this.attributeTypes = attributeTypes;
    }
 
    @Override
    public ArtifactVisitor createOnDirtyHandler(List<ArtifactTransactionData> data) {
-      return new CollectAndCopyDirtyData(dataFactory, data);
+      return new CollectAndCopyDirtyData(attributeTypes, dataFactory, data);
    }
 
    @Override

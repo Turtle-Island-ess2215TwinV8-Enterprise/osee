@@ -102,26 +102,26 @@ public class OrcsObjectFactoryImpl implements OrcsObjectFactory {
    }
 
    @Override
-   public AttributeData createAttributeData(VersionData version, int localId, int localTypeID, ModificationType modType, int artifactId, String value, String uri) throws OseeCoreException {
+   public AttributeData createAttributeData(String providerId, VersionData version, int localId, int localTypeID, ModificationType modType, int artifactId, String value, String uri) throws OseeCoreException {
       long typeId = toUuid(localTypeID);
-      DataProxy proxy = proxyFactory.createProxy(typeId, value, uri);
+      DataProxy proxy = proxyFactory.createProxy(providerId, value, uri);
       return createAttributeFromRow(version, localId, typeId, modType, typeId, modType, artifactId, proxy);
    }
 
    @Override
-   public AttributeData createCopy(AttributeData source) throws OseeCoreException {
+   public AttributeData createCopy(String providerId, AttributeData source) throws OseeCoreException {
       VersionData newVersion = createCopy(source.getVersion());
       long typeId = source.getTypeUuid();
       DataProxy sourceProxy = source.getDataProxy();
-      DataProxy newProxy = proxyFactory.createProxy(typeId, sourceProxy.getData());
+      DataProxy newProxy = proxyFactory.createProxy(providerId, sourceProxy.getData());
       return createAttributeFromRow(newVersion, source.getLocalId(), typeId, source.getModType(),
          source.getLoadedTypeUuid(), source.getLoadedModType(), source.getArtifactId(), newProxy);
    }
 
    @Override
-   public AttributeData createAttributeData(VersionData version, int localId, IAttributeType type, ModificationType modType, int artId) throws OseeCoreException {
+   public AttributeData createAttributeData(String providerId, VersionData version, int localId, IAttributeType type, ModificationType modType, int artId) throws OseeCoreException {
       long typeId = type.getGuid();
-      DataProxy proxy = proxyFactory.createProxy(typeId, "", "");
+      DataProxy proxy = proxyFactory.createProxy(providerId, "", "");
       return createAttributeFromRow(version, localId, typeId, modType, typeId, modType, artId, proxy);
    }
 

@@ -12,8 +12,6 @@ package org.eclipse.osee.orcs.db.internal.loader;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
-import org.eclipse.osee.framework.core.model.cache.AttributeTypeCache;
 import org.eclipse.osee.framework.core.model.cache.BranchCache;
 import org.eclipse.osee.framework.core.services.IdentityService;
 import org.eclipse.osee.framework.database.IOseeDatabaseService;
@@ -49,11 +47,11 @@ public class DataModuleFactory {
       this.logger = logger;
    }
 
-   public void create(IOseeDatabaseService dbService, IdFactory idFactory, IdentityService identityService, SqlProvider sqlProvider, DataProxyFactoryProvider proxyProvider, BranchCache branchCache, ArtifactTypeCache artifactTypeCache, AttributeTypeCache attributeTypeCache) {
-      ProxyDataFactory proxyDataFactory = createDataFactory(proxyProvider, attributeTypeCache);
+   public void create(IOseeDatabaseService dbService, IdFactory idFactory, IdentityService identityService, SqlProvider sqlProvider, DataProxyFactoryProvider proxyProvider, BranchCache branchCache) {
+      ProxyDataFactory proxyDataFactory = createDataFactory(proxyProvider);
       OrcsObjectFactory rowDataFactory = createOrcsObjectFactory(identityService, proxyDataFactory);
 
-      dataFactory = createDataFactory(rowDataFactory, idFactory, artifactTypeCache);
+      dataFactory = createDataFactory(rowDataFactory, idFactory);
 
       SqlHandlerFactory handlerFactory = createHandlerFactory(identityService);
       SqlArtifactLoader loader = createArtifactLoader(dbService, handlerFactory, sqlProvider, rowDataFactory);
@@ -73,16 +71,16 @@ public class DataModuleFactory {
       return dataLoaderFactory;
    }
 
-   protected ProxyDataFactory createDataFactory(DataProxyFactoryProvider proxyProvider, AttributeTypeCache attributeTypeCache) {
-      return new AttributeDataProxyFactory(proxyProvider, attributeTypeCache);
+   protected ProxyDataFactory createDataFactory(DataProxyFactoryProvider proxyProvider) {
+      return new AttributeDataProxyFactory(proxyProvider);
    }
 
    protected OrcsObjectFactory createOrcsObjectFactory(IdentityService identityService, ProxyDataFactory proxyDataFactory) {
       return new OrcsObjectFactoryImpl(proxyDataFactory, identityService);
    }
 
-   protected DataFactory createDataFactory(OrcsObjectFactory factory, IdFactory idFactory, ArtifactTypeCache artifactTypeCache) {
-      return new DataFactoryImpl(idFactory, factory, artifactTypeCache);
+   protected DataFactory createDataFactory(OrcsObjectFactory factory, IdFactory idFactory) {
+      return new DataFactoryImpl(idFactory, factory);
    }
 
    protected SqlHandlerFactory createHandlerFactory(IdentityService identityService) {

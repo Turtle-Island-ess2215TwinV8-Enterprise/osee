@@ -51,16 +51,25 @@ public class ArtifactFactory {
       this.artifactTypeCache = artifactTypeCache;
    }
 
-   @SuppressWarnings("unused")
    public ArtifactImpl createArtifact(ArtifactData artifactData) throws OseeCoreException {
       //TODO implement an artifact class resolver for specific artifact types
+      checkTypeCreationAllowed(artifactData.getTypeUuid());
       RelationContainer relationContainer = relationFactory.createRelationContainer(artifactData.getLocalId());
 
       return new ArtifactImpl(artifactTypeCache, artifactData, attributeFactory, relationContainer, new BranchProvider(
          branchCache, artifactData));
    }
 
+   private void checkTypeCreationAllowed(long uuid) throws OseeCoreException {
+      IArtifactType artifactType = artifactTypeCache.getByUuid(uuid);
+      Conditions.checkNotNull(artifactType, "artifactType", "Unable to find artifactType matching [%s]", uuid);
+
+      Conditions.checkExpressionFailOnTrue(artifactTypeCache.isAbstract(artifactType),
+         "Cannot create an instance of abstract type [%s]", artifactType);
+   }
+
    public ArtifactImpl createArtifact(IOseeBranch branch, IArtifactType artifactType, String guid) throws OseeCoreException {
+      checkTypeCreationAllowed(artifactType.getGuid());
       ArtifactData artifactData = factory.create(branch, artifactType, guid);
       ArtifactImpl artifact = createArtifact(artifactData);
       artifact.setLoaded(true);

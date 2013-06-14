@@ -14,7 +14,6 @@ import junit.framework.Assert;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.model.cache.AttributeTypeCache;
-import org.eclipse.osee.framework.core.model.type.AttributeType;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.DataProxyFactory;
 import org.junit.Before;
@@ -38,7 +37,6 @@ public class AttributeDataProxyFactoryTest {
    //@formatter:off
    @Mock DataProxyFactoryProvider proxyProvider;
    @Mock AttributeTypeCache attributeTypeCache;
-   @Mock AttributeType attributeType;
    @Mock DataProxyFactory dataProxyFactory;
    @Mock DataProxy proxy;
    //@formatter:on

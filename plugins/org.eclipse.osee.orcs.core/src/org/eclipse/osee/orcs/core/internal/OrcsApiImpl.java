@@ -142,7 +142,7 @@ public class OrcsApiImpl implements OrcsApi {
 
       proxyFactory = new ArtifactProxyFactory(artifactFactory);
 
-      txUpdateFactory = new TxDataHandlerFactoryImpl(dataStore.getDataFactory());
+      txUpdateFactory = new TxDataHandlerFactoryImpl(dataStore.getDataFactory(), orcsTypes.getAttributeTypes());
 
       ArtifactBuilderFactory builderFactory =
          new ArtifactBuilderFactoryImpl(logger, proxyFactory, artifactFactory, attributeFactory);
