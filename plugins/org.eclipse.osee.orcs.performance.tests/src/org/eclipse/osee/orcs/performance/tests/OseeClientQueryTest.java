@@ -29,7 +29,7 @@ import org.junit.Test;
 public class OseeClientQueryTest {
 
    @Rule
-   public ContiPerfRule rule = new ContiPerfRule();;
+   public ContiPerfRule rule = new ContiPerfRule();
 
    private OseeClient createClient;
 
