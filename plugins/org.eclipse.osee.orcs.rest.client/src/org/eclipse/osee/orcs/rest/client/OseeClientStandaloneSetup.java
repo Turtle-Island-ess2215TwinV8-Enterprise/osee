@@ -28,8 +28,6 @@ public final class OseeClientStandaloneSetup {
 
    public static OseeClient createClient(OseeClientConfig config) {
       Injector injector = Guice.createInjector(new StandaloneModule(config));
-      OseeClientImpl client = injector.getInstance(OseeClientImpl.class);
-      client.start();
-      return client;
+      return injector.getInstance(OseeClientImpl.class);
    }
 }
