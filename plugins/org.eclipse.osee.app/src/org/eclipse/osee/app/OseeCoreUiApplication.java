@@ -36,6 +36,7 @@ public final class OseeCoreUiApplication extends Application {
       Set<Object> singletons = new HashSet<Object>();
       singletons.add(new JaxRsExceptionMapper());
       singletons.add(new OseeAppsResource(orcsApi));
+      singletons.add(new OseeDashboardResource());
       return singletons;
    }
 }

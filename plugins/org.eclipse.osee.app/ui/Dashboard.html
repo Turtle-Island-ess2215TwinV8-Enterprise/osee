@@ -1,0 +1,39 @@
+<?file path="ui/pageDeclaration.html"?>
+<head>
+  <meta name="author" content="Donald G. Dunne" />
+  <title>OSEE Dashboard - <?user?></title>
+  <style>
+    <?file path="ui/OseeCore.css"?>
+    <?file path="ui/NavList.css"?>
+  </style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script>
+     <?file path="ui/OseeCore.js"?>
+     <?file path="ui/NavList.js"?>
+     <?file path="ui/ServerStatus.js"?>
+  </script>
+</head>
+
+<body>
+
+<div id="header" style="background-color:#98B8EB;">
+<h2 style="margin-bottom:0;height:30px;text-align:center;border:1px solid black;">OSEE Dashboard - <?user?></h2></div>
+
+<div id="navigator" style="background-color:#C3CCDB;height:700px;width:380px;float:left;border:1px solid black;">
+  <h2 id="navHeader" style="text-align:center;">Navigator</h2>
+  <ul id="navList">
+  		<?navListItems?>
+	</ul>
+</div>
+
+<div id="servers" style="background-color:#EEEEEE;height:250px;width:200px;float:right;border:1px solid black;">
+<h2 id="serversHeader" style="text-align:center;">Server Status</h2>
+<?serverStatus?>
+</div>
+
+<div id="footer" style="background-color:#98B8EB;clear:both;text-align:center;border:1px solid black;">
+Copyright © Eclipse.org</div>
+
+</body>
+</html>
+

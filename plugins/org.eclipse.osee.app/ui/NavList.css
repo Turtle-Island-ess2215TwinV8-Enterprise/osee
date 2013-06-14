@@ -1,0 +1,14 @@
+/* http://kilianvalkhof.com/uploads/listfilter/ */
+    #header{position:relative;line-height:1em;}
+    .filterform {
+      width:220px;
+      font-size:12px;
+      display:block;
+    }
+    .filterform input {
+      -moz-border-radius:5px;
+      border-radius:5px;
+      -webkit-border-radius:5px;
+      width:360px;
+    }
+    
