@@ -8,13 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.10.0",
  org.databene.contiperf;bundle-version="2.3.2",
  org.eclipse.osee.orcs.rest.model,
- org.eclipse.osee.orcs.rest.client,
- com.sun.jersey;bundle-version="1.8.0",
- com.sun.jersey.client.apache;bundle-version="1.8.0",
- org.apache.commons.httpclient,
- org.apache.commons.logging,
- org.apache.log4j,
- org.slf4j.api
+ org.eclipse.osee.orcs.rest.client
 Import-Package: org.eclipse.core.runtime,
  org.eclipse.osee.framework.core.data,
  org.eclipse.osee.framework.core.enums,
