@@ -1,0 +1,49 @@
+	#outerContainer {
+		width: 900px;
+		margin-left: 1em;
+	}
+	#title {
+		font-size:200%;
+		margin-left: 1em;
+		margin-right: 3em;
+		float:left;
+	}
+	#usageAndDescription {
+		width: 800px;
+		padding: 1em;
+		background-color: #40B3DF;
+		box-shadow: 10px 10px 5px #888888;
+		margin-bottom: 2em;
+	}
+	#oseeAppForm label {
+		color: #008000;
+		font-weight: bold;
+		margin-top: 8px;
+		margin-bottom: 0px;
+		width: 10em;
+		float: left;
+		clear: both;
+	}
+	input[type=text] {
+		width: 500px;
+		margin-bottom: 5px;
+		background-color: #FFFFCC;
+	}
+	#main_nav {
+		list-style-type: none;
+	}
+	#main_nav li {
+		float:right;
+		margin-top: 5px;
+		margin-left:3px;
+	}
+	#main_nav li a {
+		color:#FFF;
+ 		background-color:#0B86CB;
+		text-decoration:none;
+		padding:6px 15px;
+		-moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;
+	}
+	p.clear {
+		clear:both;
+	}
