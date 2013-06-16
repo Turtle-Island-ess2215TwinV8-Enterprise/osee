@@ -7,6 +7,13 @@ artifactType "Artifact" {
 	attribute "Relation Order"
 }
 
+artifactType "OSEE App" extends "Artifact" {
+	guid "AzfKiBOW8xuvrWxtsYwA"
+	uuid 0x0000000000000057
+	attribute "HTML Content"
+	attribute "Image Content"
+}
+
 artifactType "Access Control Model" extends "General Data" {
 	guid "CJr1bPfZQkbiuTA4FewA"
 	uuid 0x0000000000000002

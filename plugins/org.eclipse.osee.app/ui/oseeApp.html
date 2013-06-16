@@ -1,0 +1,39 @@
+<?file path="ui/pageDeclaration.html"?>
+<head>
+	<meta name="author" content="<?author?>" />
+	<title><?title?></title>
+	<style>
+		<?file path="ui/OseeCore.css"?>
+	</style>
+</head>
+<body> 
+	<div id="outerContainer">
+		<strong id="title"><?title?></strong>
+		
+		<ul id="main_nav">
+			<li><a href="<?title?>/source" target="_blank" class="active">Source</a></li>
+			<li><a href="#">Add to Dashboard (with values)</a></li>
+			<li><a href="#">Add to Dashboard</a></li>
+		</ul>
+		<p class="clear" />
+
+		<div id="usageAndDescription">
+			<?usageAndDescription?>
+		</div>
+		<form id="oseeAppForm">
+			<?widgets?>
+			<?dataLists?>
+			<br />
+			<input type="button" id="startToggleId" value="Start" />
+			<strong id="status"> </strong>
+			<br />
+			<dd id="log" />
+		</form>
+	</div>
+	<script type="text/javascript">
+		<?javaScript?>
+		<?file path="ui/OseeCore.js"?>
+		<?file path="ui/OseeApp.js"?>
+	</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?file path="ui/pageDeclaration.html"?>
+<head>
+	<meta name="author" content="Ryan D. Brooks" />
+	<title><?title?></title>
+	<style>
+		<?file path="ui/OseeCore.css"?>
+	</style>
+</head>
+<body> 
+		<strong id="title"><?title?></strong><input type="button" value="Duplicate" />
+		<p />
+		<textarea rows="30" cols="80" placeholder="Enter OSEE Applet code here" autofocus ></textarea>
+		<br />
+		<input type="button" value="Preview" onclick="onPreview()" />
+		<input type="button" value="Save" onclick="onSave()" />
+		Last Saved on xxxxxxxx
+		
+	<script>
+		function onPreview() {
+		   var button = document.getElementById("startToggleId");
+	   	button.value = "Start";
+		}
+		
+		function onSave() {
+			removeChildren(document.getElementById("log"));
+		   var button = document.getElementById("startToggleId");
+		   button.value = "Cancel";
+		   post("safety/status", statusHandler);
+		}
+		
+		var button = document.getElementById("startToggleId");
+	   button.addEventListener("click", startStopListener);
+	</script>
+</body>
+</html>

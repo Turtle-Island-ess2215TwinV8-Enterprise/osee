@@ -13,6 +13,7 @@ package org.eclipse.osee.app;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -78,7 +79,7 @@ public final class HtmlPageCreator {
       }
    }
 
-   public void readSubstitutions(String path) throws IOException {
+   public void readSubstitutions(String path) throws IOException, OseeArgumentException {
       InputStream keyValueStream = getInputStreamFromFile(path);
       Scanner scanner = new Scanner(keyValueStream, "UTF-8");
       scanner.useDelimiter(xmlProcessingInstructionStartOrEnd);
@@ -95,25 +96,32 @@ public final class HtmlPageCreator {
 
    private void realizePage(InputStream template) throws Exception {
       Scanner scanner = new Scanner(template, "UTF-8");
-      scanner.useDelimiter(xmlProcessingInstructionStartOrEnd);
+      try {
+         scanner.useDelimiter(xmlProcessingInstructionStartOrEnd);
 
-      boolean isProcessingInstruction = true;
-      while (scanner.hasNext()) {
-         processToken(substitutions, scanner.next(), isProcessingInstruction);
-         isProcessingInstruction = !isProcessingInstruction;
+         boolean isProcessingInstruction = true;
+         while (scanner.hasNext()) {
+            processToken(substitutions, scanner.next(), isProcessingInstruction);
+            isProcessingInstruction = !isProcessingInstruction;
+         }
+      } finally {
+         scanner.close();
       }
-      scanner.close();
    }
 
-   private InputStream getInputStreamFromFile(String path) throws IOException {
+   private InputStream getInputStreamFromFile(String path) throws IOException, OseeArgumentException {
       return getInputStreamFromFile(clazz, path);
    }
 
-   private InputStream getInputStreamFromFile(Class<?> clazz, String path) throws IOException {
-      return FrameworkUtil.getBundle(clazz).getResource(path).openStream();
+   private InputStream getInputStreamFromFile(Class<?> clazz, String path) throws IOException, OseeArgumentException {
+      URL url = FrameworkUtil.getBundle(clazz).getResource(path);
+      if (url == null) {
+         throw new OseeArgumentException("Resource [%s] not found.", path);
+      }
+      return url.openStream();
    }
 
-   private void loadFileInto(String path) throws IOException {
+   private void loadFileInto(String path) throws IOException, OseeArgumentException {
       Lib.inputStreamToStringBuilder(getInputStreamFromFile(path), htmlPage);
    }
 
@@ -138,7 +146,7 @@ public final class HtmlPageCreator {
       }
    }
 
-   private void handleInclude(String path) throws IOException {
+   private void handleInclude(String path) throws IOException, OseeArgumentException {
       boolean css = path.endsWith(".css");
       htmlPage.append(css ? "\n/* " : "\n<!-- ");
       htmlPage.append(path);

@@ -10,32 +10,32 @@
  *******************************************************************************/
 package org.eclipse.osee.app;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.ws.rs.core.Application;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import org.eclipse.osee.orcs.OrcsApi;
 
 /**
  * @author Ryan D. Brooks
  */
-public final class OseeCoreUiApplication extends Application {
-   private OrcsApi orcsApi;
+@Path("apps")
+public final class OseeAppsResource {
+   private final OrcsApi orcsApi;
 
-   public void setOrcsApi(OrcsApi orcsApi) {
+   public OseeAppsResource(OrcsApi orcsApi) {
       this.orcsApi = orcsApi;
    }
 
-   @Override
-   public Set<Class<?>> getClasses() {
-      Set<Class<?>> classes = new HashSet<Class<?>>();
-      return classes;
+   @GET
+   @Produces(MediaType.TEXT_HTML)
+   public String getAppletList() {
+      return "list all applets here as links";
    }
 
-   @Override
-   public Set<Object> getSingletons() {
-      Set<Object> singletons = new HashSet<Object>();
-      singletons.add(new JaxRsExceptionMapper());
-      singletons.add(new OseeAppsResource(orcsApi));
-      return singletons;
+   @Path("{appName}")
+   public OseeAppResource getApplet(@PathParam("appName") String appletName) {
+      return new OseeAppResource(appletName, orcsApi);
    }
 }

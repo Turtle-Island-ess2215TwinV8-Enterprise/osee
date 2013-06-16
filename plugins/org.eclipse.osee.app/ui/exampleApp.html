@@ -1,0 +1,15 @@
+<?author?>Ryan D. Brooks
+<?title?>Example App
+<?usageAndDescription?>
+       <strong>Generates report as an excel xml file.</strong>
+       <ul>
+               <li>Report Notes.  May be left blank.</li>
+               <li>Branch - the GUID of the branch from which to load the artifacts</li>
+       </ul>
+<?widgets?>
+       <label>Notes</label> <input type="text" id="notesId" />
+       <label>Branch</label> <input id="branch1" placeholder="type to filter" type="text" list="baselineBranches" />
+<?javaScript?>
+       function oseeAppStart(oseeAppParams) {
+               postWithStatus("safety/status");
+       }
