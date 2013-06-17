@@ -12,6 +12,7 @@ package org.eclipse.osee.orcs.core.internal.types.impl;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.data.IOseeBranch;
@@ -140,6 +141,11 @@ public class ArtifactTypesImpl implements ArtifactTypes {
    @Override
    public boolean exists(IArtifactType item) throws OseeCoreException {
       return getArtifactTypesIndex().existsByUuid(item.getGuid());
+   }
+
+   @Override
+   public Map<IOseeBranch, Collection<IAttributeType>> getAllAttributeTypes(IArtifactType artType) throws OseeCoreException {
+      return getArtifactTypesIndex().getAllAttributeTypes(artType);
    }
 
 }

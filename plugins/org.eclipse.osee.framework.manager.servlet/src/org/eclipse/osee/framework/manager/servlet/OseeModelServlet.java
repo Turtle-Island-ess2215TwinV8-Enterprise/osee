@@ -16,8 +16,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.eclipse.osee.framework.core.data.Identity;
 import org.eclipse.osee.framework.core.enums.CoreTranslatorId;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.exception.OseeExceptions;
@@ -25,14 +30,13 @@ import org.eclipse.osee.framework.core.model.OseeImportModelRequest;
 import org.eclipse.osee.framework.core.model.OseeImportModelResponse;
 import org.eclipse.osee.framework.core.server.ISessionManager;
 import org.eclipse.osee.framework.core.server.SecureOseeHttpServlet;
+import org.eclipse.osee.framework.core.services.IdentityService;
 import org.eclipse.osee.framework.core.translation.IDataTranslationService;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.framework.resource.management.IResource;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.OrcsApi;
 import org.eclipse.osee.orcs.OrcsTypes;
-import org.eclipse.osee.orcs.utility.ObjectProvider;
-import org.eclipse.osee.orcs.utility.Providers;
 
 /**
  * @author Roberto E. Escobar
@@ -43,11 +47,13 @@ public class OseeModelServlet extends SecureOseeHttpServlet {
 
    private final OrcsApi orcsApi;
    private final IDataTranslationService dataTransalatorService;
+   private final IdentityService identityService;
 
-   public OseeModelServlet(Log logger, ISessionManager sessionManager, IDataTranslationService dataTransalatorService, OrcsApi orcsApi) {
+   public OseeModelServlet(Log logger, ISessionManager sessionManager, IDataTranslationService dataTransalatorService, OrcsApi orcsApi, IdentityService identityService) {
       super(logger, sessionManager);
       this.dataTransalatorService = dataTransalatorService;
       this.orcsApi = orcsApi;
+      this.identityService = identityService;
    }
 
    private OrcsTypes getOrcsTypes() {
@@ -72,26 +78,24 @@ public class OseeModelServlet extends SecureOseeHttpServlet {
 
    @Override
    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-      ObjectProvider<ByteArrayOutputStream> output = Providers.returning(new ByteArrayOutputStream());
+      ByteArrayOutputStream output = new ByteArrayOutputStream();
       try {
          getOrcsTypes().writeTypes(output).call();
          resp.setStatus(HttpServletResponse.SC_ACCEPTED);
          resp.setContentType("text/plain");
          resp.setCharacterEncoding("UTF-8");
 
-         Lib.inputStreamToOutputStream(new ByteArrayInputStream(output.get().toByteArray()), resp.getOutputStream());
+         Lib.inputStreamToOutputStream(new ByteArrayInputStream(output.toByteArray()), resp.getOutputStream());
       } catch (Exception ex) {
          handleError(resp, req.getQueryString(), ex);
       }
    }
 
    @Override
-   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+   protected void doPost(final HttpServletRequest req, HttpServletResponse resp) throws IOException {
       try {
-         IDataTranslationService service = dataTransalatorService;
          final OseeImportModelRequest modelRequest =
-            service.convert(req.getInputStream(), CoreTranslatorId.OSEE_IMPORT_MODEL_REQUEST);
-
+            dataTransalatorService.convert(req.getInputStream(), CoreTranslatorId.OSEE_IMPORT_MODEL_REQUEST);
          IResource resource = new IResource() {
 
             @Override
@@ -107,6 +111,15 @@ public class OseeModelServlet extends SecureOseeHttpServlet {
 
             @Override
             public URI getLocation() {
+               try {
+                  String modelName = modelRequest.getModelName();
+                  if (!modelName.endsWith(".osee")) {
+                     modelName += ".osee";
+                  }
+                  return new URI("osee:/" + modelName);
+               } catch (URISyntaxException ex) {
+                  getLogger().error(ex, "Error creating location URI for model import");
+               }
                return null;
             }
 
@@ -126,14 +139,30 @@ public class OseeModelServlet extends SecureOseeHttpServlet {
 
          getOrcsTypes().loadTypes(resource, isInitializing(req)).call();
 
+         if (modelRequest.isPersistAllowed()) {
+            Set<Long> toStore = new LinkedHashSet<Long>();
+            getUuids(getOrcsTypes().getArtifactTypes().getAll(), toStore);
+            getUuids(getOrcsTypes().getAttributeTypes().getAll(), toStore);
+            getUuids(getOrcsTypes().getRelationTypes().getAll(), toStore);
+            getUuids(getOrcsTypes().getEnumTypes().getAll(), toStore);
+            identityService.store(toStore);
+         }
+
          resp.setStatus(HttpServletResponse.SC_ACCEPTED);
          resp.setContentType("text/xml");
          resp.setCharacterEncoding("UTF-8");
 
-         InputStream inputStream = service.convertToStream(modelResponse, CoreTranslatorId.OSEE_IMPORT_MODEL_RESPONSE);
+         InputStream inputStream =
+            dataTransalatorService.convertToStream(modelResponse, CoreTranslatorId.OSEE_IMPORT_MODEL_RESPONSE);
          Lib.inputStreamToOutputStream(inputStream, resp.getOutputStream());
       } catch (Exception ex) {
          handleError(resp, req.toString(), ex);
+      }
+   }
+
+   private void getUuids(Collection<? extends Identity<Long>> types, Set<Long> uuids) {
+      for (Identity<Long> type : types) {
+         uuids.add(type.getGuid());
       }
    }
 }

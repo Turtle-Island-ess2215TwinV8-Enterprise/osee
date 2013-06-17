@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Boeing.
+ * Copyright (c) 2012 Boeing.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,16 @@
  * Contributors:
  *     Boeing - initial API and implementation
  *******************************************************************************/
-package org.eclipse.osee.orcs.utility;
+package org.eclipse.osee.orcs.core.ds;
+
+import org.eclipse.osee.framework.core.exception.OseeCoreException;
 
 /**
  * @author Roberto E. Escobar
  */
-public final class Providers {
+public interface ProxyDataFactory {
 
-   private Providers() {
-      // utility class
-   }
+   DataProxy createProxy(String dataProxyFactoryId, boolean isEnumOrBoolean, long typeUuid, String value, String uri) throws OseeCoreException;
 
-   public static <T> ObjectProvider<T> returning(final T object) {
-      return new ObjectProvider<T>() {
-
-         @Override
-         public T get() {
-            return object;
-         }
-      };
-   }
-
+   DataProxy createProxy(String dataProxyFactoryId, boolean isEnumOrBoolean, long typeUuid, Object... data) throws OseeCoreException;
 }

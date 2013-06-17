@@ -29,7 +29,7 @@ import org.eclipse.osee.framework.database.core.JoinUtility;
 import org.eclipse.osee.framework.jdk.core.type.HashCollection;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
-import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.OrcsVisitor;
@@ -120,7 +120,7 @@ public class TxSqlBuilderImpl implements OrcsVisitor, TxSqlBuilder {
    }
 
    @Override
-   public void visit(AttributeData data) throws OseeCoreException {
+   public void visit(AttributePersistData data) throws OseeCoreException {
       if (!isNewAndDeleted(data)) {
          boolean isRowAllowed = isGammaCreationAllowed(data);
          updateTxValues(data);

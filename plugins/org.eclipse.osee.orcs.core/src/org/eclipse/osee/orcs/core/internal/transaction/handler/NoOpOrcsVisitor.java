@@ -11,7 +11,7 @@
 package org.eclipse.osee.orcs.core.internal.transaction.handler;
 
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
-import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.OrcsVisitor;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 
@@ -30,7 +30,7 @@ public class NoOpOrcsVisitor implements OrcsVisitor {
    }
 
    @Override
-   public void visit(AttributeData newData) {
+   public void visit(AttributePersistData newData) {
       // Do Nothing
    }
 

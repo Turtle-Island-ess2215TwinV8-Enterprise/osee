@@ -13,8 +13,6 @@ package org.eclipse.osee.orcs.db.internal.loader;
 import junit.framework.Assert;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.model.cache.AttributeTypeCache;
-import org.eclipse.osee.framework.core.model.type.AttributeType;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.DataProxyFactory;
 import org.junit.Before;
@@ -37,8 +35,6 @@ public class AttributeDataProxyFactoryTest {
 
    //@formatter:off
    @Mock DataProxyFactoryProvider proxyProvider;
-   @Mock AttributeTypeCache attributeTypeCache;
-   @Mock AttributeType attributeType;
    @Mock DataProxyFactory dataProxyFactory;
    @Mock DataProxy proxy;
    //@formatter:on
@@ -48,7 +44,7 @@ public class AttributeDataProxyFactoryTest {
    @Before
    public void setUp() {
       MockitoAnnotations.initMocks(this);
-      factory = new AttributeDataProxyFactory(proxyProvider, attributeTypeCache);
+      factory = new AttributeDataProxyFactory(proxyProvider);
    }
 
    @Test
@@ -57,7 +53,7 @@ public class AttributeDataProxyFactoryTest {
 
       thrown.expect(OseeArgumentException.class);
       thrown.expectMessage("data cannot be null");
-      factory.createProxy(typeUuid, (Object[]) null);
+      factory.createProxy("proxyfactory", false, typeUuid, (Object[]) null);
    }
 
    @Test
@@ -67,18 +63,18 @@ public class AttributeDataProxyFactoryTest {
 
       thrown.expect(OseeArgumentException.class);
       thrown.expectMessage("Data must have at least [2] elements - size was [1]");
-      factory.createProxy(typeUuid, data);
+      factory.createProxy("proxyfactory", false, typeUuid, data);
    }
 
    @Test
-   public void testCreateFromDataArrayTypeNotFound() throws OseeCoreException {
+   public void testCreateFromDataArrayProxyFactoryNotFound() throws OseeCoreException {
       long typeUuid = 45L;
       Object[] data = new Object[] {"hello", "uri"};
 
       thrown.expect(OseeArgumentException.class);
-      thrown.expectMessage("AttributeType cannot be null - Unable to find attributeType for [45]");
+      thrown.expectMessage("Unable to find data proxy factory for [proxyfactory]");
 
-      factory.createProxy(typeUuid, data);
+      factory.createProxy("proxyfactory", false, typeUuid, data);
    }
 
    @Test
@@ -87,12 +83,9 @@ public class AttributeDataProxyFactoryTest {
       String value = "hello";
       String uri = "theUri";
 
-      Mockito.when(attributeTypeCache.getByGuid(45L)).thenReturn(attributeType);
-      Mockito.when(attributeType.getAttributeProviderId()).thenReturn("org.eclipse.proxyfactory");
-
       thrown.expect(OseeArgumentException.class);
       thrown.expectMessage("DataProxyFactory cannot be null - Unable to find data proxy factory for [proxyfactory]");
-      factory.createProxy(typeUuid, value, uri);
+      factory.createProxy("org.eclipse.osee.proxyfactory", false, typeUuid, value, uri);
    }
 
    @Test
@@ -101,12 +94,10 @@ public class AttributeDataProxyFactoryTest {
       String value = "hello";
       String uri = "theUri";
 
-      Mockito.when(attributeTypeCache.getByGuid(45L)).thenReturn(attributeType);
-      Mockito.when(attributeType.getAttributeProviderId()).thenReturn("org.eclipse.proxyfactory");
       Mockito.when(proxyProvider.getFactory("proxyfactory")).thenReturn(dataProxyFactory);
       Mockito.when(dataProxyFactory.createInstance("proxyfactory")).thenReturn(proxy);
 
-      DataProxy theProxy = factory.createProxy(typeUuid, value, uri);
+      DataProxy theProxy = factory.createProxy("org.eclipse.osee.proxyfactory", false, typeUuid, value, uri);
 
       Assert.assertEquals(proxy, theProxy);
       Mockito.verify(proxy).setData("hello", "theUri");
@@ -118,12 +109,10 @@ public class AttributeDataProxyFactoryTest {
       String value = "hello";
       String uri = null;
 
-      Mockito.when(attributeTypeCache.getByGuid(45L)).thenReturn(attributeType);
-      Mockito.when(attributeType.getAttributeProviderId()).thenReturn("org.eclipse.proxyfactory");
       Mockito.when(proxyProvider.getFactory("proxyfactory")).thenReturn(dataProxyFactory);
       Mockito.when(dataProxyFactory.createInstance("proxyfactory")).thenReturn(proxy);
 
-      DataProxy theProxy = factory.createProxy(typeUuid, value, uri);
+      DataProxy theProxy = factory.createProxy("org.eclipse.osee.proxyfactory", false, typeUuid, value, uri);
 
       Assert.assertEquals(proxy, theProxy);
       Mockito.verify(proxy).setData("hello", null);
@@ -135,12 +124,10 @@ public class AttributeDataProxyFactoryTest {
       String value = null;
       String uri = "theUri";
 
-      Mockito.when(attributeTypeCache.getByGuid(45L)).thenReturn(attributeType);
-      Mockito.when(attributeType.getAttributeProviderId()).thenReturn("org.eclipse.proxyfactory");
       Mockito.when(proxyProvider.getFactory("proxyfactory")).thenReturn(dataProxyFactory);
       Mockito.when(dataProxyFactory.createInstance("proxyfactory")).thenReturn(proxy);
 
-      DataProxy theProxy = factory.createProxy(typeUuid, value, uri);
+      DataProxy theProxy = factory.createProxy("org.eclipse.osee.proxyfactory", false, typeUuid, value, uri);
 
       Assert.assertEquals(proxy, theProxy);
       Mockito.verify(proxy).setData(null, "theUri");
@@ -152,12 +139,10 @@ public class AttributeDataProxyFactoryTest {
       String value = null;
       String uri = null;
 
-      Mockito.when(attributeTypeCache.getByGuid(45L)).thenReturn(attributeType);
-      Mockito.when(attributeType.getAttributeProviderId()).thenReturn("org.eclipse.proxyfactory");
       Mockito.when(proxyProvider.getFactory("proxyfactory")).thenReturn(dataProxyFactory);
       Mockito.when(dataProxyFactory.createInstance("proxyfactory")).thenReturn(proxy);
 
-      DataProxy theProxy = factory.createProxy(typeUuid, value, uri);
+      DataProxy theProxy = factory.createProxy("org.eclipse.osee.proxyfactory", false, typeUuid, value, uri);
 
       Assert.assertEquals(proxy, theProxy);
       Mockito.verify(proxy).setData(null, null);
@@ -169,32 +154,27 @@ public class AttributeDataProxyFactoryTest {
       String value = "hello";
       String uri = null;
 
-      Mockito.when(attributeTypeCache.getByGuid(45L)).thenReturn(attributeType);
-      Mockito.when(attributeType.getAttributeProviderId()).thenReturn("org.eclipse.proxyfactory");
       Mockito.when(proxyProvider.getFactory("proxyfactory")).thenReturn(dataProxyFactory);
       Mockito.when(dataProxyFactory.createInstance("proxyfactory")).thenReturn(proxy);
 
       AttributeDataProxyFactory spy = Mockito.spy(factory);
 
-      spy.createProxy(typeUuid, value, uri);
+      spy.createProxy("org.eclipse.osee.proxyfactory", false, typeUuid, value, uri);
       Mockito.verify(spy, Mockito.times(0)).intern(value);
 
       Mockito.reset(spy);
 
-      Mockito.when(attributeType.isEnumerated()).thenReturn(true);
-      spy.createProxy(typeUuid, value, uri);
+      spy.createProxy("org.eclipse.osee.proxyfactory", true, typeUuid, value, uri);
       Mockito.verify(spy).intern(value);
 
       Mockito.reset(spy);
 
-      Mockito.when(attributeType.isEnumerated()).thenReturn(false);
-      spy.createProxy(typeUuid, value, uri);
+      spy.createProxy("org.eclipse.osee.proxyfactory", false, typeUuid, value, uri);
       Mockito.verify(spy, Mockito.times(0)).intern(value);
 
       Mockito.reset(spy);
 
-      Mockito.when(attributeType.getBaseAttributeTypeId()).thenReturn("hellobooleanx");
-      spy.createProxy(typeUuid, value, uri);
+      spy.createProxy("org.eclipse.osee.proxyfactory", true, typeUuid, value, uri);
       Mockito.verify(spy).intern(value);
    }
 }

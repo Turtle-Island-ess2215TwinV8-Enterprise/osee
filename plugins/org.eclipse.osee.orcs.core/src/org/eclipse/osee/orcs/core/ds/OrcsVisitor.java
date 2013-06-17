@@ -19,7 +19,7 @@ public interface OrcsVisitor {
 
    void visit(ArtifactData data) throws OseeCoreException;
 
-   void visit(AttributeData data) throws OseeCoreException;
+   void visit(AttributePersistData data) throws OseeCoreException;
 
    void visit(RelationData data) throws OseeCoreException;
 

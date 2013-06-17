@@ -11,13 +11,12 @@
 package org.eclipse.osee.orcs.db.internal.loader;
 
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.model.cache.AttributeTypeCache;
-import org.eclipse.osee.framework.core.model.type.AttributeType;
 import org.eclipse.osee.framework.core.util.Conditions;
 import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.DataProxyFactory;
+import org.eclipse.osee.orcs.core.ds.ProxyDataFactory;
 
 /**
  * @author Roberto E. Escobar
@@ -25,20 +24,14 @@ import org.eclipse.osee.orcs.core.ds.DataProxyFactory;
 public class AttributeDataProxyFactory implements ProxyDataFactory {
 
    private final DataProxyFactoryProvider proxyProvider;
-   private final AttributeTypeCache attributeTypeCache;
 
-   public AttributeDataProxyFactory(DataProxyFactoryProvider proxyProvider, AttributeTypeCache attributeTypeCache) {
+   public AttributeDataProxyFactory(DataProxyFactoryProvider proxyProvider) {
       super();
       this.proxyProvider = proxyProvider;
-      this.attributeTypeCache = attributeTypeCache;
    }
 
    @Override
-   public DataProxy createProxy(long typeUuid, String value, String uri) throws OseeCoreException {
-      AttributeType attributeType = attributeTypeCache.getByGuid(typeUuid);
-      Conditions.checkNotNull(attributeType, "AttributeType", "Unable to find attributeType for [%s]", typeUuid);
-
-      String dataProxyFactoryId = attributeType.getAttributeProviderId();
+   public DataProxy createProxy(String dataProxyFactoryId, boolean isEnumOrBoolean, long typeUuid, String value, String uri) throws OseeCoreException {
       if (dataProxyFactoryId.contains(".")) {
          dataProxyFactoryId = Lib.getExtension(dataProxyFactoryId);
       }
@@ -47,15 +40,15 @@ public class AttributeDataProxyFactory implements ProxyDataFactory {
       Conditions.checkNotNull(factory, "DataProxyFactory", "Unable to find data proxy factory for [%s]",
          dataProxyFactoryId);
 
-      String checkedValue = intern(attributeType, value);
+      String checkedValue = intern(isEnumOrBoolean, value);
       DataProxy proxy = factory.createInstance(dataProxyFactoryId);
       proxy.setData(checkedValue, uri);
       return proxy;
    }
 
-   private String intern(AttributeType attributeType, String original) {
+   private String intern(boolean isEnumOrBoolean, String original) {
       String value = original;
-      if (isEnumOrBoolean(attributeType)) {
+      if (isEnumOrBoolean) {
          value = intern(value);
       }
       return value;
@@ -65,22 +58,14 @@ public class AttributeDataProxyFactory implements ProxyDataFactory {
       return Strings.intern(value);
    }
 
-   protected boolean isEnumOrBoolean(AttributeType attributeType) {
-      boolean isEnumAttribute = attributeType.isEnumerated();
-      String baseType = attributeType.getBaseAttributeTypeId();
-      boolean isBooleanAttribute = baseType != null && baseType.toLowerCase().contains("boolean");
-
-      return isBooleanAttribute || isEnumAttribute;
-   }
-
    @Override
-   public DataProxy createProxy(long typeUuid, Object... data) throws OseeCoreException {
+   public DataProxy createProxy(String dataProxyFactoryId, boolean isEnumOrBoolean, long typeUuid, Object... data) throws OseeCoreException {
       Conditions.checkNotNull(data, "data");
       Conditions.checkExpressionFailOnTrue(data.length < 2, "Data must have at least [2] elements - size was [%s]",
          data.length);
 
       String value = (String) data[0];
       String uri = (String) data[1];
-      return createProxy(typeUuid, value, uri);
+      return createProxy(dataProxyFactoryId, isEnumOrBoolean, typeUuid, value, uri);
    }
 }

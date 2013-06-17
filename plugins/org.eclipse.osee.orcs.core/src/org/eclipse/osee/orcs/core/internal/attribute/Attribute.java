@@ -38,11 +38,13 @@ public abstract class Attribute<T> implements HasOrcsData<AttributeData>, Compar
    private String defaultValue;
    private Log logger;
    private AttributeData attributeData;
+   private DataProxy dataProxy;
 
-   public void internalInitialize(AttributeTypes attributeTypeCache, Reference<AttributeManager> containerReference, AttributeData attributeData, boolean isDirty, boolean setDefaultValue) throws OseeCoreException {
+   public void internalInitialize(AttributeTypes attributeTypeCache, Reference<AttributeManager> containerReference, AttributeData attributeData, boolean isDirty, boolean setDefaultValue, DataProxy dataProxy) throws OseeCoreException {
       this.attributeTypeCache = attributeTypeCache;
       this.containerReference = containerReference;
       this.attributeData = attributeData;
+      this.dataProxy = dataProxy;
 
       if (setDefaultValue) {
          setToDefaultValue();
@@ -171,7 +173,7 @@ public abstract class Attribute<T> implements HasOrcsData<AttributeData>, Compar
    }
 
    public DataProxy getDataProxy() {
-      return getOrcsData().getDataProxy();
+      return dataProxy;
    }
 
    /**

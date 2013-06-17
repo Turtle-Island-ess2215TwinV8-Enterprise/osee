@@ -14,7 +14,6 @@ import static junit.framework.Assert.assertEquals;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
@@ -43,7 +42,7 @@ public class IntegrationUtil {
       verifyData(data.getVersion(), index, values);
    }
 
-   public static void verifyData(AttributeData data, Object... values) throws OseeCoreException {
+   public static void verifyData(AttributeData data, Object... values) {
       int index = 0;
       assertEquals(data.getLocalId(), values[index++]);
       assertEquals(data.getArtifactId(), values[index++]);
@@ -51,10 +50,6 @@ public class IntegrationUtil {
       assertEquals(data.getTypeUuid(), values[index++]);
 
       index = verifyData(data.getVersion(), index, values);
-
-      Object[] proxied = data.getDataProxy().getData();
-      assertEquals(proxied[0], values[index++]); // value
-      assertEquals(proxied[1], values[index++]); // uri
    }
 
    public static void verifyData(RelationData data, Object... values) {

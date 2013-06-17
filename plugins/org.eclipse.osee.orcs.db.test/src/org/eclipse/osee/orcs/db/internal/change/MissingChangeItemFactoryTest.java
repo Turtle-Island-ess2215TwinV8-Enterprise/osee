@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.db.internal.change;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +38,6 @@ import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributeDataHandler;
 import org.eclipse.osee.orcs.core.ds.DataLoader;
 import org.eclipse.osee.orcs.core.ds.DataLoaderFactory;
-import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.RelationDataHandler;
@@ -338,12 +341,10 @@ public class MissingChangeItemFactoryTest {
    private static AttributeData createAttributeData(int artId, int attrId, long gamma, ModificationType modType) {
       AttributeData data = mock(AttributeData.class);
       VersionData version = mock(VersionData.class);
-      DataProxy proxy = mock(DataProxy.class);
       when(data.getModType()).thenReturn(modType);
       when(data.getVersion()).thenReturn(version);
       when(data.getArtifactId()).thenReturn(artId);
       when(data.getLocalId()).thenReturn(attrId);
-      when(data.getDataProxy()).thenReturn(proxy);
       when(data.getVersion().getGammaId()).thenReturn(gamma);
       return data;
    }

@@ -19,8 +19,8 @@ public interface AttributeData extends OrcsData {
 
    void setArtifactId(int artifactId);
 
-   DataProxy getDataProxy();
+   String getValue();
 
-   void setDataProxy(DataProxy proxy);
+   String getUri();
 
 }

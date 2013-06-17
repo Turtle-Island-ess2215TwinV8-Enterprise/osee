@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.core.ds;
 
-
 /**
  * @author Roberto E. Escobar
  */
@@ -21,6 +20,8 @@ public interface OrcsDataStore extends OrcsTypesDataStore {
    DataStoreAdmin getDataStoreAdmin();
 
    DataFactory getDataFactory();
+
+   ProxyDataFactory getProxyDataFactory();
 
    DataLoaderFactory getDataLoaderFactory();
 

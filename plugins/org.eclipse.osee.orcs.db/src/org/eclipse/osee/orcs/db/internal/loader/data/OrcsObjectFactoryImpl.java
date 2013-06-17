@@ -10,19 +10,17 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.db.internal.loader.data;
 
-import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.data.IRelationType;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.framework.core.services.IdentityService;
+import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
-import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.db.internal.OrcsObjectFactory;
-import org.eclipse.osee.orcs.db.internal.loader.ProxyDataFactory;
 import org.eclipse.osee.orcs.db.internal.loader.RelationalConstants;
 
 /**
@@ -30,12 +28,10 @@ import org.eclipse.osee.orcs.db.internal.loader.RelationalConstants;
  */
 public class OrcsObjectFactoryImpl implements OrcsObjectFactory {
 
-   private final ProxyDataFactory proxyFactory;
    private final IdentityService identityService;
 
-   public OrcsObjectFactoryImpl(ProxyDataFactory proxyFactory, IdentityService identityService) {
+   public OrcsObjectFactoryImpl(IdentityService identityService) {
       super();
-      this.proxyFactory = proxyFactory;
       this.identityService = identityService;
    }
 
@@ -89,8 +85,7 @@ public class OrcsObjectFactoryImpl implements OrcsObjectFactory {
    }
 
    @Override
-   public ArtifactData createArtifactData(VersionData version, int localId, IArtifactType type, ModificationType modType, String guid, String humanReadableId) {
-      long typeUuid = type.getGuid();
+   public ArtifactData createArtifactData(VersionData version, int localId, long typeUuid, ModificationType modType, String guid, String humanReadableId) {
       return createArtifactFromRow(version, localId, typeUuid, modType, typeUuid, modType, guid, humanReadableId);
    }
 
@@ -104,25 +99,23 @@ public class OrcsObjectFactoryImpl implements OrcsObjectFactory {
    @Override
    public AttributeData createAttributeData(VersionData version, int localId, int localTypeID, ModificationType modType, int artifactId, String value, String uri) throws OseeCoreException {
       long typeId = toUuid(localTypeID);
-      DataProxy proxy = proxyFactory.createProxy(typeId, value, uri);
-      return createAttributeFromRow(version, localId, typeId, modType, typeId, modType, artifactId, proxy);
+      return createAttributeFromRow(version, localId, typeId, modType, typeId, modType, artifactId, value, uri);
    }
 
    @Override
-   public AttributeData createCopy(AttributeData source) throws OseeCoreException {
+   public AttributeData createCopy(AttributeData source) {
       VersionData newVersion = createCopy(source.getVersion());
       long typeId = source.getTypeUuid();
-      DataProxy sourceProxy = source.getDataProxy();
-      DataProxy newProxy = proxyFactory.createProxy(typeId, sourceProxy.getData());
       return createAttributeFromRow(newVersion, source.getLocalId(), typeId, source.getModType(),
-         source.getLoadedTypeUuid(), source.getLoadedModType(), source.getArtifactId(), newProxy);
+         source.getLoadedTypeUuid(), source.getLoadedModType(), source.getArtifactId(), source.getValue(),
+         source.getUri());
    }
 
    @Override
    public AttributeData createAttributeData(VersionData version, int localId, IAttributeType type, ModificationType modType, int artId) throws OseeCoreException {
       long typeId = type.getGuid();
-      DataProxy proxy = proxyFactory.createProxy(typeId, "", "");
-      return createAttributeFromRow(version, localId, typeId, modType, typeId, modType, artId, proxy);
+      return createAttributeFromRow(version, localId, typeId, modType, typeId, modType, artId, Strings.EMPTY_STRING,
+         Strings.EMPTY_STRING);
    }
 
    @Override
@@ -149,15 +142,16 @@ public class OrcsObjectFactoryImpl implements OrcsObjectFactory {
       return data;
    }
 
-   private AttributeData createAttributeFromRow(VersionData version, int localId, long localTypeID, ModificationType modType, long loadedLocalTypeID, ModificationType loadedModType, int artifactId, DataProxy proxy) {
-      AttributeData data = new AttributeDataImpl(version);
+   private AttributeData createAttributeFromRow(VersionData version, int localId, long localTypeID, ModificationType modType, long loadedLocalTypeID, ModificationType loadedModType, int artifactId, String value, String uri) {
+      AttributeDataImpl data = new AttributeDataImpl(version);
       data.setLocalId(localId);
       data.setTypeUuid(localTypeID);
       data.setLoadedTypeUuid(loadedLocalTypeID);
       data.setModType(modType);
       data.setLoadedModType(loadedModType);
       data.setArtifactId(artifactId);
-      data.setDataProxy(proxy);
+      data.setValue(value);
+      data.setUri(uri);
       return data;
    }
 

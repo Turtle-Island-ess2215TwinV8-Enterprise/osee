@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.db.internal.loader.data;
 
+import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
-import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.db.internal.loader.RelationalConstants;
 
@@ -21,11 +21,29 @@ import org.eclipse.osee.orcs.db.internal.loader.RelationalConstants;
 public class AttributeDataImpl extends OrcsObjectImpl implements AttributeData {
 
    private int artifactId = RelationalConstants.ART_ID_SENTINEL;
-
-   private DataProxy proxy;
+   private String value;
+   private String uri;
 
    public AttributeDataImpl(VersionData version) {
       super(version);
+   }
+
+   public void setValue(String value) {
+      this.value = value;
+   }
+
+   public void setUri(String uri) {
+      this.uri = uri;
+   }
+
+   @Override
+   public String getValue() {
+      return value;
+   }
+
+   @Override
+   public String getUri() {
+      return uri;
    }
 
    @Override
@@ -34,18 +52,8 @@ public class AttributeDataImpl extends OrcsObjectImpl implements AttributeData {
    }
 
    @Override
-   public DataProxy getDataProxy() {
-      return proxy;
-   }
-
-   @Override
    public void setArtifactId(int artifactId) {
       this.artifactId = artifactId;
-   }
-
-   @Override
-   public void setDataProxy(DataProxy proxy) {
-      this.proxy = proxy;
    }
 
    @Override
@@ -53,7 +61,7 @@ public class AttributeDataImpl extends OrcsObjectImpl implements AttributeData {
       final int prime = 31;
       int result = super.hashCode();
       result = prime * result + artifactId;
-      result = prime * result + ((proxy == null) ? 0 : proxy.hashCode());
+      result = prime * result + (Strings.isValid(value) ? value.hashCode() : uri.hashCode());
       return result;
    }
 
@@ -72,18 +80,23 @@ public class AttributeDataImpl extends OrcsObjectImpl implements AttributeData {
       if (artifactId != other.artifactId) {
          return false;
       }
-      if (proxy == null) {
-         if (other.proxy != null) {
+      if (Strings.isValid(value)) {
+         if (!value.equals(other.getValue())) {
             return false;
          }
-      } else if (!proxy.equals(other.proxy)) {
-         return false;
+      }
+      if (Strings.isValid(uri)) {
+         if (!uri.equals(other.getUri())) {
+            return false;
+         }
       }
       return true;
    }
 
    @Override
    public String toString() {
-      return "AttributeData [artifactId=" + artifactId + " " + super.toString() + ", proxy=" + proxy + "]";
+      return "AttributeData [artifactId=" + artifactId + //
+      " " + super.toString() + ", " + //
+      (Strings.isValid(value) ? "value=" + value : "uri=" + uri) + "]";
    }
 }

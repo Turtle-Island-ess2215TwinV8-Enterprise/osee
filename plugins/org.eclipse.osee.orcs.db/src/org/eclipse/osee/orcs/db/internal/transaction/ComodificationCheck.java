@@ -23,6 +23,7 @@ import org.eclipse.osee.orcs.core.ds.ArtifactDataHandler;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributeDataHandler;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.DataLoader;
 import org.eclipse.osee.orcs.core.ds.DataLoaderFactory;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
@@ -102,7 +103,7 @@ public class ComodificationCheck implements TransactionCheck {
       }
 
       @Override
-      public void visit(AttributeData data) {
+      public void visit(AttributePersistData data) {
          if (data.getVersion().isInStorage()) {
             attributes.put(data.getLocalId(), data);
          }

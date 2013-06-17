@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.osee.orcs.db.internal.loader.data;
 
-import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
@@ -23,7 +22,7 @@ public interface ArtifactObjectFactory extends VersionObjectFactory {
 
    ArtifactData createArtifactData(VersionData version, int localId, int localTypeID, ModificationType modType, String guid, String humanReadableId) throws OseeCoreException;
 
-   ArtifactData createArtifactData(VersionData version, int generateArtId, IArtifactType type, ModificationType modType, String guidToSet, String humanReadableId);
+   ArtifactData createArtifactData(VersionData version, int generateArtId, long typeUuid, ModificationType modType, String guidToSet, String humanReadableId);
 
    ArtifactData createCopy(ArtifactData source);
 }

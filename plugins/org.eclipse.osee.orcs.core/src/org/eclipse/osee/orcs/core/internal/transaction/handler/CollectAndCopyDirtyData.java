@@ -17,10 +17,12 @@ import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTxDataImpl;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
+import org.eclipse.osee.orcs.core.internal.attribute.AttributePersistDataImpl;
 
 /**
  * Takes a snapshot of all the dirty internal OrcsData
@@ -43,7 +45,7 @@ public class CollectAndCopyDirtyData implements ArtifactVisitor {
    public void visit(ArtifactImpl artifact) throws OseeCoreException {
       if (artifact.isDirty()) {
          ArtifactData copy = dataFactory.clone(artifact.getOrcsData());
-         txData = new ArtifactTxDataImpl(copy, new ArrayList<AttributeData>());
+         txData = new ArtifactTxDataImpl(copy, new ArrayList<AttributePersistData>());
          data.add(txData);
       }
    }
@@ -52,7 +54,8 @@ public class CollectAndCopyDirtyData implements ArtifactVisitor {
    public void visit(Attribute<?> attribute) throws OseeCoreException {
       if (attribute.isDirty()) {
          AttributeData copy = dataFactory.clone(attribute.getOrcsData());
-         txData.getAttributeData().add(copy);
+         AttributePersistData withProxy = new AttributePersistDataImpl(copy, attribute.getDataProxy());
+         txData.getAttributePersistData().add(withProxy);
       }
    }
 }

@@ -22,15 +22,12 @@ import org.eclipse.osee.framework.core.enums.CoreBranches;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.model.cache.ArtifactTypeCache;
-import org.eclipse.osee.framework.core.model.type.ArtifactType;
 import org.eclipse.osee.framework.core.services.IdentityService;
 import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.framework.jdk.core.util.HumanReadableId;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
-import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.data.HasLocalId;
@@ -55,25 +52,20 @@ public class DataFactoryImplTest {
 
    //@formatter:off
    @Mock private IdFactory idFactory;
-   @Mock private ProxyDataFactory proxyFactory;
    @Mock private IdentityService identityService;
-   @Mock private ArtifactTypeCache artifactCache;
    
    @Mock private ArtifactData artData;
    @Mock private AttributeData attrData;
    @Mock private RelationData relData;
    @Mock private VersionData verData;
-   @Mock private DataProxy dataProxy;
-   @Mock private DataProxy otherDataProxy;
    
-   @Mock private ArtifactType artifactType;
    @Mock private IArtifactType artifactTypeToken;
    //@formatter:on
 
    private DataFactory dataFactory;
-   private Object[] expectedProxyData;
    private String guid;
    private String hrid;
+   private final Long typeUuid = 4536L;
 
    @Before
    public void setUp() throws OseeCoreException {
@@ -82,8 +74,9 @@ public class DataFactoryImplTest {
       guid = GUID.create();
       hrid = HumanReadableId.generate();
 
-      OrcsObjectFactory objectFactory = new OrcsObjectFactoryImpl(proxyFactory, identityService);
-      dataFactory = new DataFactoryImpl(idFactory, objectFactory, artifactCache);
+      OrcsObjectFactory objectFactory = new OrcsObjectFactoryImpl(identityService);
+      dataFactory = new DataFactoryImpl(idFactory, objectFactory);
+      when(artifactTypeToken.getGuid()).thenReturn(typeUuid);
 
       // VERSION
       when(verData.getBranchId()).thenReturn(11);
@@ -110,12 +103,6 @@ public class DataFactoryImplTest {
       when(attrData.getLoadedModType()).thenReturn(ModificationType.NEW);
       when(attrData.getLoadedTypeUuid()).thenReturn(777L);
       when(attrData.getArtifactId()).thenReturn(88);
-      when(attrData.getDataProxy()).thenReturn(dataProxy);
-
-      expectedProxyData = new Object[] {45, "hello", "hello"};
-      when(dataProxy.getData()).thenReturn(expectedProxyData);
-      when(proxyFactory.createProxy(666L, expectedProxyData)).thenReturn(otherDataProxy);
-      when(otherDataProxy.getData()).thenReturn(new Object[] {45, "hello", "hello"});
 
       // RELATION
       when(relData.getVersion()).thenReturn(verData);
@@ -135,58 +122,35 @@ public class DataFactoryImplTest {
    @Test
    public void testCreateArtifactDataNullType() throws OseeCoreException {
       when(artifactTypeToken.toString()).thenReturn("artifactTypeToken");
-      when(artifactCache.get(artifactTypeToken)).thenReturn(null);
 
       thrown.expect(OseeArgumentException.class);
-      thrown.expectMessage("artifactType cannot be null - Unable to find artifactType matching [artifactTypeToken]");
-      dataFactory.create(CoreBranches.COMMON, artifactTypeToken, guid, hrid);
-   }
-
-   @Test
-   public void testCreateArtifactDataUsingAbstratArtifactType() throws OseeCoreException {
-      when(artifactType.toString()).thenReturn("artifactType");
-      when(artifactCache.get(artifactTypeToken)).thenReturn(artifactType);
-      when(artifactType.isAbstract()).thenReturn(true);
-
-      thrown.expect(OseeArgumentException.class);
-      thrown.expectMessage("Cannot create an instance of abstract type [artifactType]");
+      thrown.expectMessage("Invalid guid [null] during artifact creation");
       dataFactory.create(CoreBranches.COMMON, artifactTypeToken, guid, hrid);
    }
 
    @Test
    public void testCreateArtifactDataInvalidGuid() throws OseeCoreException {
-      when(artifactCache.get(artifactTypeToken)).thenReturn(artifactType);
-      when(artifactType.isAbstract()).thenReturn(false);
-      when(artifactType.toString()).thenReturn("artifactType");
-
       when(idFactory.getUniqueGuid(guid)).thenReturn("123");
 
       thrown.expect(OseeArgumentException.class);
-      thrown.expectMessage("Invalid guid [123] during artifact creation [type: artifactType]");
+      thrown.expectMessage("Invalid guid [123] during artifact creation");
 
       dataFactory.create(CoreBranches.COMMON, artifactTypeToken, guid, hrid);
    }
 
    @Test
    public void testCreateArtifactDataInvalidHrid() throws OseeCoreException {
-      when(artifactCache.get(artifactTypeToken)).thenReturn(artifactType);
-      when(artifactType.isAbstract()).thenReturn(false);
-      when(artifactType.toString()).thenReturn("artifactType");
-
       when(idFactory.getUniqueGuid(guid)).thenReturn(guid);
       when(idFactory.getUniqueHumanReadableId(hrid)).thenReturn("123");
 
       thrown.expect(OseeArgumentException.class);
-      thrown.expectMessage("Invalid human readable id [123] during artifact creation [type: artifactType, guid: " + guid + "]");
+      thrown.expectMessage("Invalid human readable id [123] during artifact creation [guid: " + guid + "]");
 
       dataFactory.create(CoreBranches.COMMON, artifactTypeToken, guid, hrid);
    }
 
    @Test
    public void testCreateArtifactData() throws OseeCoreException {
-      when(artifactCache.get(artifactTypeToken)).thenReturn(artifactType);
-      when(artifactType.getGuid()).thenReturn(4536L);
-      when(artifactType.isAbstract()).thenReturn(false);
       when(idFactory.getUniqueGuid(guid)).thenReturn(guid);
       when(idFactory.getUniqueHumanReadableId(hrid)).thenReturn(hrid);
       when(idFactory.getNextArtifactId()).thenReturn(987);
@@ -219,9 +183,6 @@ public class DataFactoryImplTest {
    public void testCreateArtifactDataGenerateHrid() throws OseeCoreException {
       String newHrid = HumanReadableId.generate();
 
-      when(artifactCache.get(artifactTypeToken)).thenReturn(artifactType);
-      when(artifactType.getGuid()).thenReturn(4536L);
-      when(artifactType.isAbstract()).thenReturn(false);
       when(idFactory.getUniqueGuid(guid)).thenReturn(guid);
       when(idFactory.getUniqueHumanReadableId(null)).thenReturn(newHrid);
       when(idFactory.getNextArtifactId()).thenReturn(987);
@@ -254,8 +215,6 @@ public class DataFactoryImplTest {
       IAttributeType attributeType = mock(IAttributeType.class);
 
       when(attributeType.getGuid()).thenReturn(2389L);
-      when(proxyFactory.createProxy(2389L, "", "")).thenReturn(otherDataProxy);
-      when(otherDataProxy.getData()).thenReturn(new Object[] {2389L, "", ""});
 
       AttributeData actual = dataFactory.create(artData, attributeType);
 
@@ -274,12 +233,7 @@ public class DataFactoryImplTest {
       assertEquals(2389L, actual.getLoadedTypeUuid());
 
       assertEquals(555, actual.getArtifactId());
-      assertNotSame(dataProxy, actual.getDataProxy());
 
-      Object[] objData = actual.getDataProxy().getData();
-      assertEquals(2389L, objData[0]);
-      assertEquals("", objData[1]);
-      assertEquals("", objData[2]);
    }
 
    @Test
@@ -358,13 +312,7 @@ public class DataFactoryImplTest {
       assertEquals(777L, actual.getLoadedTypeUuid());
 
       assertEquals(88, actual.getArtifactId());
-      assertNotSame(dataProxy, actual.getDataProxy());
 
-      Object[] objData = actual.getDataProxy().getData();
-      assertNotSame(expectedProxyData, objData);
-      assertEquals(expectedProxyData[0], objData[0]);
-      assertEquals(expectedProxyData[1], objData[1]);
-      assertEquals(expectedProxyData[2], objData[2]);
    }
 
    @Test
@@ -419,13 +367,6 @@ public class DataFactoryImplTest {
       assertEquals(777L, actual.getLoadedTypeUuid());
 
       assertEquals(88, actual.getArtifactId());
-      assertNotSame(dataProxy, actual.getDataProxy());
-
-      Object[] objData = actual.getDataProxy().getData();
-      assertNotSame(expectedProxyData, objData);
-      assertEquals(expectedProxyData[0], objData[0]);
-      assertEquals(expectedProxyData[1], objData[1]);
-      assertEquals(expectedProxyData[2], objData[2]);
    }
 
    @Test
@@ -455,7 +396,6 @@ public class DataFactoryImplTest {
    @Test
    public void testCloneAttributeData() throws OseeCoreException {
       AttributeData actual = dataFactory.clone(attrData);
-      verify(proxyFactory).createProxy(666L, expectedProxyData);
 
       VersionData actualVer = actual.getVersion();
 
@@ -476,13 +416,6 @@ public class DataFactoryImplTest {
       assertEquals(777L, actual.getLoadedTypeUuid());
 
       assertEquals(88, actual.getArtifactId());
-      assertNotSame(dataProxy, actual.getDataProxy());
-
-      Object[] objData = actual.getDataProxy().getData();
-      assertNotSame(expectedProxyData, objData);
-      assertEquals(expectedProxyData[0], objData[0]);
-      assertEquals(expectedProxyData[1], objData[1]);
-      assertEquals(expectedProxyData[2], objData[2]);
    }
 
    @Test

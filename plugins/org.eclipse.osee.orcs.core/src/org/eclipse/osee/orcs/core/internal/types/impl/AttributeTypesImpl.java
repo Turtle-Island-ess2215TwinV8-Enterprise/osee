@@ -195,4 +195,10 @@ public class AttributeTypesImpl implements AttributeTypes {
       }
       return toReturn;
    }
+
+   @Override
+   public boolean isBooleanType(IAttributeType attrType) throws OseeCoreException {
+      String baseAttributeTypeId = getBaseAttributeTypeId(attrType);
+      return baseAttributeTypeId != null && baseAttributeTypeId.toLowerCase().contains("boolean");
+   }
 }

@@ -24,6 +24,7 @@ import org.eclipse.osee.framework.core.model.cache.IOseeCache;
 import org.eclipse.osee.framework.core.model.cache.TransactionCache;
 import org.eclipse.osee.framework.core.services.IOseeModelFactoryService;
 import org.eclipse.osee.framework.core.services.IdentityService;
+import org.eclipse.osee.framework.core.services.TempCachingService;
 import org.eclipse.osee.framework.database.IOseeDatabaseService;
 import org.eclipse.osee.framework.resource.management.IResource;
 import org.eclipse.osee.framework.resource.management.IResourceManager;
@@ -34,9 +35,9 @@ import org.eclipse.osee.orcs.core.ds.DataFactory;
 import org.eclipse.osee.orcs.core.ds.DataLoaderFactory;
 import org.eclipse.osee.orcs.core.ds.DataStoreAdmin;
 import org.eclipse.osee.orcs.core.ds.OrcsDataStore;
+import org.eclipse.osee.orcs.core.ds.ProxyDataFactory;
 import org.eclipse.osee.orcs.core.ds.QueryEngine;
 import org.eclipse.osee.orcs.core.ds.QueryEngineIndexer;
-import org.eclipse.osee.orcs.core.ds.TempCachingService;
 import org.eclipse.osee.orcs.db.internal.branch.BranchDataStoreImpl;
 import org.eclipse.osee.orcs.db.internal.callable.OrcsTypeLoaderCallable;
 import org.eclipse.osee.orcs.db.internal.callable.PurgeArtifactTypeDatabaseTxCallable;
@@ -165,6 +166,11 @@ public class OrcsDataStoreImpl implements OrcsDataStore, TempCachingService {
    }
 
    @Override
+   public ProxyDataFactory getProxyDataFactory() {
+      return dataModuleFactory.getProxyDataFactory();
+   }
+
+   @Override
    public DataFactory getDataFactory() {
       return dataModuleFactory.getDataFactory();
    }
@@ -224,17 +230,17 @@ public class OrcsDataStoreImpl implements OrcsDataStore, TempCachingService {
    }
 
    @Override
-   public Callable<?> purgeArtifactsByArtifactType(String sessionId, Collection<? extends IArtifactType> typesToPurge) {
+   public Callable<Void> purgeArtifactsByArtifactType(String sessionId, Collection<? extends IArtifactType> typesToPurge) {
       return new PurgeArtifactTypeDatabaseTxCallable(logger, dbService, identityService, typesToPurge);
    }
 
    @Override
-   public Callable<?> purgeAttributesByAttributeType(String sessionId, Collection<? extends IAttributeType> typesToPurge) {
+   public Callable<Void> purgeAttributesByAttributeType(String sessionId, Collection<? extends IAttributeType> typesToPurge) {
       return new PurgeAttributeTypeDatabaseTxCallable(logger, dbService, identityService, typesToPurge);
    }
 
    @Override
-   public Callable<?> purgeRelationsByRelationType(String sessionId, Collection<? extends IRelationType> typesToPurge) {
+   public Callable<Void> purgeRelationsByRelationType(String sessionId, Collection<? extends IRelationType> typesToPurge) {
       return new PurgeRelationTypeDatabaseTxCallable(logger, dbService, identityService, typesToPurge);
    }
 

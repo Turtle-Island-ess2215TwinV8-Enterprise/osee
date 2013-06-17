@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.concurrent.Callable;
-import org.eclipse.osee.executor.admin.CancellableCallable;
 import org.eclipse.osee.framework.core.data.IArtifactType;
 import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.data.IRelationType;
@@ -30,8 +29,8 @@ import org.eclipse.osee.orcs.core.internal.types.OrcsTypesLoaderFactory;
 import org.eclipse.osee.orcs.core.internal.types.OrcsTypesResourceProvider;
 import org.eclipse.osee.orcs.data.ArtifactTypes;
 import org.eclipse.osee.orcs.data.AttributeTypes;
+import org.eclipse.osee.orcs.data.EnumTypes;
 import org.eclipse.osee.orcs.data.RelationTypes;
-import org.eclipse.osee.orcs.utility.ObjectProvider;
 
 /**
  * @author Roberto E. Escobar
@@ -48,6 +47,7 @@ public class OrcsTypesImpl implements OrcsTypes {
    private final ArtifactTypes artifactTypes;
    private final AttributeTypes attributeTypes;
    private final RelationTypes relationTypes;
+   private final EnumTypes enumTypes;
 
    public OrcsTypesImpl(Log logger, SessionContext session, OrcsTypesDataStore dataStore, OrcsTypesLoaderFactory loaderFactory, OrcsTypesIndexProvider indexProvider) {
       this.logger = logger;
@@ -60,6 +60,7 @@ public class OrcsTypesImpl implements OrcsTypes {
       this.artifactTypes = new ArtifactTypesImpl(indexProvider);
       this.attributeTypes = new AttributeTypesImpl(indexProvider, indexProvider);
       this.relationTypes = new RelationTypesImpl(indexProvider);
+      this.enumTypes = new EnumTypesImpl(indexProvider);
    }
 
    @Override
@@ -78,13 +79,18 @@ public class OrcsTypesImpl implements OrcsTypes {
    }
 
    @Override
+   public EnumTypes getEnumTypes() {
+      return enumTypes;
+   }
+
+   @Override
    public void invalidateAll() {
       indexProvider.invalidate();
    }
 
    @Override
-   public Callable<?> loadTypes(final IResource resource, final boolean isInitializing) {
-      return new CancellableCallable<Void>() {
+   public Callable<Void> loadTypes(final IResource resource, final boolean isInitializing) {
+      return new Callable<Void>() {
          @Override
          public Void call() throws Exception {
             indexProvider.setLoader(loaderFactory.createTypesLoader(session, new OrcsTypesResourceProvider() {
@@ -100,18 +106,15 @@ public class OrcsTypesImpl implements OrcsTypes {
    }
 
    @Override
-   public Callable<?> writeTypes(final ObjectProvider<? extends OutputStream> supplier) {
-      return new CancellableCallable<Void>() {
+   public Callable<Void> writeTypes(final OutputStream outputStream) {
+      return new Callable<Void>() {
          @Override
          public Void call() throws Exception {
             logger.trace("Writing OrcsTypes for session [%s]", session);
             IResource resource = indexProvider.getOrcsTypesResource();
             InputStream inputStream = null;
-            OutputStream outputStream = null;
             try {
-               outputStream = supplier.get();
                inputStream = resource.getContent();
-               checkForCancelled();
                Lib.inputStreamToOutputStream(inputStream, outputStream);
             } catch (Exception ex) {
                OseeExceptions.wrapAndThrow(ex);
@@ -125,17 +128,17 @@ public class OrcsTypesImpl implements OrcsTypes {
    }
 
    @Override
-   public Callable<?> purgeArtifactsByArtifactType(Collection<? extends IArtifactType> artifactTypes) {
+   public Callable<Void> purgeArtifactsByArtifactType(Collection<? extends IArtifactType> artifactTypes) {
       return dataStore.purgeArtifactsByArtifactType(session.getSessionId(), artifactTypes);
    }
 
    @Override
-   public Callable<?> purgeAttributesByAttributeType(Collection<? extends IAttributeType> attributeTypes) {
+   public Callable<Void> purgeAttributesByAttributeType(Collection<? extends IAttributeType> attributeTypes) {
       return dataStore.purgeAttributesByAttributeType(session.getSessionId(), attributeTypes);
    }
 
    @Override
-   public Callable<?> purgeRelationsByRelationType(Collection<? extends IRelationType> relationTypes) {
+   public Callable<Void> purgeRelationsByRelationType(Collection<? extends IRelationType> relationTypes) {
       return dataStore.purgeRelationsByRelationType(session.getSessionId(), relationTypes);
    }
 

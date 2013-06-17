@@ -25,11 +25,11 @@ import org.eclipse.osee.framework.core.enums.CoreAttributeTypes;
 import org.eclipse.osee.framework.core.enums.CoreBranches;
 import org.eclipse.osee.framework.core.exception.OseeArgumentException;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
-import org.eclipse.osee.framework.core.model.type.AttributeType;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributeDataFactory;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
+import org.eclipse.osee.orcs.core.ds.ProxyDataFactory;
 import org.eclipse.osee.orcs.core.ds.ResourceNameResolver;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.core.internal.artifact.AttributeManager;
@@ -39,6 +39,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -56,6 +57,7 @@ public class AttributeFactoryTest {
    @Mock private AttributeClassResolver classResolver;
    @Mock private AttributeTypes cache;
    @Mock private AttributeDataFactory dataFactory;
+   @Mock private ProxyDataFactory proxyFactory;
    
    @Mock private AttributeData attributeData;
    @Mock private VersionData attrVersionData;
@@ -64,25 +66,29 @@ public class AttributeFactoryTest {
    @Mock private Attribute<Object> attribute;
 
    @Mock private AttributeManager container;
-   @Mock private DataProxy proxy;
+   @Mock private DataProxy dataProxy;
    // @formatter:on
 
    private AttributeFactory factory;
    private long expectedGuid;
    private final IOseeBranch branch = CoreBranches.COMMON;
+   private final String attributeProviderId = "attributeProviderId";
 
    @Before
    public void init() throws OseeCoreException {
       MockitoAnnotations.initMocks(this);
 
-      factory = new AttributeFactory(classResolver, dataFactory, cache);
+      factory = new AttributeFactory(classResolver, dataFactory, cache, proxyFactory);
 
       expectedGuid = CoreAttributeTypes.Name.getGuid();
 
       when(attributeData.getTypeUuid()).thenReturn(expectedGuid);
       when(cache.getByUuid(expectedGuid)).thenReturn(attributeType);
       when(classResolver.createAttribute(attributeType)).thenReturn(attribute);
-      when(attributeData.getDataProxy()).thenReturn(proxy);
+      when(cache.getAttributeProviderId(attributeType)).thenReturn(attributeProviderId);
+      when(
+         proxyFactory.createProxy(eq(attributeProviderId), eq(false), eq(expectedGuid), Matchers.anyString(),
+            Matchers.anyString())).thenReturn(dataProxy);
    }
 
    @Test
@@ -97,15 +103,18 @@ public class AttributeFactoryTest {
    @SuppressWarnings({"unchecked", "rawtypes"})
    @Test
    public void testCreateAttribute() throws OseeCoreException {
-      ArgumentCaptor<ResourceNameResolver> resolverCapture = ArgumentCaptor.forClass(ResourceNameResolver.class);
       ArgumentCaptor<WeakReference> refCapture = ArgumentCaptor.forClass(WeakReference.class);
+      ArgumentCaptor<ResourceNameResolver> resolverCapture = ArgumentCaptor.forClass(ResourceNameResolver.class);
 
       Attribute<Object> actual = factory.createAttribute(container, attributeData);
 
       assertTrue(attribute == actual);
 
-      verify(proxy).setResolver(resolverCapture.capture());
-      verify(attribute).internalInitialize(eq(cache), refCapture.capture(), eq(attributeData), eq(false), eq(false));
+      verify(dataProxy).setResolver(resolverCapture.capture());
+      verify(proxyFactory).createProxy(attributeProviderId, false, attributeData.getTypeUuid(),
+         attributeData.getValue(), attributeData.getUri());
+      verify(attribute).internalInitialize(eq(cache), refCapture.capture(), eq(attributeData), eq(false), eq(false),
+         eq(dataProxy));
       verify(container).add(attributeType, attribute);
       assertEquals(container, refCapture.getValue().get());
 
@@ -130,8 +139,9 @@ public class AttributeFactoryTest {
       verify(dataFactory).create(artifactData, attributeType);
       assertTrue(attribute == actual);
 
-      verify(proxy).setResolver(resolverCapture.capture());
-      verify(attribute).internalInitialize(eq(cache), refCapture.capture(), eq(attributeData), eq(true), eq(true));
+      verify(dataProxy).setResolver(resolverCapture.capture());
+      verify(attribute).internalInitialize(eq(cache), refCapture.capture(), eq(attributeData), eq(true), eq(true),
+         eq(dataProxy));
       verify(container).add(attributeType, attribute);
       assertEquals(container, refCapture.getValue().get());
 
@@ -144,7 +154,6 @@ public class AttributeFactoryTest {
 
       when(dataFactory.copy(branch, attributeData)).thenReturn(copiedAttributeData);
       when(copiedAttributeData.getTypeUuid()).thenReturn(expectedGuid);
-      when(copiedAttributeData.getDataProxy()).thenReturn(proxy);
 
       ArgumentCaptor<ResourceNameResolver> resolverCapture = ArgumentCaptor.forClass(ResourceNameResolver.class);
       ArgumentCaptor<WeakReference> refCapture = ArgumentCaptor.forClass(WeakReference.class);
@@ -155,9 +164,9 @@ public class AttributeFactoryTest {
 
       verify(dataFactory).copy(branch, attributeData);
 
-      verify(proxy).setResolver(resolverCapture.capture());
+      verify(dataProxy).setResolver(resolverCapture.capture());
       verify(attribute).internalInitialize(eq(cache), refCapture.capture(), eq(copiedAttributeData), eq(true),
-         eq(false));
+         eq(false), eq(dataProxy));
       verify(container).add(attributeType, attribute);
       assertEquals(container, refCapture.getValue().get());
    }
@@ -181,7 +190,6 @@ public class AttributeFactoryTest {
 
       when(dataFactory.introduce(branch, attributeData)).thenReturn(introducedAttributeData);
       when(introducedAttributeData.getTypeUuid()).thenReturn(expectedGuid);
-      when(introducedAttributeData.getDataProxy()).thenReturn(proxy);
 
       ArgumentCaptor<ResourceNameResolver> resolverCapture = ArgumentCaptor.forClass(ResourceNameResolver.class);
       ArgumentCaptor<WeakReference> refCapture = ArgumentCaptor.forClass(WeakReference.class);
@@ -191,9 +199,9 @@ public class AttributeFactoryTest {
 
       verify(dataFactory).introduce(branch, attributeData);
 
-      verify(proxy).setResolver(resolverCapture.capture());
+      verify(dataProxy).setResolver(resolverCapture.capture());
       verify(attribute).internalInitialize(eq(cache), refCapture.capture(), eq(introducedAttributeData), eq(true),
-         eq(false));
+         eq(false), eq(dataProxy));
       verify(container).add(attributeType, attribute);
       assertEquals(container, refCapture.getValue().get());
    }

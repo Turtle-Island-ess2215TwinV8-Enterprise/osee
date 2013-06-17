@@ -262,8 +262,7 @@ public class MissingChangeItemFactoryImpl implements MissingChangeItemFactory {
    private AttributeChangeItem createAttributeChangeItem(AttributeData data) throws OseeCoreException {
       AttributeChangeItem attrChange =
          new AttributeChangeItem(data.getLocalId(), identityService.getLocalId(data.getTypeUuid()),
-            data.getArtifactId(), data.getVersion().getGammaId(), determineModType(data),
-            data.getDataProxy().getDisplayableString());
+            data.getArtifactId(), data.getVersion().getGammaId(), determineModType(data), data.getValue());
       attrChange.getNetChange().copy(attrChange.getCurrentVersion());
       return attrChange;
    }

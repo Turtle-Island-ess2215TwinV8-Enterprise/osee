@@ -24,9 +24,9 @@ public interface OrcsTypesDataStore {
 
    Callable<IResource> getOrcsTypesLoader(String sessionId);
 
-   Callable<?> purgeArtifactsByArtifactType(String sessionId, Collection<? extends IArtifactType> artifactTypes);
+   Callable<Void> purgeArtifactsByArtifactType(String sessionId, Collection<? extends IArtifactType> artifactTypes);
 
-   Callable<?> purgeAttributesByAttributeType(String sessionId, Collection<? extends IAttributeType> attributeTypes);
+   Callable<Void> purgeAttributesByAttributeType(String sessionId, Collection<? extends IAttributeType> attributeTypes);
 
-   Callable<?> purgeRelationsByRelationType(String sessionId, Collection<? extends IRelationType> relationTypes);
+   Callable<Void> purgeRelationsByRelationType(String sessionId, Collection<? extends IRelationType> relationTypes);
 }

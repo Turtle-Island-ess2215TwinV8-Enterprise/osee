@@ -20,6 +20,7 @@ import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributeDataFactory;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
+import org.eclipse.osee.orcs.core.ds.ProxyDataFactory;
 import org.eclipse.osee.orcs.core.ds.ResourceNameResolver;
 import org.eclipse.osee.orcs.core.internal.artifact.AttributeManager;
 import org.eclipse.osee.orcs.data.AttributeTypes;
@@ -32,11 +33,13 @@ public class AttributeFactory {
    private final AttributeClassResolver classResolver;
    private final AttributeDataFactory dataFactory;
    private final AttributeTypes cache;
+   private final ProxyDataFactory proxyFactory;
 
-   public AttributeFactory(AttributeClassResolver classResolver, AttributeDataFactory dataFactory, AttributeTypes cache) {
+   public AttributeFactory(AttributeClassResolver classResolver, AttributeDataFactory dataFactory, AttributeTypes cache, ProxyDataFactory proxyFactory) {
       this.classResolver = classResolver;
       this.dataFactory = dataFactory;
       this.cache = cache;
+      this.proxyFactory = proxyFactory;
    }
 
    public <T> Attribute<T> createAttributeWithDefaults(AttributeManager container, ArtifactData artifactData, IAttributeType attributeType) throws OseeCoreException {
@@ -52,15 +55,20 @@ public class AttributeFactory {
       IAttributeType type = cache.getByUuid(data.getTypeUuid());
       Conditions.checkNotNull(type, "attributeType", "Cannot find attribute type with uuid[%s]", data.getTypeUuid());
 
+      String attributeProviderId = cache.getAttributeProviderId(type);
+      boolean isEnumOrBoolean = cache.isEnumerated(type) || cache.isBooleanType(type);
+
       Attribute<T> attribute = classResolver.createAttribute(type);
 
-      DataProxy proxy = data.getDataProxy();
+      DataProxy proxy =
+         proxyFactory.createProxy(attributeProviderId, isEnumOrBoolean, data.getTypeUuid(), data.getValue(),
+            data.getUri());
       ResourceNameResolver resolver = createResolver(attribute);
       proxy.setResolver(resolver);
 
       Reference<AttributeManager> artifactRef = new WeakReference<AttributeManager>(container);
 
-      attribute.internalInitialize(cache, artifactRef, data, isDirty, createWithDefaults);
+      attribute.internalInitialize(cache, artifactRef, data, isDirty, createWithDefaults, proxy);
       container.add(type, attribute);
 
       return attribute;

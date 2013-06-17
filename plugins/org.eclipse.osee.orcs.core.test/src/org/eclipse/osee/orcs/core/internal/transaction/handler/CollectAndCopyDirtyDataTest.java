@@ -94,6 +94,6 @@ public class CollectAndCopyDirtyDataTest {
       ArtifactTransactionData txData = data.iterator().next();
 
       Assert.assertEquals(artCopyData, txData.getArtifactData());
-      Assert.assertEquals(attrCopyData, txData.getAttributeData().get(0));
+      Assert.assertEquals(attrCopyData, txData.getAttributePersistData().get(0));
    }
 }

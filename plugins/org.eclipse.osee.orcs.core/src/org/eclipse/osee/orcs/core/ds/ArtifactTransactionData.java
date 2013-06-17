@@ -20,7 +20,7 @@ public interface ArtifactTransactionData extends Identity<String>, OrcsVisitable
 
    ArtifactData getArtifactData();
 
-   List<AttributeData> getAttributeData();
+   List<AttributePersistData> getAttributePersistData();
 
    List<RelationData> getRelationData();
 

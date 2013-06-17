@@ -17,7 +17,6 @@ import org.eclipse.osee.framework.jdk.core.util.Lib;
 import org.eclipse.osee.logger.Log;
 import org.eclipse.osee.orcs.OrcsTypes;
 import org.eclipse.osee.orcs.db.internal.exchange.handler.ExportItem;
-import org.eclipse.osee.orcs.utility.Providers;
 
 /**
  * @author Roberto E. Escobar
@@ -36,7 +35,7 @@ public class OseeTypeModelExportItem extends AbstractExportItem {
       try {
          File outputFile = new File(getWriteLocation(), getFileName());
          outputStream = new FileOutputStream(outputFile);
-         orcsTypes.writeTypes(Providers.returning(outputStream)).call();
+         orcsTypes.writeTypes(outputStream).call();
       } finally {
          Lib.close(outputStream);
       }

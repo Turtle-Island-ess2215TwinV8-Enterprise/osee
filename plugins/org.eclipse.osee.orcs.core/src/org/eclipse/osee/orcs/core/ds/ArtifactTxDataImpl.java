@@ -21,10 +21,10 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 public class ArtifactTxDataImpl extends AbstractIdentity<String> implements ArtifactTransactionData {
 
    private final ArtifactData artifactData;
-   private final List<AttributeData> attributeData;
+   private final List<AttributePersistData> attributeData;
    private final List<RelationData> relationData = new LinkedList<RelationData>();
 
-   public ArtifactTxDataImpl(ArtifactData artifactData, List<AttributeData> attributeData) {
+   public ArtifactTxDataImpl(ArtifactData artifactData, List<AttributePersistData> attributeData) {
       super();
       this.artifactData = artifactData;
       this.attributeData = attributeData;
@@ -41,7 +41,7 @@ public class ArtifactTxDataImpl extends AbstractIdentity<String> implements Arti
    }
 
    @Override
-   public List<AttributeData> getAttributeData() {
+   public List<AttributePersistData> getAttributePersistData() {
       return attributeData;
    }
 
@@ -53,7 +53,7 @@ public class ArtifactTxDataImpl extends AbstractIdentity<String> implements Arti
    @Override
    public void accept(OrcsVisitor visitor) throws OseeCoreException {
       visitor.visit(getArtifactData());
-      for (AttributeData attributeData : getAttributeData()) {
+      for (AttributePersistData attributeData : getAttributePersistData()) {
          visitor.visit(attributeData);
       }
       for (RelationData relationData : getRelationData()) {

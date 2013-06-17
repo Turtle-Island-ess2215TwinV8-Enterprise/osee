@@ -19,8 +19,8 @@ import org.eclipse.osee.framework.core.data.IRelationType;
 import org.eclipse.osee.framework.resource.management.IResource;
 import org.eclipse.osee.orcs.data.ArtifactTypes;
 import org.eclipse.osee.orcs.data.AttributeTypes;
+import org.eclipse.osee.orcs.data.EnumTypes;
 import org.eclipse.osee.orcs.data.RelationTypes;
-import org.eclipse.osee.orcs.utility.ObjectProvider;
 
 /**
  * @author Roberto E. Escobar
@@ -33,15 +33,17 @@ public interface OrcsTypes {
 
    RelationTypes getRelationTypes();
 
-   Callable<?> loadTypes(IResource resource, boolean isInitializing);
+   EnumTypes getEnumTypes();
 
-   Callable<?> writeTypes(ObjectProvider<? extends OutputStream> outputStream);
+   Callable<Void> loadTypes(IResource resource, boolean isInitializing);
 
-   Callable<?> purgeArtifactsByArtifactType(Collection<? extends IArtifactType> artifactTypes);
+   Callable<Void> writeTypes(OutputStream outputStream);
 
-   Callable<?> purgeAttributesByAttributeType(Collection<? extends IAttributeType> attributeTypes);
+   Callable<Void> purgeArtifactsByArtifactType(Collection<? extends IArtifactType> artifactTypes);
 
-   Callable<?> purgeRelationsByRelationType(Collection<? extends IRelationType> relationTypes);
+   Callable<Void> purgeAttributesByAttributeType(Collection<? extends IAttributeType> attributeTypes);
+
+   Callable<Void> purgeRelationsByRelationType(Collection<? extends IRelationType> relationTypes);
 
    void invalidateAll();
 
