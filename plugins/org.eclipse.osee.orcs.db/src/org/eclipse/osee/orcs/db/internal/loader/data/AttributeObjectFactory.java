@@ -14,6 +14,8 @@ import org.eclipse.osee.framework.core.data.IAttributeType;
 import org.eclipse.osee.framework.core.enums.ModificationType;
 import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
+import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 
 /**
@@ -26,4 +28,6 @@ public interface AttributeObjectFactory extends VersionObjectFactory {
    AttributeData createAttributeData(VersionData version, int localId, IAttributeType type, ModificationType modType, int artId) throws OseeCoreException;
 
    AttributeData createCopy(AttributeData source) throws OseeCoreException;
+
+   AttributePersistData createPersistCopy(AttributeData source, DataProxy dataProxy);
 }

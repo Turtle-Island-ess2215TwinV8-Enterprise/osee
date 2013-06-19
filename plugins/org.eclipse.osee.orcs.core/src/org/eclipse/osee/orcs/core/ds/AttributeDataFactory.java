@@ -25,6 +25,8 @@ public interface AttributeDataFactory {
 
    AttributeData clone(AttributeData source) throws OseeCoreException;
 
+   AttributePersistData cloneForPersist(AttributeData source, DataProxy dataProxy) throws OseeCoreException;
+
    AttributeData introduce(IOseeBranch destination, AttributeData source) throws OseeCoreException;
 
 }

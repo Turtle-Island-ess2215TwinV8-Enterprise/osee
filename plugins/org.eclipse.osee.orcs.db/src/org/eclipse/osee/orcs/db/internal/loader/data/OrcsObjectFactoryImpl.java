@@ -18,6 +18,8 @@ import org.eclipse.osee.framework.core.services.IdentityService;
 import org.eclipse.osee.framework.jdk.core.util.Strings;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
+import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.db.internal.OrcsObjectFactory;
@@ -175,6 +177,12 @@ public class OrcsObjectFactoryImpl implements OrcsObjectFactory {
       return createRelationData(newVersion, source.getLocalId(), source.getTypeUuid(), source.getModType(),
          source.getLoadedTypeUuid(), source.getLoadedModType(), source.getParentId(), source.getArtIdA(),
          source.getArtIdB(), source.getRationale());
+   }
+
+   @Override
+   public AttributePersistData createPersistCopy(AttributeData source, DataProxy dataProxy) {
+      AttributeData copy = createCopy(source);
+      return new AttributePersistDataImpl(copy, dataProxy);
    }
 
 }

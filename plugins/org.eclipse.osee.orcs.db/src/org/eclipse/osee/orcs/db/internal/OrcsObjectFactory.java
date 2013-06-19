@@ -18,5 +18,6 @@ import org.eclipse.osee.orcs.db.internal.loader.data.RelationObjectFactory;
  * @author Roberto E. Escobar
  */
 public interface OrcsObjectFactory extends ArtifactObjectFactory, AttributeObjectFactory, RelationObjectFactory {
+
    //
 }

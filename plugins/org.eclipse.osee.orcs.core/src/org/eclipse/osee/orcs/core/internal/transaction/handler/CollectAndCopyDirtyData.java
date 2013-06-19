@@ -16,13 +16,11 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTxDataImpl;
-import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactVisitor;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
-import org.eclipse.osee.orcs.core.internal.attribute.AttributePersistDataImpl;
 
 /**
  * Takes a snapshot of all the dirty internal OrcsData
@@ -53,9 +51,8 @@ public class CollectAndCopyDirtyData implements ArtifactVisitor {
    @Override
    public void visit(Attribute<?> attribute) throws OseeCoreException {
       if (attribute.isDirty()) {
-         AttributeData copy = dataFactory.clone(attribute.getOrcsData());
-         AttributePersistData withProxy = new AttributePersistDataImpl(copy, attribute.getDataProxy());
-         txData.getAttributePersistData().add(withProxy);
+         AttributePersistData copy = dataFactory.cloneForPersist(attribute.getOrcsData(), attribute.getDataProxy());
+         txData.getAttributePersistData().add(copy);
       }
    }
 }

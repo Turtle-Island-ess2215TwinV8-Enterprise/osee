@@ -20,10 +20,11 @@ import org.eclipse.osee.framework.core.exception.OseeCoreException;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
+import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.internal.artifact.ArtifactImpl;
 import org.eclipse.osee.orcs.core.internal.attribute.Attribute;
-import org.eclipse.osee.orcs.core.internal.transaction.handler.CollectAndCopyDirtyData;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -44,7 +45,8 @@ public class CollectAndCopyDirtyDataTest {
    @Mock ArtifactData artSourceData;
    @Mock AttributeData attrSourceData;
    @Mock ArtifactData artCopyData;
-   @Mock AttributeData attrCopyData;
+   @Mock DataProxy dataProxy;
+   @Mock AttributePersistData attrPersistData;
    // @formatter:on
 
    private List<ArtifactTransactionData> data;
@@ -81,19 +83,19 @@ public class CollectAndCopyDirtyDataTest {
       when(artifact.isDirty()).thenReturn(true);
       when(attribute.isDirty()).thenReturn(true);
       when(dataFactory.clone(artSourceData)).thenReturn(artCopyData);
-      when(dataFactory.clone(attrSourceData)).thenReturn(attrCopyData);
-
+      when(dataFactory.cloneForPersist(attrSourceData, dataProxy)).thenReturn(attrPersistData);
+      when(attribute.getDataProxy()).thenReturn(dataProxy);
       handler.visit(artifact);
       handler.visit(attribute);
 
       verify(dataFactory).clone(artSourceData);
-      verify(dataFactory).clone(attrSourceData);
+      verify(dataFactory).cloneForPersist(attrSourceData, dataProxy);
 
       Assert.assertEquals(1, data.size());
 
       ArtifactTransactionData txData = data.iterator().next();
 
       Assert.assertEquals(artCopyData, txData.getArtifactData());
-      Assert.assertEquals(attrCopyData, txData.getAttributePersistData().get(0));
+      Assert.assertEquals(attrPersistData, txData.getAttributePersistData().get(0));
    }
 }

@@ -21,7 +21,9 @@ import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.framework.jdk.core.util.HumanReadableId;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.AttributeData;
+import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.DataFactory;
+import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
 import org.eclipse.osee.orcs.core.ds.RelationData;
 import org.eclipse.osee.orcs.core.ds.VersionData;
@@ -138,6 +140,11 @@ public class DataFactoryImpl implements DataFactory {
       return objectFactory.createCopy(source);
    }
 
+   @Override
+   public AttributePersistData cloneForPersist(AttributeData source, DataProxy dataProxy) throws OseeCoreException {
+      return objectFactory.createPersistCopy(source, dataProxy);
+   }
+
    private void updateDataForCopy(IOseeBranch destination, OrcsData data) throws OseeCoreException {
       VersionData version = data.getVersion();
       version.setBranchId(idFactory.getBranchId(destination));
@@ -158,4 +165,5 @@ public class DataFactoryImpl implements DataFactory {
       // do not clear gammaId for introduce case so we reuse the same version
       data.setModType(ModificationType.INTRODUCED);
    }
+
 }
