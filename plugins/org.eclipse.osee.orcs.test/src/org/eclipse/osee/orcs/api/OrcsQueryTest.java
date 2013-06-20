@@ -125,6 +125,7 @@ public class OrcsQueryTest {
       Assert.assertNull(artifact);
 
       builder.includeTypeInheritance();
+
       Assert.assertEquals(24, builder.getCount());
 
       List<ArtifactReadable> artifacts = builder.getResults().getList();

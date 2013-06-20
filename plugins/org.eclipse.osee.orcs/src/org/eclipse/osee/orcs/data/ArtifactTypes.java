@@ -26,8 +26,6 @@ public interface ArtifactTypes extends IdentityCollection<Long, IArtifactType> {
 
    Collection<? extends IArtifactType> getSuperArtifactTypes(IArtifactType artType) throws OseeCoreException;
 
-   Collection<? extends IArtifactType> getDescendantTypes(IArtifactType artType, int depth) throws OseeCoreException;
-
    Collection<? extends IArtifactType> getAllDescendantTypes(IArtifactType artType) throws OseeCoreException;
 
    boolean isValidAttributeType(IArtifactType artType, IOseeBranch branch, IAttributeType attributeType) throws OseeCoreException;

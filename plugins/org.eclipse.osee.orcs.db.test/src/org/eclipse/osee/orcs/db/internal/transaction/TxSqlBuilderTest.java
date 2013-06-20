@@ -40,6 +40,7 @@ import org.eclipse.osee.framework.jdk.core.util.GUID;
 import org.eclipse.osee.framework.jdk.core.util.HumanReadableId;
 import org.eclipse.osee.orcs.core.ds.ArtifactData;
 import org.eclipse.osee.orcs.core.ds.ArtifactTransactionData;
+import org.eclipse.osee.orcs.core.ds.AttributeData;
 import org.eclipse.osee.orcs.core.ds.AttributePersistData;
 import org.eclipse.osee.orcs.core.ds.DataProxy;
 import org.eclipse.osee.orcs.core.ds.OrcsData;
@@ -48,6 +49,8 @@ import org.eclipse.osee.orcs.core.ds.VersionData;
 import org.eclipse.osee.orcs.db.internal.loader.IdFactory;
 import org.eclipse.osee.orcs.db.internal.loader.RelationalConstants;
 import org.eclipse.osee.orcs.db.internal.loader.data.ArtifactDataImpl;
+import org.eclipse.osee.orcs.db.internal.loader.data.AttributeDataImpl;
+import org.eclipse.osee.orcs.db.internal.loader.data.AttributePersistDataImpl;
 import org.eclipse.osee.orcs.db.internal.loader.data.RelationDataImpl;
 import org.eclipse.osee.orcs.db.internal.loader.data.VersionDataImpl;
 import org.eclipse.osee.orcs.db.internal.transaction.TransactionWriter.SqlOrderEnum;
@@ -103,7 +106,6 @@ public class TxSqlBuilderTest {
 
    @Mock private ArtifactJoinQuery join;
    @Mock private DataProxy dataProxy;
-   @Mock private AttributePersistData attrData;
    // @formatter:on
 
    private VersionData versionData;
@@ -112,6 +114,7 @@ public class TxSqlBuilderTest {
 
    private ArtifactData artData;
    private RelationData relData;
+   private AttributePersistData attrPersistData;
 
    @Before
    public void setUp() throws OseeCoreException {
@@ -131,12 +134,11 @@ public class TxSqlBuilderTest {
       artData.setGuid(EXP_GUID);
       artData.setHumanReadableId(HRID);
 
-      when(attrData.getLocalId()).thenReturn(ITEM_ID);
-      when(attrData.getTypeUuid()).thenReturn(TYPE_UUID);
-      when(attrData.getArtifactId()).thenReturn(ATTR_ARTIFACT_ID);
-      when(attrData.getDataProxy()).thenReturn(dataProxy);
-      when(attrData.getVersion()).thenReturn(versionData);
-      when(attrData.getModType()).thenReturn(ModificationType.NEW);
+      AttributeData attrData = new AttributeDataImpl(versionData);
+      attrData.setLocalId(ITEM_ID);
+      attrData.setTypeUuid(TYPE_UUID);
+      attrData.setArtifactId(ATTR_ARTIFACT_ID);
+      attrPersistData = new AttributePersistDataImpl(attrData, dataProxy);
 
       Object[] proxyData = new Object[] {ATTR_VALUE, ATTR_URI};
       when(dataProxy.getData()).thenReturn(proxyData);
@@ -309,9 +311,9 @@ public class TxSqlBuilderTest {
    public void testAcceptAttributeData() throws OseeCoreException {
       for (ModificationType modType : MODS_ITEMS_ROW) {
          builder.accept(tx, txData);
-         when(attrData.getModType()).thenReturn(modType);
+         attrPersistData.setModType(modType);
 
-         builder.visit(attrData);
+         builder.visit(attrPersistData);
 
          verifyEmpty(allExcept(SqlOrderEnum.TXS_DETAIL, SqlOrderEnum.TXS, SqlOrderEnum.ATTRIBUTES));
 
@@ -328,7 +330,7 @@ public class TxSqlBuilderTest {
          assertEquals(ATTR_URI, dao.getUri());
          assertEquals(ATTR_VALUE, dao.getValue());
 
-         reset(attrData);
+         reset(attrPersistData);
       }
    }
 
@@ -336,9 +338,9 @@ public class TxSqlBuilderTest {
    public void testAcceptAttributeDataNoRow() throws OseeCoreException {
       for (ModificationType modType : MODS_REUSE_ROW) {
          builder.accept(tx, txData);
-         when(attrData.getModType()).thenReturn(ModificationType.REPLACED_WITH_VERSION);
+         attrPersistData.setModType(modType);
 
-         builder.visit(attrData);
+         builder.visit(attrPersistData);
 
          assertTrue(builder.getBinaryStores().isEmpty());
          verifyEmpty(allExcept(SqlOrderEnum.TXS_DETAIL, SqlOrderEnum.TXS));
@@ -350,7 +352,7 @@ public class TxSqlBuilderTest {
          verifyQuery(SqlOrderEnum.ATTRIBUTES);
          // @formatter:on
 
-         reset(attrData);
+         reset(attrPersistData);
       }
    }
 

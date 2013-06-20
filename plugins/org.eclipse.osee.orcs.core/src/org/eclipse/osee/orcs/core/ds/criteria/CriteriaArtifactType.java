@@ -53,9 +53,7 @@ public class CriteriaArtifactType extends Criteria<QueryOptions> {
       boolean includeTypeInheritance = options.isTypeInheritanceIncluded();
       for (IArtifactType type : artifactTypes) {
          if (includeTypeInheritance) {
-            for (IArtifactType descendant : artTypeCache.getAllDescendantTypes(type)) {
-               typesToUse.add(descendant);
-            }
+            typesToUse.addAll(artTypeCache.getAllDescendantTypes(type));
          }
          typesToUse.add(type);
       }

@@ -143,13 +143,13 @@ public class ArtifactTypeIndex extends TokenTypeIndex<Long, IArtifactType, XArti
          Set<IArtifactType> originals = Sets.newHashSet(superTypes);
          superTypes = Sets.newHashSet(newSuperTypes);
          for (IArtifactType superType : superTypes) {
-            ArtifactTypeMetaData metaData = tokenToTypeData.get(superType);
+            ArtifactTypeMetaData metaData = getOrCreateData(superType);
             if (metaData != null) {
                metaData.getDescendantTypes().add(type);
             }
          }
          for (IArtifactType oldValue : originals) {
-            ArtifactTypeMetaData metaData = tokenToTypeData.get(oldValue);
+            ArtifactTypeMetaData metaData = getOrCreateData(oldValue);
             if (metaData != null) {
                metaData.getDescendantTypes().remove(type);
             }

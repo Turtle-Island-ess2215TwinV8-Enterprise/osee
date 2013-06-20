@@ -86,30 +86,18 @@ public class ArtifactTypesImpl implements ArtifactTypes {
    }
 
    @Override
-   public Collection<? extends IArtifactType> getDescendantTypes(IArtifactType artType, int depth) throws OseeCoreException {
+   public Collection<? extends IArtifactType> getAllDescendantTypes(IArtifactType artType) throws OseeCoreException {
       Conditions.checkNotNull(artType, "artifactType");
       LinkedHashSet<IArtifactType> descendants = Sets.newLinkedHashSet();
-      if (depth != DEPTH_ZERO) {
-         int depthToUse = depth < 0 ? INFINITE_DEPTH : depth;
-         walkDescendants(artType, descendants, depthToUse);
-      }
+      walkDescendants(artType, descendants);
       return descendants;
    }
 
-   @Override
-   public Collection<? extends IArtifactType> getAllDescendantTypes(IArtifactType artType) throws OseeCoreException {
-      return getDescendantTypes(artType, INFINITE_DEPTH);
-   }
-
-   private void walkDescendants(IArtifactType artifactType, Collection<IArtifactType> descendants, int depth) throws OseeCoreException {
+   private void walkDescendants(IArtifactType artifactType, Collection<IArtifactType> descendants) throws OseeCoreException {
       Collection<IArtifactType> childTypes = getArtifactTypesIndex().getDescendantTypes(artifactType);
       if (!childTypes.isEmpty()) {
-         boolean isWalkNextLevelAllowed = depth > DEPTH_ONE || depth <= INFINITE_DEPTH;
-         int nextLevel = depth - DEPTH_ONE;
          for (IArtifactType type : childTypes) {
-            if (isWalkNextLevelAllowed) {
-               walkDescendants(type, descendants, nextLevel);
-            }
+            walkDescendants(type, descendants);
             descendants.add(type);
          }
       }
